@@ -185,28 +185,34 @@ $stats = getStats();
                                     $firma_id = $firma_id[0]['id'] ?? null;
                                     
                                     if ($firma_id) {
-                                        // Satış detaylarından firma bazlı satış toplamını al
+                                        // Satış detaylarından firma bazlı satış toplamını al (maliyet düşülmüş)
                                         $firma_satis_verileri = $db->query("
                                             SELECT 
-                                                SUM(CASE WHEN s.durum = 'odendi' AND s.onay_durumu = 'onaylandi' THEN sd.toplam_fiyat ELSE 0 END) as tamamlanan_satis
+                                                SUM(CASE WHEN s.durum = 'odendi' AND s.onay_durumu = 'onaylandi' THEN sd.toplam_fiyat ELSE 0 END) as tamamlanan_satis,
+                                                COALESCE(SUM(sm.maliyet_tutari), 0) as toplam_maliyet
                                             FROM satislar s
                                             LEFT JOIN satis_detay sd ON s.id = sd.satis_id
+                                            LEFT JOIN satis_maliyetler sm ON s.id = sm.satis_id
                                             WHERE s.personel_id = ? 
                                             AND YEAR(s.satis_tarihi) = ? 
                                             AND MONTH(s.satis_tarihi) = ?
                                             AND sd.firma_id = ?
                                         ", [$personel_id, $hedef_group['yil'], $hedef_group['ay'], $firma_id]);
                                         
-                                        $firma_satis_data = $firma_satis_verileri[0] ?? ['tamamlanan_satis' => 0];
+                                        $firma_satis_data = $firma_satis_verileri[0] ?? ['tamamlanan_satis' => 0, 'toplam_maliyet' => 0];
                                         $firma_tamamlanan = (float)$firma_satis_data['tamamlanan_satis'];
+                                        $firma_maliyet = (float)$firma_satis_data['toplam_maliyet'];
+                                        
+                                        // Maliyet düşülmüş net satış
+                                        $firma_net_satis = $firma_tamamlanan - $firma_maliyet;
                                         
                                         // Eğer satis_detay'da veri yoksa, bu firma için satış yok demektir
                                         // Fallback sistemi kaldırıldı - sadece gerçek veriler kullanılacak
                                     } else {
-                                        $firma_tamamlanan = 0;
+                                        $firma_net_satis = 0;
                                     }
                                     
-                                    $firma_progress = $firma['aylik_hedef'] > 0 ? min(100, ($firma_tamamlanan / $firma['aylik_hedef']) * 100) : 0;
+                                    $firma_progress = $firma['aylik_hedef'] > 0 ? min(100, ($firma_net_satis / $firma['aylik_hedef']) * 100) : 0;
                                 ?>
                                 <div class="firma-item">
                                     <div class="firma-header">
@@ -224,8 +230,8 @@ $stats = getStats();
                                             <div class="progress-bar" style="width: <?php echo $firma_progress; ?>%"></div>
                                         </div>
                                         <div class="progress-info">
-                                            <span class="progress-amount">Tamamlanan: ₺<?php echo number_format($firma_tamamlanan, 0, ',', '.'); ?></span>
-                                            <span class="progress-amount">Kalan: ₺<?php echo number_format(max(0, $firma['aylik_hedef'] - $firma_tamamlanan), 0, ',', '.'); ?></span>
+                                            <span class="progress-amount">Net Satış: ₺<?php echo number_format($firma_net_satis, 0, ',', '.'); ?></span>
+                                            <span class="progress-amount">Kalan: ₺<?php echo number_format(max(0, $firma['aylik_hedef'] - $firma_net_satis), 0, ',', '.'); ?></span>
                                         </div>
                                     </div>
                                 </div>

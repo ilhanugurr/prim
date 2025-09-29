@@ -69,10 +69,13 @@ if (isSatisci()) {
 }
 
 $satislar = $db->query("
-    SELECT s.*, p.ad_soyad as personel_adi 
+    SELECT s.*, p.ad_soyad as personel_adi,
+           COALESCE(SUM(sm.maliyet_tutari), 0) as toplam_maliyet
     FROM satislar s 
     LEFT JOIN personel p ON s.personel_id = p.id 
+    LEFT JOIN satis_maliyetler sm ON s.id = sm.satis_id
     $where_clause
+    GROUP BY s.id
     ORDER BY s.olusturma_tarihi DESC
 ", $where_params);
 ?>
@@ -142,6 +145,8 @@ $satislar = $db->query("
                                         <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Personel</th>
                                         <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Müşteri</th>
                                         <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Toplam Tutar</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Maliyet</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Net Tutar</th>
                                         <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Ödeme</th>
                                         <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Onay Durumu</th>
                                         <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Satış Tarihi</th>
@@ -170,6 +175,14 @@ $satislar = $db->query("
                                             </td>
                                             <td style="padding: 15px; color: #1e293b; font-weight: 600;">
                                                 <?php echo number_format($satis['toplam_tutar'], 2); ?>₺
+                                            </td>
+                                            <td style="padding: 15px; color: #dc2626; font-weight: 600;">
+                                                <?php echo number_format($satis['toplam_maliyet'], 2); ?>₺
+                                            </td>
+                                            <td style="padding: 15px; color: #059669; font-weight: 600;">
+                                                <?php 
+                                                $net_tutar = $satis['toplam_tutar'] - $satis['toplam_maliyet'];
+                                                echo number_format($net_tutar, 2); ?>₺
                                             </td>
                                             <td style="padding: 15px;">
                                                 <span class="status-badge status-<?php echo $satis['durum'] == 'odendi' ? 'active' : ($satis['durum'] == 'odeme_bekleniyor' ? 'warning' : 'inactive'); ?>">

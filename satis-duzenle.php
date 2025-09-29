@@ -60,6 +60,9 @@ $satis_detaylar = $db->query("
     ORDER BY sd.id ASC
 ", [$satis_id]);
 
+// Maliyetleri al
+$maliyetler = $db->select('satis_maliyetler', ['satis_id' => $satis_id], 'id ASC');
+
 // Personelleri al
 $personeller = $db->select('personel', [], 'ad_soyad ASC');
 
@@ -107,6 +110,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
         // Mevcut satış detaylarını sil
         $db->delete('satis_detay', ['satis_id' => $satis_id]);
         
+        // Mevcut maliyetleri sil
+        $db->delete('satis_maliyetler', ['satis_id' => $satis_id]);
+        
         // Yeni satış detaylarını ekle
         if (isset($_POST['urun_id']) && is_array($_POST['urun_id'])) {
             for ($i = 0; $i < count($_POST['urun_id']); $i++) {
@@ -133,6 +139,21 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
             }
         }
         
+        // Maliyetleri ekle
+        if (isset($_POST['maliyet_adi']) && is_array($_POST['maliyet_adi'])) {
+            for ($i = 0; $i < count($_POST['maliyet_adi']); $i++) {
+                if (!empty($_POST['maliyet_adi'][$i]) && !empty($_POST['maliyet_tutari'][$i])) {
+                    $maliyet_data = [
+                        'satis_id' => $satis_id,
+                        'maliyet_adi' => $_POST['maliyet_adi'][$i],
+                        'maliyet_aciklama' => $_POST['maliyet_aciklama'][$i] ?? '',
+                        'maliyet_tutari' => (float)$_POST['maliyet_tutari'][$i]
+                    ];
+                    $db->insert('satis_maliyetler', $maliyet_data);
+                }
+            }
+        }
+        
         $success_message = "Satış başarıyla güncellendi!";
         
         // Güncellenmiş verileri tekrar al
@@ -145,6 +166,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
             WHERE sd.satis_id = ? 
             ORDER BY sd.id ASC
         ", [$satis_id]);
+        $maliyetler = $db->select('satis_maliyetler', ['satis_id' => $satis_id], 'id ASC');
     } else {
         $error_message = "Satış güncellenirken hata oluştu!";
     }
@@ -408,6 +430,52 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                             </button>
                         </div>
                         
+                        <!-- Maliyetler -->
+                        <div style="margin-bottom: 30px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <label style="font-weight: 600; color: #374151; font-size: 16px;">Maliyetler</label>
+                                <button type="button" id="addMaliyet" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                    <i class="fas fa-plus"></i>
+                                    Yeni Maliyet Ekle
+                                </button>
+                            </div>
+                            
+                            <div id="maliyetContainer">
+                                <?php if (!empty($maliyetler)): ?>
+                                    <?php foreach ($maliyetler as $maliyet): ?>
+                                        <div class="maliyet-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
+                                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
+                                                <div>
+                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Maliyet Adı</label>
+                                                    <input type="text" name="maliyet_adi[]" value="<?php echo htmlspecialchars($maliyet['maliyet_adi']); ?>" placeholder="Örn: Reklam, Komisyon" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" required>
+                                                </div>
+                                                <div>
+                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Açıklama</label>
+                                                    <input type="text" name="maliyet_aciklama[]" value="<?php echo htmlspecialchars($maliyet['maliyet_aciklama']); ?>" placeholder="Maliyet açıklaması" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                                </div>
+                                                <div>
+                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Tutar (₺)</label>
+                                                    <input type="number" name="maliyet_tutari[]" step="0.01" min="0" value="<?php echo $maliyet['maliyet_tutari']; ?>" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="updateMaliyetToplam()" required>
+                                                </div>
+                                                <div>
+                                                    <button type="button" onclick="removeMaliyet(this)" style="background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 600; color: #374151;">Toplam Maliyet:</span>
+                                    <span id="toplamMaliyet" style="font-weight: 700; color: #dc2626; font-size: 18px;">₺0,00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <!-- Satış Tarihi -->
                         <div style="margin-bottom: 30px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Satış Tarihi</label>
@@ -595,6 +663,70 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                     loadProducts(select);
                 }
             });
+        });
+
+        // Maliyet yönetimi
+        let maliyetCounter = 0;
+
+        // Yeni maliyet ekle
+        function addMaliyet() {
+            maliyetCounter++;
+            const container = document.getElementById('maliyetContainer');
+            
+            const maliyetDiv = document.createElement('div');
+            maliyetDiv.className = 'maliyet-item';
+            maliyetDiv.style.cssText = 'background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 10px;';
+            
+            maliyetDiv.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Maliyet Adı</label>
+                        <input type="text" name="maliyet_adi[]" placeholder="Örn: Reklam, Komisyon" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" required>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Açıklama</label>
+                        <input type="text" name="maliyet_aciklama[]" placeholder="Maliyet açıklaması" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Tutar (₺)</label>
+                        <input type="number" name="maliyet_tutari[]" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="updateMaliyetToplam()" required>
+                    </div>
+                    <div>
+                        <button type="button" onclick="removeMaliyet(this)" style="background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(maliyetDiv);
+        }
+
+        // Maliyet kaldır
+        function removeMaliyet(button) {
+            button.closest('.maliyet-item').remove();
+            updateMaliyetToplam();
+        }
+
+        // Maliyet toplamını güncelle
+        function updateMaliyetToplam() {
+            const maliyetInputs = document.querySelectorAll('input[name="maliyet_tutari[]"]');
+            let toplam = 0;
+            
+            maliyetInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                toplam += value;
+            });
+            
+            document.getElementById('toplamMaliyet').textContent = '₺' + toplam.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
+
+        // Maliyet ekleme butonuna event listener ekle
+        document.getElementById('addMaliyet').addEventListener('click', addMaliyet);
+        
+        // Sayfa yüklendiğinde maliyet toplamını hesapla
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMaliyetToplam();
         });
     </script>
 </body>

@@ -28,16 +28,18 @@ if (isAdmin()) {
 
 // Aylık prim hesaplama fonksiyonu
 function hesaplaAylikPrim($personel_id, $yil, $ay, $db) {
-    // Bu ay için onaylı satış verilerini al (firma bazlı)
+    // Bu ay için onaylı satış verilerini al (firma bazlı) - maliyet düşülmüş
     $satis_verileri = $db->query("
         SELECT 
             f.id as firma_id,
             f.firma_adi,
-            SUM(CASE WHEN s.durum = 'odendi' AND s.onay_durumu = 'onaylandi' THEN s.toplam_tutar ELSE 0 END) as tamamlanan_satis
+            SUM(CASE WHEN s.durum = 'odendi' AND s.onay_durumu = 'onaylandi' THEN s.toplam_tutar ELSE 0 END) as tamamlanan_satis,
+            COALESCE(SUM(sm.maliyet_tutari), 0) as toplam_maliyet
         FROM satislar s
         LEFT JOIN satis_detay sd ON s.id = sd.satis_id
         LEFT JOIN urun_hizmet uh ON sd.urun_hizmet_id = uh.id
         LEFT JOIN firmalar f ON uh.firma_id = f.id
+        LEFT JOIN satis_maliyetler sm ON s.id = sm.satis_id
         WHERE s.personel_id = ? 
         AND YEAR(s.satis_tarihi) = ? 
         AND MONTH(s.satis_tarihi) = ?
@@ -52,9 +54,13 @@ function hesaplaAylikPrim($personel_id, $yil, $ay, $db) {
         $firma_id = $satis['firma_id'];
         $firma_adi = $satis['firma_adi'];
         $tamamlanan_satis = (float)$satis['tamamlanan_satis'];
+        $toplam_maliyet = (float)$satis['toplam_maliyet'];
         
-        if ($tamamlanan_satis > 0) {
-            $toplam_satis += $tamamlanan_satis;
+        // Maliyet düşülmüş satış tutarı
+        $net_satis = $tamamlanan_satis - $toplam_maliyet;
+        
+        if ($net_satis > 0) {
+            $toplam_satis += $net_satis;
             
             // Bu personel için bu firma için bu ay için özel prim oranı var mı?
             $personel_prim_oranlari = $db->query("
@@ -69,7 +75,7 @@ function hesaplaAylikPrim($personel_id, $yil, $ay, $db) {
             if (!empty($personel_prim_oranlari)) {
                 // Personel bazlı özel oranlar var
                 foreach ($personel_prim_oranlari as $oran) {
-                    if ($tamamlanan_satis >= $oran['min_tutar'] && $tamamlanan_satis <= $oran['max_tutar']) {
+                    if ($net_satis >= $oran['min_tutar'] && $net_satis <= $oran['max_tutar']) {
                         $prim_orani = $oran['prim_orani'];
                         $prim_aciklama = $oran['aciklama'];
                         break;
@@ -79,7 +85,7 @@ function hesaplaAylikPrim($personel_id, $yil, $ay, $db) {
                 // Genel prim oranlarını kullan
                 $genel_prim_oranlari = $db->select('prim_oranlari', ['durum' => 'aktif'], 'min_tutar ASC');
                 foreach ($genel_prim_oranlari as $oran) {
-                    if ($tamamlanan_satis >= $oran['min_tutar'] && $tamamlanan_satis <= $oran['max_tutar']) {
+                    if ($net_satis >= $oran['min_tutar'] && $net_satis <= $oran['max_tutar']) {
                         $prim_orani = $oran['prim_orani'];
                         $prim_aciklama = $oran['aciklama'];
                         break;
@@ -87,15 +93,16 @@ function hesaplaAylikPrim($personel_id, $yil, $ay, $db) {
                 }
             }
             
-            $prim_tutari = ($tamamlanan_satis * $prim_orani) / 100;
+            $prim_tutari = ($net_satis * $prim_orani) / 100;
             $toplam_prim += $prim_tutari;
             
             $prim_detaylari[] = [
                 'firma_adi' => $firma_adi,
-                'satis_tutari' => $tamamlanan_satis,
+                'satis_tutari' => $net_satis,
                 'prim_orani' => $prim_orani,
                 'prim_tutari' => $prim_tutari,
-                'prim_aciklama' => $prim_aciklama
+                'prim_aciklama' => $prim_aciklama,
+                'maliyet_tutari' => $toplam_maliyet
             ];
         }
     }

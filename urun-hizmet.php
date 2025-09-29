@@ -110,8 +110,8 @@ $urunler = $db->query("
                                                 <?php echo $sira; ?>
                                             </td>
                                             <td style="padding: 15px;">
-                                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #10b981, #059669); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
-                                                    <i class="fas fa-mouse-pointer" style="color: white; font-size: 14px;"></i>
+                                                <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                                    <i class="fas fa-box" style="color: white; font-size: 14px;"></i>
                                                 </div>
                                             </td>
                                             <td style="padding: 15px;">

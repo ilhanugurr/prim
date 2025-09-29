@@ -132,8 +132,7 @@ if ($_POST && isset($_POST['kullanici_adi']) && isset($_POST['sifre'])) {
             </form>
             
             <div class="login-footer">
-                <p>Demo Giriş Bilgileri:</p>
-                <p><strong>Admin:</strong> admin / admin123</p>
+                
             </div>
         </div>
     </div>

@@ -36,6 +36,18 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_personel') {
     
     if (empty($errors)) {
         if ($db->insert('personel', $data)) {
+            // Personel eklendikten sonra kullanıcı kaydı da oluştur
+            $personel_id = $db->lastInsertId();
+            $kullanici_data = [
+                'personel_id' => $personel_id,
+                'ad_soyad' => $data['ad_soyad'],
+                'kullanici_adi' => strtolower(str_replace(' ', '', $data['ad_soyad'])),
+                'sifre' => $data['sifre'], // Aynı hash'i kullan
+                'rol' => $data['rol'],
+                'durum' => 'aktif'
+            ];
+            $db->insert('kullanicilar', $kullanici_data);
+            
             $success_message = "Personel başarıyla eklendi!";
             // Formu temizle
             $data = [

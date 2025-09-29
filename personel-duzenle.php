@@ -70,6 +70,23 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
     
     if (empty($errors)) {
         if ($db->update('personel', $data, ['id' => $personel_id])) {
+            // Personel güncellendikten sonra kullanıcı kaydını da güncelle
+            $kullanici_data = [
+                'ad_soyad' => $data['ad_soyad']
+            ];
+            
+            // Admin ise rol güncelleme
+            if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin') {
+                $kullanici_data['rol'] = $data['rol'];
+            }
+            
+            // Şifre güncelleme (eğer girilmişse)
+            if (!empty($_POST['yeni_sifre'])) {
+                $kullanici_data['sifre'] = $data['sifre'];
+            }
+            
+            $db->update('kullanicilar', $kullanici_data, ['personel_id' => $personel_id]);
+            
             $success_message = "Personel başarıyla güncellendi!";
             // Güncellenmiş veriyi al
             $personel = $db->select('personel', ['id' => $personel_id])[0];
