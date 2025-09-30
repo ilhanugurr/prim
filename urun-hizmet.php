@@ -22,13 +22,26 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     }
 }
 
+// Firma filtresi
+$firma_filter = isset($_GET['firma_id']) && $_GET['firma_id'] !== '' ? (int)$_GET['firma_id'] : null;
+
+// Firmaları al (filtreleme için)
+$firmalar = $db->select('firmalar', [], 'firma_adi ASC');
+
 // Ürün/Hizmetleri al (firma bilgileri ile birlikte)
-$urunler = $db->query("
+$query = "
     SELECT uh.*, f.firma_adi 
     FROM urun_hizmet uh 
     LEFT JOIN firmalar f ON uh.firma_id = f.id 
-    ORDER BY uh.urun_adi ASC
-");
+";
+
+if ($firma_filter) {
+    $query .= " WHERE uh.firma_id = " . $firma_filter;
+}
+
+$query .= " ORDER BY uh.urun_adi ASC";
+
+$urunler = $db->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -62,6 +75,36 @@ $urunler = $db->query("
                     </nav>
                 </div>
 
+                <!-- Filtre ve Aksiyon Butonları -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 250px;">
+                            <form method="GET" action="urun-hizmet.php" style="display: flex; gap: 10px; align-items: center;">
+                                <label style="font-weight: 600; color: #374151; white-space: nowrap;">Firma Filtresi:</label>
+                                <select name="firma_id" onchange="this.form.submit()" style="flex: 1; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: white; cursor: pointer;">
+                                    <option value="">Tüm Firmalar</option>
+                                    <?php foreach ($firmalar as $firma): ?>
+                                        <option value="<?php echo $firma['id']; ?>" <?php echo $firma_filter == $firma['id'] ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($firma['firma_adi']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <?php if ($firma_filter): ?>
+                                    <a href="urun-hizmet.php" style="padding: 10px 16px; background: #ef4444; color: white; border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; white-space: nowrap;">
+                                        <i class="fas fa-times"></i> Filtreyi Temizle
+                                    </a>
+                                <?php endif; ?>
+                            </form>
+                        </div>
+                        <?php if (isAdmin()): ?>
+                        <a href="urun-ekle.php" class="btn btn-primary" style="white-space: nowrap;">
+                            <i class="fas fa-plus"></i>
+                            Yeni Ürün/Hizmet Ekle
+                        </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
                 <!-- Success/Error Messages -->
                 <?php if (isset($success_message)): ?>
                     <div class="alert alert-success" style="background: #dcfce7; color: #166534; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
@@ -75,15 +118,6 @@ $urunler = $db->query("
                     </div>
                 <?php endif; ?>
 
-                <!-- Action Buttons -->
-                <?php if (isAdmin()): ?>
-                <div class="action-buttons">
-                    <a href="urun-ekle.php" class="btn btn-primary">
-                        <i class="fas fa-plus"></i>
-                        Yeni Ürün/Hizmet Ekle
-                    </a>
-                </div>
-                <?php endif; ?>
 
                 <!-- Ürün/Hizmet Listesi -->
                 <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
@@ -131,14 +165,42 @@ $urunler = $db->query("
                                                 </div>
                                             </td>
                                             <td style="padding: 15px;">
-                                                <div style="font-size: 14px; font-weight: 600; color: #1e293b;">
-                                                    <?php 
-                                                    $kdv_dahil_fiyat = $urun['fiyat'] * 1.20; // %20 KDV ekle
-                                                    echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?>₺
-                                                </div>
-                                                <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
-                                                    KDV Hariç: <?php echo number_format($urun['fiyat'], 2, ',', '.'); ?>₺
-                                                </div>
+                                                <?php 
+                                                $kdv_aktif = isset($urun['kdv_dahil']) ? $urun['kdv_dahil'] : 1;
+                                                
+                                                if ($kdv_aktif) {
+                                                    // KDV Aktif: Fiyat üzerine KDV ekle
+                                                    $kdv_hariç_fiyat = $urun['fiyat'];
+                                                    $kdv_dahil_fiyat = $kdv_hariç_fiyat * 1.20;
+                                                } else {
+                                                    // KDV Pasif: Fiyat zaten KDV dahil
+                                                    $kdv_dahil_fiyat = $urun['fiyat'];
+                                                    $kdv_hariç_fiyat = $kdv_dahil_fiyat / 1.20;
+                                                }
+                                                ?>
+                                                <?php if ($kdv_aktif): ?>
+                                                    <div style="font-size: 14px; font-weight: 600; color: #10b981;">
+                                                        <i class="fas fa-check-circle" style="font-size: 12px;"></i>
+                                                        <?php echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?>₺
+                                                    </div>
+                                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                                        KDV Hariç: <?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?>₺
+                                                    </div>
+                                                    <div style="font-size: 10px; color: #10b981; margin-top: 2px; font-weight: 600;">
+                                                        <i class="fas fa-info-circle"></i> KDV Ekle Aktif
+                                                    </div>
+                                                <?php else: ?>
+                                                    <div style="font-size: 14px; font-weight: 600; color: #64748b;">
+                                                        <i class="fas fa-times-circle" style="font-size: 12px;"></i>
+                                                        <?php echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?>₺
+                                                    </div>
+                                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                                        KDV Hariç: <?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?>₺
+                                                    </div>
+                                                    <div style="font-size: 10px; color: #64748b; margin-top: 2px; font-weight: 600;">
+                                                        <i class="fas fa-info-circle"></i> KDV Dahil Fiyat
+                                                    </div>
+                                                <?php endif; ?>
                                             </td>
                                             <td style="padding: 15px;">
                                                 <span class="status-badge status-<?php echo $urun['durum'] == 'aktif' ? 'active' : 'inactive'; ?>">

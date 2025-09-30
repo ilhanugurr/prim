@@ -32,6 +32,18 @@ $urun = $urun[0];
 // Firmaları al
 $firmalar = $db->select('firmalar', [], 'firma_adi ASC');
 
+// KDV Ekle/Çıkar işlemi
+if ($_POST && isset($_POST['action']) && $_POST['action'] == 'toggle_kdv') {
+    $current_kdv = $db->select('urun_hizmet', ['id' => $urun_id])[0]['kdv_dahil'];
+    $new_kdv = $current_kdv ? 0 : 1;
+    
+    if ($db->update('urun_hizmet', ['kdv_dahil' => $new_kdv], ['id' => $urun_id])) {
+        $success_message = $new_kdv ? "KDV dahil fiyata geçildi!" : "KDV hariç fiyata geçildi!";
+        // Güncellenmiş veriyi al
+        $urun = $db->select('urun_hizmet', ['id' => $urun_id])[0];
+    }
+}
+
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
     $data = [
@@ -39,7 +51,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
         'aciklama' => trim($_POST['aciklama']),
         'fiyat' => !empty($_POST['fiyat']) ? (float)$_POST['fiyat'] : null,
         'firma_id' => (int)$_POST['firma_id'],
-        'durum' => $_POST['durum']
+        'durum' => $_POST['durum'],
+        'kdv_dahil' => isset($_POST['kdv_dahil']) ? 1 : 0
     ];
     
     // Validasyon
@@ -205,12 +218,52 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Fiyat (KDV Hariç - ₺)</label>
+                                <?php 
+                                $kdv_aktif = isset($urun['kdv_dahil']) ? $urun['kdv_dahil'] : 1;
+                                
+                                if ($kdv_aktif) {
+                                    // KDV Aktif: Fiyat üzerine KDV eklenecek
+                                    $kdv_hariç_fiyat = $urun['fiyat'];
+                                    $kdv_dahil_fiyat = $kdv_hariç_fiyat * 1.20;
+                                    $fiyat_label = "Fiyat (KDV Hariç - ₺)";
+                                } else {
+                                    // KDV Pasif: Fiyat zaten KDV dahil
+                                    $kdv_dahil_fiyat = $urun['fiyat'];
+                                    $kdv_hariç_fiyat = $kdv_dahil_fiyat / 1.20;
+                                    $fiyat_label = "Fiyat (KDV Dahil - ₺)";
+                                }
+                                ?>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">
+                                    <?php echo $fiyat_label; ?>
+                                </label>
                                 <input type="number" name="fiyat" step="0.01" min="0" value="<?php echo $urun['fiyat']; ?>" 
                                        style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
                                        placeholder="0.00">
-                                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
-                                    <i class="fas fa-info-circle"></i> KDV (%20) otomatik olarak eklenecektir
+                                <div style="font-size: 14px; color: #0ea5e9; margin-top: 8px; font-weight: 600;">
+                                    <i class="fas fa-info-circle"></i> 
+                                    <?php if ($kdv_aktif): ?>
+                                        <span style="color: #10b981;">✓ KDV Dahil: ₺<?php echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?></span>
+                                    <?php else: ?>
+                                        <span style="color: #64748b;">KDV Hariç: ₺<?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">KDV Ekle</label>
+                                <form method="POST" action="urun-duzenle.php?id=<?php echo $urun_id; ?>" style="margin: 0;">
+                                    <input type="hidden" name="action" value="toggle_kdv">
+                                    <button type="submit" style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; <?php echo $kdv_aktif ? 'background: #10b981; color: white;' : 'background: #e2e8f0; color: #64748b;'; ?>">
+                                        <i class="fas <?php echo $kdv_aktif ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
+                                        <?php echo $kdv_aktif ? 'KDV Ekle (Aktif)' : 'KDV Ekle (Pasif)'; ?>
+                                    </button>
+                                </form>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 8px; text-align: center;">
+                                    <i class="fas fa-info-circle"></i> 
+                                    <?php if ($kdv_aktif): ?>
+                                        Aktif: Fiyat üzerine %20 KDV eklenir
+                                    <?php else: ?>
+                                        Pasif: Fiyat zaten KDV dahildir
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
