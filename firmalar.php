@@ -13,7 +13,34 @@ require_once 'config/database.php';
 // İstatistikleri al
 $stats = getStats();
 
-// Firmaları al
+// Firmaları al (hiyerarşik olarak)
+$tum_firmalar = $db->query("
+    SELECT f.*, uf.firma_adi as ust_firma_adi
+    FROM firmalar f
+    LEFT JOIN firmalar uf ON f.ust_firma_id = uf.id
+    ORDER BY COALESCE(f.ust_firma_id, f.id), f.firma_adi ASC
+");
+
+// Ana firmaları ve alt firmaları grupla
+$ana_firmalar = [];
+$alt_firmalar = [];
+
+foreach ($tum_firmalar as $firma) {
+    if ($firma['ust_firma_id'] === null) {
+        $ana_firmalar[$firma['id']] = $firma;
+        $ana_firmalar[$firma['id']]['alt_firmalar'] = [];
+    } else {
+        $alt_firmalar[$firma['ust_firma_id']][] = $firma;
+    }
+}
+
+// Alt firmaları ana firmalara ekle
+foreach ($alt_firmalar as $ust_id => $altlar) {
+    if (isset($ana_firmalar[$ust_id])) {
+        $ana_firmalar[$ust_id]['alt_firmalar'] = $altlar;
+    }
+}
+
 $firmalar = getFirmalar();
 
 
@@ -74,39 +101,97 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 </div>
                 <?php endif; ?>
 
-                <!-- Firms Grid -->
+                <!-- Firms Grid (Hiyerarşik Görünüm) -->
                 <div class="dashboard-grid">
-                    <?php foreach ($firmalar as $firma): ?>
-                        <div class="dashboard-card">
+                    <?php foreach ($ana_firmalar as $ana_firma): ?>
+                        <!-- Ana Firma -->
+                        <div class="dashboard-card" style="<?php echo !empty($ana_firma['alt_firmalar']) ? 'background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #3b82f6;' : ''; ?>">
                             <div class="card-header">
-                                <div class="card-icon">
-                                    <i class="fas fa-industry"></i>
+                                <div class="card-icon" style="<?php echo !empty($ana_firma['alt_firmalar']) ? 'background: linear-gradient(135deg, #3b82f6, #1d4ed8);' : ''; ?>">
+                                    <i class="fas <?php echo !empty($ana_firma['alt_firmalar']) ? 'fa-building' : 'fa-industry'; ?>"></i>
                                 </div>
-                                <div class="card-title"><?php echo htmlspecialchars($firma['firma_adi']); ?></div>
+                                <div class="card-title">
+                                    <?php echo htmlspecialchars($ana_firma['firma_adi']); ?>
+                                    <?php if (!empty($ana_firma['alt_firmalar'])): ?>
+                                        <span style="font-size: 11px; color: #3b82f6; font-weight: 600; margin-left: 8px;">
+                                            <i class="fas fa-layer-group"></i> Ana Firma
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                             <div style="margin-bottom: 15px;">
                                 <div style="display: flex; align-items: center; font-size: 14px;">
                                     <i class="fas fa-clock" style="width: 20px; color: #64748b; margin-right: 10px;"></i>
-                                    <span>Son güncelleme: <?php echo date('d.m.Y H:i', strtotime($firma['son_guncelleme'])); ?></span>
+                                    <span>Son güncelleme: <?php echo date('d.m.Y H:i', strtotime($ana_firma['son_guncelleme'])); ?></span>
                                 </div>
+                                <?php if (!empty($ana_firma['alt_firmalar'])): ?>
+                                    <div style="display: flex; align-items: center; font-size: 14px; margin-top: 8px;">
+                                        <i class="fas fa-sitemap" style="width: 20px; color: #3b82f6; margin-right: 10px;"></i>
+                                        <span style="color: #3b82f6; font-weight: 600;"><?php echo count($ana_firma['alt_firmalar']); ?> Alt Firma</span>
+                                    </div>
+                                <?php endif; ?>
                             </div>
+                            
+                            <!-- Alt Firmalar (Ana firmanın içinde) -->
+                            <?php if (!empty($ana_firma['alt_firmalar'])): ?>
+                                <div style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #e0f2fe;">
+                                    <h4 style="font-size: 13px; font-weight: 600; color: #3b82f6; margin-bottom: 12px;">
+                                        <i class="fas fa-sitemap"></i> Alt Firmalar
+                                    </h4>
+                                    <?php foreach ($ana_firma['alt_firmalar'] as $alt_firma): ?>
+                                        <div style="background: #f8fafc; border-left: 3px solid #3b82f6; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                                <div style="display: flex; align-items: center; gap: 8px;">
+                                                    <i class="fas fa-arrow-right" style="color: #3b82f6; font-size: 12px;"></i>
+                                                    <span style="font-weight: 600; color: #1e293b; font-size: 14px;">
+                                                        <?php echo htmlspecialchars($alt_firma['firma_adi']); ?>
+                                                    </span>
+                                                    <span class="status-badge status-<?php echo $alt_firma['durum'] == 'aktif' ? 'active' : 'inactive'; ?>" style="font-size: 10px; padding: 3px 8px;">
+                                                        <?php echo ucfirst($alt_firma['durum']); ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                                <a href="firma-duzenle.php?id=<?php echo $alt_firma['id']; ?>" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
+                                                    <i class="fas fa-eye"></i> Görüntüle
+                                                </a>
+                                                <?php if (isAdmin()): ?>
+                                                <a href="firma-duzenle.php?id=<?php echo $alt_firma['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
+                                                    <i class="fas fa-edit"></i> Düzenle
+                                                </a>
+                                                <a href="firma-komisyon.php?firma_id=<?php echo $alt_firma['id']; ?>" class="btn btn-info" style="padding: 6px 12px; font-size: 11px; background: #0ea5e9; color: white;">
+                                                    <i class="fas fa-percentage"></i> Komisyon
+                                                </a>
+                                                <a href="firmalar.php?action=delete&id=<?php echo $alt_firma['id']; ?>" 
+                                                   class="btn btn-danger" 
+                                                   style="padding: 6px 12px; font-size: 11px;"
+                                                   onclick="return confirm('Bu alt firmayı silmek istediğinizden emin misiniz?')">
+                                                    <i class="fas fa-trash"></i> Sil
+                                                </a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                            
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <span class="status-badge status-<?php echo $firma['durum'] == 'aktif' ? 'active' : 'inactive'; ?>">
-                                    <?php echo ucfirst($firma['durum']); ?>
+                                <span class="status-badge status-<?php echo $ana_firma['durum'] == 'aktif' ? 'active' : 'inactive'; ?>">
+                                    <?php echo ucfirst($ana_firma['durum']); ?>
                                 </span>
                             </div>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <a href="firma-duzenle.php?id=<?php echo $firma['id']; ?>" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
+                                <a href="firma-duzenle.php?id=<?php echo $ana_firma['id']; ?>" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
                                     <i class="fas fa-eye"></i> Görüntüle
                                 </a>
                                 <?php if (isAdmin()): ?>
-                                <a href="firma-duzenle.php?id=<?php echo $firma['id']; ?>" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
+                                <a href="firma-duzenle.php?id=<?php echo $ana_firma['id']; ?>" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
                                     <i class="fas fa-edit"></i> Düzenle
                                 </a>
-                                <a href="firma-komisyon.php?firma_id=<?php echo $firma['id']; ?>" class="btn btn-info" style="padding: 8px 16px; font-size: 12px; background: #0ea5e9; color: white;">
+                                <a href="firma-komisyon.php?firma_id=<?php echo $ana_firma['id']; ?>" class="btn btn-info" style="padding: 8px 16px; font-size: 12px; background: #0ea5e9; color: white;">
                                     <i class="fas fa-percentage"></i> Komisyon
                                 </a>
-                                <a href="firmalar.php?action=delete&id=<?php echo $firma['id']; ?>" 
+                                <a href="firmalar.php?action=delete&id=<?php echo $ana_firma['id']; ?>" 
                                    class="btn btn-danger" 
                                    style="padding: 8px 16px; font-size: 12px;"
                                    onclick="return confirm('Bu firmayı silmek istediğinizden emin misiniz?')">

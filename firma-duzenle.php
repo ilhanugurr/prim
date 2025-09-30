@@ -33,10 +33,14 @@ if (empty($firma)) {
 }
 $firma = $firma[0];
 
+// Ana firmaları al (üst firma seçimi için, kendi hariç)
+$ana_firmalar_list = $db->query("SELECT * FROM firmalar WHERE ust_firma_id IS NULL AND id != {$firma_id} ORDER BY firma_adi ASC");
+
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_firma') {
     $data = [
         'firma_adi' => trim($_POST['firma_adi']),
+        'ust_firma_id' => !empty($_POST['ust_firma_id']) ? (int)$_POST['ust_firma_id'] : null,
         'durum' => $_POST['durum']
     ];
     
@@ -126,13 +130,30 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_firma') {
                     <form method="POST" action="firma-duzenle.php?id=<?php echo $firma_id; ?>">
                         <input type="hidden" name="action" value="update_firma">
                         
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Firma Adı *</label>
                                 <input type="text" name="firma_adi" value="<?php echo htmlspecialchars($firma['firma_adi']); ?>" required 
                                        style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
                             </div>
                             
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Üst Firma (Opsiyonel)</label>
+                                <select name="ust_firma_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                    <option value="">Ana Firma (Üst Firma Yok)</option>
+                                    <?php foreach ($ana_firmalar_list as $ana_firma): ?>
+                                        <option value="<?php echo $ana_firma['id']; ?>" <?php echo (isset($firma['ust_firma_id']) && $firma['ust_firma_id'] == $ana_firma['id']) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($ana_firma['firma_adi']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                                    <i class="fas fa-info-circle"></i> Alt firma olarak atamak için üst firma seçin
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
                                 <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">

@@ -101,7 +101,10 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
         'musteri_adi' => $musteri_adi,
         'satis_tarihi' => $_POST['satis_tarihi'] ?? date('Y-m-d'),
         'toplam_tutar' => $toplam_tutar,
-        'durum' => $_POST['durum']
+        'durum' => $_POST['durum'],
+        'onay_durumu' => 'beklemede', // Düzenleme sonrası tekrar onaya düşsün
+        'onay_tarihi' => null,
+        'onaylayan_id' => null
     ];
     
     $update_result = $db->update('satislar', $satis_data, ['id' => $satis_id]);
