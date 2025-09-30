@@ -188,9 +188,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                 <a href="firma-duzenle.php?id=<?php echo $ana_firma['id']; ?>" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
                                     <i class="fas fa-edit"></i> Düzenle
                                 </a>
+                                <?php if (empty($ana_firma['alt_firmalar'])): ?>
                                 <a href="firma-komisyon.php?firma_id=<?php echo $ana_firma['id']; ?>" class="btn btn-info" style="padding: 8px 16px; font-size: 12px; background: #0ea5e9; color: white;">
                                     <i class="fas fa-percentage"></i> Komisyon
                                 </a>
+                                <?php endif; ?>
                                 <a href="firmalar.php?action=delete&id=<?php echo $ana_firma['id']; ?>" 
                                    class="btn btn-danger" 
                                    style="padding: 8px 16px; font-size: 12px;"

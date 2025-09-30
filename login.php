@@ -3,17 +3,12 @@
  * Primew Panel - Giriş Sayfası
  */
 
+// Session'ı en başta başlat
+session_start();
+
 // UTF-8 encoding
 header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
-
-// Veritabanı bağlantısından önce karakter setini ayarla
-if (isset($db)) {
-    $db->exec("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
-    $db->exec("SET CHARACTER SET utf8mb4");
-}
-
-session_start();
 
 // Zaten giriş yapmışsa ana sayfaya yönlendir
 if (isset($_SESSION['user_id'])) {
@@ -22,6 +17,10 @@ if (isset($_SESSION['user_id'])) {
 }
 
 require_once 'config/database.php';
+
+// Veritabanı karakter setini ayarla
+$db->query("SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci");
+$db->query("SET CHARACTER SET utf8mb4");
 
 $error_message = '';
 

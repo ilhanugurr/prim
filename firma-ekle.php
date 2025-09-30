@@ -14,7 +14,7 @@ require_once 'config/database.php';
 $stats = getStats();
 
 // Ana firmaları al (üst firma seçimi için)
-$ana_firmalar_list = $db->select('firmalar', ['ust_firma_id' => null], 'firma_adi ASC');
+$ana_firmalar_list = $db->query("SELECT * FROM firmalar WHERE ust_firma_id IS NULL ORDER BY firma_adi ASC");
 
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_firma') {
