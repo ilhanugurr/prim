@@ -22,17 +22,23 @@ $stats = getStats();
         <a href="firmalar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'firmalar.php') ? 'active' : ''; ?>">
             <i class="fas fa-industry nav-icon"></i>
             <span class="nav-text">Firmalar</span>
+            <?php if (isAdmin()): ?>
             <span class="nav-badge"><?php echo $stats['firmalar']; ?></span>
+            <?php endif; ?>
         </a>
         <a href="personel.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'personel.php') ? 'active' : ''; ?>">
             <i class="fas fa-users nav-icon"></i>
             <span class="nav-text">Personel</span>
+            <?php if (isAdmin()): ?>
             <span class="nav-badge"><?php echo $stats['personel']; ?></span>
+            <?php endif; ?>
         </a>
         <a href="urun-hizmet.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'urun-hizmet.php') ? 'active' : ''; ?>">
             <i class="fas fa-link nav-icon"></i>
             <span class="nav-text">Ürün / Hizmet</span>
+            <?php if (isAdmin()): ?>
             <span class="nav-badge"><?php echo $stats['urun_hizmet']; ?></span>
+            <?php endif; ?>
         </a>
         <a href="satislar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'satislar.php') ? 'active' : ''; ?>">
             <i class="fas fa-chart-line nav-icon"></i>
@@ -41,13 +47,17 @@ $stats = getStats();
         <a href="musteriler.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'musteriler.php') ? 'active' : ''; ?>">
             <i class="fas fa-user-tie nav-icon"></i>
             <span class="nav-text">Müşteriler</span>
+            <?php if (isAdmin()): ?>
             <span class="nav-badge"><?php echo $stats['musteriler']; ?></span>
+            <?php endif; ?>
         </a>
         
         <a href="hedefler.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'hedefler.php') ? 'active' : ''; ?>">
             <i class="fas fa-bullseye nav-icon"></i>
             <span class="nav-text">Hedefler</span>
+            <?php if (isAdmin()): ?>
             <span class="nav-badge"><?php echo $stats['hedefler']; ?></span>
+            <?php endif; ?>
         </a>
                 <a href="primler.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'primler.php' || basename($_SERVER['PHP_SELF']) == 'prim-oranlari.php') ? 'active' : ''; ?>">
                     <i class="fas fa-coins nav-icon"></i>

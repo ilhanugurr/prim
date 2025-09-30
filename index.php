@@ -151,7 +151,8 @@ $recent_activities = $db->query("
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
+                <!-- Quick Actions (Sadece Admin) -->
+                <?php if (isAdmin()): ?>
                 <div class="quick-actions" style="margin-bottom: 40px;">
                     <h2 class="section-title">
                         <i class="fas fa-bolt"></i>
@@ -174,16 +175,9 @@ $recent_activities = $db->query("
 
                         <a href="urun-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
                             <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-link" style="font-size: 16px;"></i>
+                                <i class="fas fa-box" style="font-size: 16px;"></i>
                             </div>
                             <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Ürün/Hizmet Ekle</div>
-                        </a>
-
-                        <a href="satis-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-chart-line" style="font-size: 16px;"></i>
-                            </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Yeni Satış Ekle</div>
                         </a>
 
                         <a href="musteri-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
@@ -192,8 +186,23 @@ $recent_activities = $db->query("
                             </div>
                             <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Yeni Müşteri Ekle</div>
                         </a>
+                        
+                        <a href="hedef-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
+                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
+                                <i class="fas fa-bullseye" style="font-size: 16px;"></i>
+                            </div>
+                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Hedef Ekle</div>
+                        </a>
+                        
+                        <a href="personel-prim-oranlari.php" class="action-card" style="padding: 15px; text-align: center;">
+                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
+                                <i class="fas fa-coins" style="font-size: 16px;"></i>
+                            </div>
+                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Prim Oranları</div>
+                        </a>
                     </div>
                 </div>
+                <?php endif; ?>
 
 
 
