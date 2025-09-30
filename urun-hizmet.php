@@ -25,8 +25,20 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 // Firma filtresi
 $firma_filter = isset($_GET['firma_id']) && $_GET['firma_id'] !== '' ? (int)$_GET['firma_id'] : null;
 
-// Firmaları al (filtreleme için)
-$firmalar = $db->select('firmalar', [], 'firma_adi ASC');
+// Firmaları al (filtreleme için - sadece alt firmaları veya alt firması olmayan ana firmaları)
+$firmalar_query = "
+    SELECT f.* 
+    FROM firmalar f
+    LEFT JOIN (
+        SELECT DISTINCT ust_firma_id 
+        FROM firmalar 
+        WHERE ust_firma_id IS NOT NULL
+    ) alt ON f.id = alt.ust_firma_id
+    WHERE f.ust_firma_id IS NOT NULL 
+       OR alt.ust_firma_id IS NULL
+    ORDER BY f.firma_adi ASC
+";
+$firmalar = $db->query($firmalar_query);
 
 // Ürün/Hizmetleri al (firma bilgileri ile birlikte)
 $query = "
