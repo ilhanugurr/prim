@@ -1,0 +1,19 @@
+# Session dosyaları
+/sessions/
+sessions/
+
+# Config dosyaları (host bilgileri)
+config/database_host.php
+config/database_host_alternatif.php
+
+# Test dosyaları
+test_*.php
+*_debug.php
+*_test.php
+
+# Dokumentasyon
+*.md
+
+# Temporary files
+*.tmp
+*.log

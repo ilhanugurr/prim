@@ -3,8 +3,14 @@
  * Primew Panel - Kimlik Doğrulama Yardımcı Fonksiyonları
  */
 
-// Oturum başlat
+// Oturum başlat (eğer başlatılmamışsa)
 if (session_status() == PHP_SESSION_NONE) {
+    // Session için cookie parametrelerini ayarla (Chrome için)
+    ini_set('session.cookie_samesite', 'Lax');
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.cookie_lifetime', 0);
+    
     session_start();
 }
 
@@ -19,14 +25,14 @@ function isLoggedIn() {
  * Kullanıcının admin olup olmadığını kontrol et
  */
 function isAdmin() {
-    return isLoggedIn() && $_SESSION['rol'] === 'admin';
+    return isLoggedIn() && isset($_SESSION['rol']) && $_SESSION['rol'] === 'admin';
 }
 
 /**
  * Kullanıcının satışçı olup olmadığını kontrol et
  */
 function isSatisci() {
-    return isLoggedIn() && $_SESSION['rol'] === 'satisci';
+    return isLoggedIn() && isset($_SESSION['rol']) && $_SESSION['rol'] === 'satisci';
 }
 
 /**
@@ -70,12 +76,12 @@ function getCurrentUser() {
     }
     
     return [
-        'id' => $_SESSION['user_id'],
-        'kullanici_adi' => $_SESSION['kullanici_adi'],
-        'ad_soyad' => $_SESSION['ad_soyad'],
-        'rol' => $_SESSION['rol'],
-        'personel_id' => $_SESSION['personel_id'],
-        'personel_adi' => $_SESSION['personel_adi']
+        'id' => $_SESSION['user_id'] ?? null,
+        'kullanici_adi' => $_SESSION['kullanici_adi'] ?? '',
+        'ad_soyad' => $_SESSION['ad_soyad'] ?? '',
+        'rol' => $_SESSION['rol'] ?? '',
+        'personel_id' => $_SESSION['personel_id'] ?? null,
+        'personel_adi' => $_SESSION['personel_adi'] ?? ''
     ];
 }
 
