@@ -45,6 +45,7 @@ if (!isset($personel['sifre'])) {
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') {
     $data = [
         'ad_soyad' => trim($_POST['ad_soyad']),
+        'kullanici_adi' => trim($_POST['kullanici_adi']),
         'durum' => $_POST['durum']
     ];
     
@@ -64,29 +65,16 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
         $errors[] = "Ad Soyad zorunludur!";
     }
     
+    if (empty($data['kullanici_adi'])) {
+        $errors[] = "Kullanıcı adı zorunludur!";
+    }
+    
     if (!empty($_POST['yeni_sifre']) && strlen($_POST['yeni_sifre']) < 6) {
         $errors[] = "Şifre en az 6 karakter olmalıdır!";
     }
     
     if (empty($errors)) {
         if ($db->update('personel', $data, ['id' => $personel_id])) {
-            // Personel güncellendikten sonra kullanıcı kaydını da güncelle
-            $kullanici_data = [
-                'ad_soyad' => $data['ad_soyad']
-            ];
-            
-            // Admin ise rol güncelleme
-            if (isset($_SESSION['rol']) && $_SESSION['rol'] == 'admin') {
-                $kullanici_data['rol'] = $data['rol'];
-            }
-            
-            // Şifre güncelleme (eğer girilmişse)
-            if (!empty($_POST['yeni_sifre'])) {
-                $kullanici_data['sifre'] = $data['sifre'];
-            }
-            
-            $db->update('kullanicilar', $kullanici_data, ['personel_id' => $personel_id]);
-            
             $success_message = "Personel başarıyla güncellendi!";
             // Güncellenmiş veriyi al
             $personel = $db->select('personel', ['id' => $personel_id])[0];
@@ -212,6 +200,14 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
                             <input type="text" name="ad_soyad" value="<?php echo htmlspecialchars($personel['ad_soyad']); ?>" required 
                                    style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
                                    placeholder="Örn: Ahmet Yılmaz">
+                        </div>
+                        
+                        <div style="margin-bottom: 30px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Kullanıcı Adı *</label>
+                            <input type="text" name="kullanici_adi" value="<?php echo htmlspecialchars($personel['kullanici_adi'] ?? ''); ?>" required 
+                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                   placeholder="Örn: ahmet">
+                            <small style="color: #6b7280;">Giriş yaparken kullanılacak (küçük harf, boşluksuz)</small>
                         </div>
                         
                         <?php if (isAdmin()): ?>

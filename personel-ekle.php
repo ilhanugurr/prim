@@ -17,6 +17,7 @@ $stats = getStats();
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_personel') {
     $data = [
         'ad_soyad' => trim($_POST['ad_soyad']),
+        'kullanici_adi' => trim($_POST['kullanici_adi']),
         'durum' => $_POST['durum'],
         'rol' => $_POST['rol'],
         'sifre' => md5($_POST['sifre'])
@@ -28,6 +29,10 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_personel') {
         $errors[] = "Ad Soyad zorunludur!";
     }
     
+    if (empty($data['kullanici_adi'])) {
+        $errors[] = "Kullanıcı adı zorunludur!";
+    }
+    
     if (empty($_POST['sifre'])) {
         $errors[] = "Şifre zorunludur!";
     } elseif (strlen($_POST['sifre']) < 6) {
@@ -36,22 +41,11 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_personel') {
     
     if (empty($errors)) {
         if ($db->insert('personel', $data)) {
-            // Personel eklendikten sonra kullanıcı kaydı da oluştur
-            $personel_id = $db->lastInsertId();
-            $kullanici_data = [
-                'personel_id' => $personel_id,
-                'ad_soyad' => $data['ad_soyad'],
-                'kullanici_adi' => strtolower(str_replace(' ', '', $data['ad_soyad'])),
-                'sifre' => $data['sifre'], // Aynı hash'i kullan
-                'rol' => $data['rol'],
-                'durum' => 'aktif'
-            ];
-            $db->insert('kullanicilar', $kullanici_data);
-            
             $success_message = "Personel başarıyla eklendi!";
             // Formu temizle
             $data = [
                 'ad_soyad' => '',
+                'kullanici_adi' => '',
                 'durum' => 'aktif',
                 'rol' => 'satisci',
                 'sifre' => ''
@@ -66,6 +60,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_personel') {
     // Form varsayılan değerleri
     $data = [
         'ad_soyad' => '',
+        'kullanici_adi' => '',
         'durum' => 'aktif',
         'rol' => 'satisci',
         'sifre' => ''
@@ -186,6 +181,14 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_personel') {
                             <input type="text" name="ad_soyad" value="<?php echo htmlspecialchars($data['ad_soyad']); ?>" required 
                                    style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
                                    placeholder="Örn: Ahmet Yılmaz">
+                        </div>
+                        
+                        <div style="margin-bottom: 30px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Kullanıcı Adı *</label>
+                            <input type="text" name="kullanici_adi" value="<?php echo htmlspecialchars($data['kullanici_adi'] ?? ''); ?>" required 
+                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                   placeholder="Örn: ahmet (küçük harf, boşluksuz)">
+                            <small style="color: #6b7280;">Giriş yaparken kullanılacak kullanıcı adı</small>
                         </div>
                         
                         <div style="margin-bottom: 30px;">

@@ -15,7 +15,9 @@ $stats = getStats();
 
 // Personel silme işlemi
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
-    if ($db->delete('personel', ['id' => $_GET['id']])) {
+    $personel_id = (int)$_GET['id'];
+    
+    if ($db->delete('personel', ['id' => $personel_id])) {
         $success_message = "Personel başarıyla silindi!";
     } else {
         $error_message = "Personel silinirken hata oluştu!";

@@ -30,16 +30,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
     $sifre = trim($_POST['sifre']);
     
     if (!empty($kullanici_adi) && !empty($sifre)) {
-        // Kullanıcıyı kontrol et
-        $kullanici = $db->query("
-            SELECT k.*, p.ad_soyad as personel_adi 
-            FROM kullanicilar k
-            LEFT JOIN personel p ON k.personel_id = p.id
-            WHERE k.kullanici_adi = ? AND k.durum = 'aktif'
+        // Personel tablosundan kullanıcıyı kontrol et
+        $personel = $db->query("
+            SELECT * FROM personel 
+            WHERE kullanici_adi = ? 
+            AND durum = 'aktif'
         ", [$kullanici_adi]);
         
-        if (!empty($kullanici)) {
-            $user = $kullanici[0];
+        if (!empty($personel)) {
+            $user = $personel[0];
             
             // Şifre kontrolü (MD5 ile şifrelenmiş)
             if (md5($sifre) === $user['sifre']) {
@@ -47,23 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['kullanici_adi'] = $user['kullanici_adi'];
                 $_SESSION['rol'] = $user['rol'];
-                $_SESSION['personel_id'] = $user['personel_id'];
-                $_SESSION['personel_adi'] = $user['personel_adi'];
-                
-                // Kullanıcı adına göre ad_soyad belirle
-                if ($user['kullanici_adi'] === 'admin') {
-                    $_SESSION['ad_soyad'] = 'Uğur İlhan';
-                } elseif ($user['kullanici_adi'] === 'seyma') {
-                    $_SESSION['ad_soyad'] = 'Şeyma';
-                } elseif ($user['kullanici_adi'] === 'mehmet') {
-                    $_SESSION['ad_soyad'] = 'Mehmet Kaya';
-                } else {
-                    $_SESSION['ad_soyad'] = $user['ad_soyad'];
-                }
+                $_SESSION['personel_id'] = $user['id'];
+                $_SESSION['personel_adi'] = $user['ad_soyad'];
+                $_SESSION['ad_soyad'] = $user['ad_soyad'];
                 
                 // Son giriş tarihini güncelle
                 try {
-                    $db->update('kullanicilar', ['son_giris' => date('Y-m-d H:i:s')], ['id' => $user['id']]);
+                    $db->update('personel', ['son_guncelleme' => date('Y-m-d H:i:s')], ['id' => $user['id']]);
                 } catch (Exception $e) {
                     // Hata olsa bile devam et
                 }
