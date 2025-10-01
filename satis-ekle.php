@@ -36,8 +36,22 @@ if (isAdmin()) {
     $personeller = $db->select('personel', ['id' => $_SESSION['personel_id']], 'ad_soyad ASC');
 }
 
-// Firmaları al
-$firmalar = $db->select('firmalar', [], 'firma_adi ASC');
+// Firmaları al - ana firması olmayanlar veya alt firması olmayanlar
+$firmalar = $db->query("
+    SELECT f.*
+    FROM firmalar f
+    WHERE f.durum = 'aktif'
+    AND (
+        -- Ana firmaya sahip olan alt firmalar
+        f.ust_firma_id IS NOT NULL
+        OR
+        -- Ana firma ama alt firması olmayan
+        (f.ust_firma_id IS NULL AND NOT EXISTS (
+            SELECT 1 FROM firmalar f2 WHERE f2.ust_firma_id = f.id AND f2.durum = 'aktif'
+        ))
+    )
+    ORDER BY f.firma_adi ASC
+");
 
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_satis') {

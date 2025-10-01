@@ -87,55 +87,60 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                     <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Personel Listesi</h2>
                     
                     <?php if (!empty($personeller)): ?>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
                             <?php foreach ($personeller as $personel): ?>
-                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; transition: all 0.3s ease;">
-                                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
-                                            <i class="fas fa-user" style="color: white; font-size: 20px;"></i>
+                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 16px; transition: all 0.2s ease;">
+                                    <!-- İkon -->
+                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                        <i class="fas fa-user" style="color: white; font-size: 16px;"></i>
+                                    </div>
+                                    
+                                    <!-- Ad Soyad -->
+                                    <div style="flex: 1; min-width: 0;">
+                                        <div style="font-size: 15px; font-weight: 600; color: #1e293b;">
+                                            <?php echo htmlspecialchars($personel['ad_soyad']); ?>
                                         </div>
-                                        <div>
-                                            <div style="font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 4px;">
-                                                <?php echo htmlspecialchars($personel['ad_soyad']); ?>
-                                            </div>
-                                            <div style="font-size: 12px; color: #64748b; margin-bottom: 4px;">
-                                                <i class="fas fa-user-tag" style="margin-right: 5px;"></i>
-                                                <?php echo isset($personel['rol']) ? ucfirst($personel['rol']) : 'Satışçı'; ?>
-                                            </div>
-                                            <div style="font-size: 12px; color: #64748b;">
-                                                <i class="fas fa-clock" style="margin-right: 5px;"></i>
-                                                Son güncelleme: <?php echo date('d.m.Y H:i', strtotime($personel['son_guncelleme'])); ?>
-                                            </div>
+                                        <div style="font-size: 13px; color: #64748b; margin-top: 2px;">
+                                            <i class="fas fa-at" style="margin-right: 4px;"></i>
+                                            <?php echo htmlspecialchars($personel['kullanici_adi']); ?>
                                         </div>
                                     </div>
                                     
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                        <span class="status-badge status-<?php echo $personel['durum'] == 'aktif' ? 'active' : 'inactive'; ?>">
+                                    <!-- Rol -->
+                                    <div style="flex-shrink: 0;">
+                                        <span style="display: inline-block; padding: 6px 12px; background: <?php echo $personel['rol'] == 'admin' ? '#dbeafe' : '#f3f4f6'; ?>; color: <?php echo $personel['rol'] == 'admin' ? '#1e40af' : '#4b5563'; ?>; border-radius: 6px; font-size: 13px; font-weight: 500;">
+                                            <i class="fas <?php echo $personel['rol'] == 'admin' ? 'fa-crown' : 'fa-user-tag'; ?>" style="margin-right: 4px;"></i>
+                                            <?php echo ucfirst($personel['rol']); ?>
+                                        </span>
+                                    </div>
+                                    
+                                    <!-- Durum -->
+                                    <div style="flex-shrink: 0;">
+                                        <span style="display: inline-block; padding: 6px 12px; background: <?php echo $personel['durum'] == 'aktif' ? '#dcfce7' : '#fee2e2'; ?>; color: <?php echo $personel['durum'] == 'aktif' ? '#166534' : '#dc2626'; ?>; border-radius: 6px; font-size: 13px; font-weight: 500;">
+                                            <i class="fas fa-circle" style="font-size: 8px; margin-right: 4px;"></i>
                                             <?php echo ucfirst($personel['durum']); ?>
                                         </span>
-                                        <div style="font-size: 12px; color: #64748b;">
-                                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                                            Kayıtlı Personel
-                                        </div>
                                     </div>
                                     
-                                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <!-- Aksiyonlar -->
+                                    <div style="display: flex; gap: 8px; flex-shrink: 0;">
                                         <?php if (isAdmin()): ?>
-                                        <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
-                                            <i class="fas fa-eye"></i> Görüntüle
-                                        </a>
-                                        <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
-                                            <i class="fas fa-edit"></i> Düzenle
+                                        <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" 
+                                           style="padding: 8px 14px; background: #3b82f6; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.2s ease;"
+                                           title="Düzenle">
+                                            <i class="fas fa-edit"></i>
                                         </a>
                                         <a href="personel.php?action=delete&id=<?php echo $personel['id']; ?>" 
-                                           class="btn btn-danger" 
-                                           style="padding: 8px 16px; font-size: 12px;"
+                                           style="padding: 8px 14px; background: #ef4444; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.2s ease;"
+                                           title="Sil"
                                            onclick="return confirm('Bu personeli silmek istediğinizden emin misiniz?')">
-                                            <i class="fas fa-trash"></i> Sil
+                                            <i class="fas fa-trash"></i>
                                         </a>
                                         <?php endif; ?>
-                                        <a href="hedef-profil.php?personel_id=<?php echo $personel['id']; ?>" class="btn btn-info" style="padding: 8px 16px; font-size: 12px;">
-                                            <i class="fas fa-bullseye"></i> Hedefler
+                                        <a href="hedef-profil.php?personel_id=<?php echo $personel['id']; ?>" 
+                                           style="padding: 8px 14px; background: #10b981; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.2s ease;"
+                                           title="Hedefler">
+                                            <i class="fas fa-bullseye"></i>
                                         </a>
                                     </div>
                                 </div>

@@ -152,54 +152,114 @@ $recent_activities = $db->query("
                 </div>
 
                 <!-- Quick Actions (Sadece Admin) -->
-                <?php if (isAdmin()): ?>
-                <div class="quick-actions" style="margin-bottom: 40px;">
+                <?php if (isAdmin()): 
+                    // Son 3 ayın verilerini hazırla
+                    $aylar_data = [];
+                    $ay_isimleri = [
+                        1 => 'Ocak', 2 => 'Şubat', 3 => 'Mart', 4 => 'Nisan',
+                        5 => 'Mayıs', 6 => 'Haziran', 7 => 'Temmuz', 8 => 'Ağustos',
+                        9 => 'Eylül', 10 => 'Ekim', 11 => 'Kasım', 12 => 'Aralık'
+                    ];
+                    
+                    // Son 3 ay için veri topla
+                    for ($i = 0; $i < 3; $i++) {
+                        $tarih = strtotime("-$i months");
+                        $yil = date('Y', $tarih);
+                        $ay = (int)date('n', $tarih);
+                        $ay_adi = $ay_isimleri[$ay] . ' ' . $yil;
+                        
+                        $firma_satislari = $db->query("
+                            SELECT 
+                                f.firma_adi,
+                                f.id as firma_id,
+                                SUM(sd.toplam_fiyat) as toplam_satis,
+                                COUNT(DISTINCT s.id) as satis_adedi
+                            FROM satislar s
+                            INNER JOIN satis_detay sd ON s.id = sd.satis_id
+                            INNER JOIN firmalar f ON sd.firma_id = f.id
+                            WHERE YEAR(s.satis_tarihi) = ?
+                            AND MONTH(s.satis_tarihi) = ?
+                            AND s.durum = 'odendi'
+                            AND s.onay_durumu = 'onaylandi'
+                            AND (
+                                f.ust_firma_id IS NOT NULL
+                                OR
+                                (f.ust_firma_id IS NULL AND NOT EXISTS (
+                                    SELECT 1 FROM firmalar f2 WHERE f2.ust_firma_id = f.id AND f2.durum = 'aktif'
+                                ))
+                            )
+                            GROUP BY f.id, f.firma_adi
+                            ORDER BY toplam_satis DESC
+                        ", [$yil, $ay]);
+                        
+                        $toplam = array_sum(array_column($firma_satislari, 'toplam_satis'));
+                        
+                        $aylar_data[] = [
+                            'ay_adi' => $ay_adi,
+                            'firmalar' => $firma_satislari,
+                            'toplam' => $toplam,
+                            'index' => $i
+                        ];
+                    }
+                ?>
+                <div class="sales-chart-section" style="margin-bottom: 40px;">
                     <h2 class="section-title">
-                        <i class="fas fa-bolt"></i>
-                        Hızlı İşlemler
+                        <i class="fas fa-chart-pie"></i>
+                        Son 3 Ay Firma Bazlı Satış Dağılımı
                     </h2>
-                    <div class="actions-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                        <a href="firma-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-industry" style="font-size: 16px;"></i>
-                            </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Yeni Firma Ekle</div>
-                        </a>
-
-                        <a href="personel-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-users" style="font-size: 16px;"></i>
-                            </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Yeni Personel Ekle</div>
-                        </a>
-
-                        <a href="urun-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-box" style="font-size: 16px;"></i>
-                            </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Ürün/Hizmet Ekle</div>
-                        </a>
-
-                        <a href="musteri-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-user-tie" style="font-size: 16px;"></i>
-                            </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Yeni Müşteri Ekle</div>
-                        </a>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                        <?php 
+                        $colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
                         
-                        <a href="hedef-ekle.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-bullseye" style="font-size: 16px;"></i>
+                        foreach ($aylar_data as $ay_data): 
+                        ?>
+                        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                            <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; text-align: center;">
+                                <?php echo $ay_data['ay_adi']; ?>
+                            </h3>
+                            <div style="font-size: 14px; color: #64748b; margin-bottom: 20px; text-align: center;">
+                                Toplam: <strong style="color: #3b82f6;">₺<?php echo number_format($ay_data['toplam'], 0, ',', '.'); ?></strong>
                             </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Hedef Ekle</div>
-                        </a>
-                        
-                        <a href="personel-prim-oranlari.php" class="action-card" style="padding: 15px; text-align: center;">
-                            <div class="action-icon" style="width: 40px; height: 40px; margin: 0 auto 10px;">
-                                <i class="fas fa-coins" style="font-size: 16px;"></i>
+                            
+                            <!-- Grafik -->
+                            <div style="position: relative; margin-bottom: 20px;">
+                                <canvas id="chart_<?php echo $ay_data['index']; ?>" width="280" height="280"></canvas>
                             </div>
-                            <div class="action-title" style="font-size: 14px; margin-bottom: 0;">Prim Oranları</div>
-                        </a>
+                            
+                            <!-- Firma Listesi -->
+                            <?php if (!empty($ay_data['firmalar'])): ?>
+                            <div style="display: flex; flex-direction: column; gap: 10px;">
+                                <?php 
+                                $color_index = 0;
+                                foreach ($ay_data['firmalar'] as $firma): 
+                                    $yuzde = $ay_data['toplam'] > 0 ? ($firma['toplam_satis'] / $ay_data['toplam']) * 100 : 0;
+                                    $color = $colors[$color_index % count($colors)];
+                                    $color_index++;
+                                ?>
+                                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 6px; border-left: 3px solid <?php echo $color; ?>;">
+                                    <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
+                                        <div style="width: 10px; height: 10px; border-radius: 50%; background: <?php echo $color; ?>; flex-shrink: 0;"></div>
+                                        <span style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo htmlspecialchars($firma['firma_adi']); ?></span>
+                                    </div>
+                                    <div style="text-align: right; flex-shrink: 0; margin-left: 8px;">
+                                        <div style="font-size: 13px; font-weight: 700; color: <?php echo $color; ?>;">
+                                            ₺<?php echo number_format($firma['toplam_satis'], 0, ',', '.'); ?>
+                                        </div>
+                                        <div style="font-size: 11px; color: #64748b;">
+                                            %<?php echo number_format($yuzde, 1); ?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php else: ?>
+                            <div style="text-align: center; padding: 20px; color: #94a3b8; font-size: 14px;">
+                                <i class="fas fa-inbox" style="font-size: 32px; margin-bottom: 10px; display: block;"></i>
+                                Satış yok
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -210,12 +270,72 @@ $recent_activities = $db->query("
         </div>
     </div>
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
     <script>
         // Sidebar toggle for mobile
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
         }
+        
+        // Firma Satış Grafikleri
+        <?php if (isAdmin()): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+            
+            <?php foreach ($aylar_data as $ay_data): ?>
+            <?php if (!empty($ay_data['firmalar'])): ?>
+            {
+                const ctx = document.getElementById('chart_<?php echo $ay_data['index']; ?>');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: [
+                                <?php foreach ($ay_data['firmalar'] as $firma): ?>
+                                '<?php echo addslashes($firma['firma_adi']); ?>',
+                                <?php endforeach; ?>
+                            ],
+                            datasets: [{
+                                data: [
+                                    <?php foreach ($ay_data['firmalar'] as $firma): ?>
+                                    <?php echo $firma['toplam_satis']; ?>,
+                                    <?php endforeach; ?>
+                                ],
+                                backgroundColor: colors,
+                                borderWidth: 2,
+                                borderColor: '#ffffff'
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const label = context.label || '';
+                                            const value = context.parsed || 0;
+                                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                            const percentage = ((value / total) * 100).toFixed(1);
+                                            return label + ': ₺' + value.toLocaleString('tr-TR') + ' (' + percentage + '%)';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            <?php endif; ?>
+            <?php endforeach; ?>
+        });
+        <?php endif; ?>
 
         // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {

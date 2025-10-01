@@ -4,12 +4,11 @@ require_once 'config/database.php';
 // Hedef düzenleme işlemi
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_hedef') {
     $personel_id = $_POST['personel_id'] ?? null;
-    $yillik_hedef = $_POST['yillik_hedef'] ?? null;
     $yil = $_POST['yil'] ?? date('Y');
     $ay = $_POST['ay'] ?? date('n');
     $firma_hedefleri = $_POST['firma_hedef'] ?? [];
     
-    if ($personel_id && $yillik_hedef && !empty($firma_hedefleri)) {
+    if ($personel_id && !empty($firma_hedefleri)) {
         try {
             // Önce mevcut hedefleri sil
             $db->query("DELETE FROM hedefler WHERE personel_id = ? AND yil = ? AND ay = ?", 
@@ -24,7 +23,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_hedef') {
                         'personel_id' => $personel_id,
                         'firma_id' => $firma_id,
                         'aylik_hedef' => $firma_hedef,
-                        'yillik_hedef' => $yillik_hedef,
+                        'yillik_hedef' => 0, // Yıllık hedef kaldırıldı
                         'yil' => $yil,
                         'ay' => $ay,
                         'durum' => 'aktif'
@@ -72,7 +71,24 @@ if (empty($hedefler)) {
 }
 
 $personeller = getPersonel();
-$firmalar = getFirmalar();
+
+// Firmaları al - ana firması olmayanlar veya alt firması olmayanlar
+$firmalar = $db->query("
+    SELECT f.*
+    FROM firmalar f
+    WHERE f.durum = 'aktif'
+    AND (
+        -- Ana firmaya sahip olan alt firmalar
+        f.ust_firma_id IS NOT NULL
+        OR
+        -- Ana firma ama alt firması olmayan
+        (f.ust_firma_id IS NULL AND NOT EXISTS (
+            SELECT 1 FROM firmalar f2 WHERE f2.ust_firma_id = f.id AND f2.durum = 'aktif'
+        ))
+    )
+    ORDER BY f.firma_adi ASC
+");
+
 $stats = getStats();
 
 // Mevcut hedef verilerini hazırla
@@ -207,13 +223,6 @@ foreach ($hedefler as $hedef) {
                             <label class="form-label">Toplam Aylık Hedef (₺)</label>
                             <input type="number" name="aylik_hedef" id="toplam-aylik-hedef" class="form-input" 
                                    placeholder="Otomatik hesaplanacak" readonly>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Yıllık Hedef (₺)</label>
-                            <input type="number" name="yillik_hedef" class="form-input" 
-                                   placeholder="Yıllık hedef tutarını girin" 
-                                   value="<?php echo $yillik_hedef; ?>" required>
                         </div>
 
                         <div class="form-actions">

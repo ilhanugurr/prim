@@ -28,12 +28,21 @@ if (empty($personel)) {
 }
 $personel = $personel[0];
 
-// Bu personelin hedeflerini al
+// Bu personelin hedeflerini al - sadece alt firmalar veya alt firması olmayan ana firmalar
 $hedefler = $db->query("
     SELECT h.*, f.firma_adi 
     FROM hedefler h
     LEFT JOIN firmalar f ON h.firma_id = f.id
     WHERE h.personel_id = ?
+    AND (
+        -- Ana firmaya sahip olan alt firmalar
+        f.ust_firma_id IS NOT NULL
+        OR
+        -- Ana firma ama alt firması olmayan
+        (f.ust_firma_id IS NULL AND NOT EXISTS (
+            SELECT 1 FROM firmalar f2 WHERE f2.ust_firma_id = f.id AND f2.durum = 'aktif'
+        ))
+    )
     ORDER BY h.yil DESC, h.ay DESC
 ", [$personel_id]);
 
