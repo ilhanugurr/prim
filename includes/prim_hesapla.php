@@ -42,31 +42,45 @@ if (!function_exists('hesaplaAylikPrim')) {
                 AND s.onay_durumu = 'onaylandi'
             ", [$personel_id, $yil, $ay, $firma_id]);
             
-            // Her satış için net tutarı hesapla
-            $net_satis = 0;
-            $firma_toplam_maliyet = 0;
+        // Her satış için bu firmaya ait ürünlerin net tutarını hesapla
+        $net_satis = 0;
+        $firma_toplam_maliyet = 0;
+        
+        foreach ($satis_ids as $satis_row) {
+            $satis_id = $satis_row['id'];
             
-            foreach ($satis_ids as $satis_row) {
-                $satis_id = $satis_row['id'];
+            // Bu satışta sadece bu firmaya ait ürünlerin toplam fiyatını al
+            $firma_satis_detay = $db->query("
+                SELECT 
+                    COALESCE(SUM(sd.toplam_fiyat), 0) as firma_tutar
+                FROM satis_detay sd
+                WHERE sd.satis_id = ?
+                AND sd.firma_id = ?
+            ", [$satis_id, $firma_id]);
+            
+            $firma_tutar = !empty($firma_satis_detay) ? (float)$firma_satis_detay[0]['firma_tutar'] : 0;
+            
+            if ($firma_tutar > 0) {
+                // Bu satışın toplam maliyetini al ve firma oranına göre böl
+                $satis_toplam = $db->query("SELECT toplam_tutar FROM satislar WHERE id = ?", [$satis_id]);
+                $toplam_tutar = !empty($satis_toplam) ? (float)$satis_toplam[0]['toplam_tutar'] : 0;
                 
-                // Bu satışın toplam tutarını ve maliyetini al
-                $satis_detay = $db->query("
-                    SELECT 
-                        s.toplam_tutar,
-                        COALESCE(SUM(sm.maliyet_tutari), 0) as toplam_maliyet
-                    FROM satislar s
-                    LEFT JOIN satis_maliyetler sm ON s.id = sm.satis_id
-                    WHERE s.id = ?
-                    GROUP BY s.id
+                $maliyet_detay = $db->query("
+                    SELECT COALESCE(SUM(maliyet_tutari), 0) as toplam_maliyet
+                    FROM satis_maliyetler
+                    WHERE satis_id = ?
                 ", [$satis_id]);
                 
-                if (!empty($satis_detay)) {
-                    $toplam = (float)$satis_detay[0]['toplam_tutar'];
-                    $maliyet = (float)$satis_detay[0]['toplam_maliyet'];
-                    $net_satis += ($toplam - $maliyet);
-                    $firma_toplam_maliyet += $maliyet;
-                }
+                $toplam_maliyet = !empty($maliyet_detay) ? (float)$maliyet_detay[0]['toplam_maliyet'] : 0;
+                
+                // Maliyeti firma oranına göre dağıt
+                $firma_oran = $toplam_tutar > 0 ? ($firma_tutar / $toplam_tutar) : 0;
+                $firma_maliyet = $toplam_maliyet * $firma_oran;
+                
+                $net_satis += ($firma_tutar - $firma_maliyet);
+                $firma_toplam_maliyet += $firma_maliyet;
             }
+        }
             
             if ($net_satis > 0) {
                 $toplam_satis += $net_satis;

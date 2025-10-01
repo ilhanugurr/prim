@@ -58,15 +58,52 @@ if (isset($_GET['action']) && $_GET['action'] == 'reject' && isset($_GET['id']))
     }
 }
 
-// Satışları al (rol bazlı filtreleme)
-$where_clause = "";
+// Filtreleme parametreleri
+$filter_personel = isset($_GET['personel_id']) && !empty($_GET['personel_id']) ? (int)$_GET['personel_id'] : null;
+$filter_baslangic = isset($_GET['baslangic_tarihi']) && !empty($_GET['baslangic_tarihi']) ? $_GET['baslangic_tarihi'] : null;
+$filter_bitis = isset($_GET['bitis_tarihi']) && !empty($_GET['bitis_tarihi']) ? $_GET['bitis_tarihi'] : null;
+$filter_durum = isset($_GET['durum']) && !empty($_GET['durum']) ? $_GET['durum'] : null;
+$filter_onay = isset($_GET['onay_durumu']) && !empty($_GET['onay_durumu']) ? $_GET['onay_durumu'] : null;
+
+// Satışları al (rol bazlı ve filtre)
+$where_conditions = [];
 $where_params = [];
 
 if (isSatisci()) {
     // Satışçı sadece kendi satışlarını görür
-    $where_clause = "WHERE s.personel_id = ?";
+    $where_conditions[] = "s.personel_id = ?";
     $where_params[] = $_SESSION['personel_id'];
+} else {
+    // Admin için personel filtresi
+    if ($filter_personel) {
+        $where_conditions[] = "s.personel_id = ?";
+        $where_params[] = $filter_personel;
+    }
 }
+
+// Tarih filtreleri
+if ($filter_baslangic) {
+    $where_conditions[] = "s.satis_tarihi >= ?";
+    $where_params[] = $filter_baslangic;
+}
+
+if ($filter_bitis) {
+    $where_conditions[] = "s.satis_tarihi <= ?";
+    $where_params[] = $filter_bitis;
+}
+
+// Durum filtreleri
+if ($filter_durum) {
+    $where_conditions[] = "s.durum = ?";
+    $where_params[] = $filter_durum;
+}
+
+if ($filter_onay) {
+    $where_conditions[] = "s.onay_durumu = ?";
+    $where_params[] = $filter_onay;
+}
+
+$where_clause = !empty($where_conditions) ? "WHERE " . implode(" AND ", $where_conditions) : "";
 
 $satislar = $db->query("
     SELECT s.*, p.ad_soyad as personel_adi,
@@ -76,7 +113,7 @@ $satislar = $db->query("
     LEFT JOIN satis_maliyetler sm ON s.id = sm.satis_id
     $where_clause
     GROUP BY s.id
-    ORDER BY s.olusturma_tarihi DESC
+    ORDER BY s.satis_tarihi DESC, s.olusturma_tarihi DESC
 ", $where_params);
 ?>
 <!DOCTYPE html>
@@ -111,6 +148,72 @@ $satislar = $db->query("
                     </nav>
                 </div>
 
+                <!-- Filtreleme -->
+                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
+                    <form method="GET" action="satislar.php" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
+                        <?php if (isAdmin()): ?>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Satışçı</label>
+                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <option value="">Tüm Satışçılar</option>
+                                <?php
+                                $personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'], 'ad_soyad ASC');
+                                foreach ($personeller as $p):
+                                ?>
+                                    <option value="<?php echo $p['id']; ?>" <?php echo $filter_personel == $p['id'] ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($p['ad_soyad']); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Başlangıç Tarihi</label>
+                            <input type="date" name="baslangic_tarihi" value="<?php echo htmlspecialchars($filter_baslangic ?? ''); ?>" 
+                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Bitiş Tarihi</label>
+                            <input type="date" name="bitis_tarihi" value="<?php echo htmlspecialchars($filter_bitis ?? ''); ?>" 
+                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Ödeme Durumu</label>
+                            <select name="durum" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <option value="">Tümü</option>
+                                <option value="odendi" <?php echo $filter_durum == 'odendi' ? 'selected' : ''; ?>>Ödendi</option>
+                                <option value="odenmedi" <?php echo $filter_durum == 'odenmedi' ? 'selected' : ''; ?>>Ödenmedi</option>
+                                <option value="odeme_bekleniyor" <?php echo $filter_durum == 'odeme_bekleniyor' ? 'selected' : ''; ?>>Ödeme Bekleniyor</option>
+                                <option value="iptal" <?php echo $filter_durum == 'iptal' ? 'selected' : ''; ?>>İptal</option>
+                            </select>
+                        </div>
+                        
+                        <?php if (isAdmin()): ?>
+                        <div>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Onay Durumu</label>
+                            <select name="onay_durumu" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <option value="">Tümü</option>
+                                <option value="beklemede" <?php echo $filter_onay == 'beklemede' ? 'selected' : ''; ?>>Beklemede</option>
+                                <option value="onaylandi" <?php echo $filter_onay == 'onaylandi' ? 'selected' : ''; ?>>Onaylandı</option>
+                                <option value="reddedildi" <?php echo $filter_onay == 'reddedildi' ? 'selected' : ''; ?>>Reddedildi</option>
+                            </select>
+                        </div>
+                        <?php endif; ?>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button type="submit" style="padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px;">
+                                <i class="fas fa-filter"></i> Filtrele
+                            </button>
+                            <a href="satislar.php" style="padding: 10px 20px; background: #6b7280; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 14px; text-decoration: none; display: inline-block;">
+                                <i class="fas fa-redo"></i> Sıfırla
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Success/Error Messages -->
                 <?php if (isset($success_message)): ?>
                     <div class="alert alert-success" style="background: #dcfce7; color: #166534; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
@@ -125,7 +228,10 @@ $satislar = $db->query("
                 <?php endif; ?>
 
                 <!-- Action Buttons -->
-                <div class="action-buttons">
+                <div class="action-buttons" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="font-size: 15px; color: #64748b;">
+                        <i class="fas fa-list"></i> Toplam <strong><?php echo count($satislar); ?></strong> satış bulundu
+                    </div>
                     <a href="satis-ekle.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
                         Yeni Satış Ekle
