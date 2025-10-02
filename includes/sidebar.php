@@ -64,6 +64,10 @@ $stats = getStats();
                     <span class="nav-text">Primler</span>
                 </a>
         <?php if (isAdmin()): ?>
+        <a href="tahsilatlar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'tahsilatlar.php' || basename($_SERVER['PHP_SELF']) == 'tahsilat-ekle.php' || basename($_SERVER['PHP_SELF']) == 'tahsilat-duzenle.php') ? 'active' : ''; ?>">
+            <i class="fas fa-money-bill-wave nav-icon"></i>
+            <span class="nav-text">Tahsilat</span>
+        </a>
         <a href="raporlar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'raporlar.php') ? 'active' : ''; ?>">
             <i class="fas fa-chart-line nav-icon"></i>
             <span class="nav-text">Raporlar</span>
