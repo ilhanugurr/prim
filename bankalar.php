@@ -31,8 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     
     // Silme
     if ($_POST['action'] === 'delete' && isset($_POST['id'])) {
-        $db->update('bankalar', ['durum' => 'pasif'], ['id' => (int)$_POST['id']]);
-        header('Location: bankalar.php?deleted=1');
+        $banka_id = (int)$_POST['id'];
+        
+        // Bu bankayı kullanan tahsilat var mı kontrol et
+        $tahsilat_check = $db->select('tahsilatlar', ['banka_id' => $banka_id]);
+        
+        if (!empty($tahsilat_check)) {
+            // Kullanımda - sadece pasif yap
+            $db->update('bankalar', ['durum' => 'pasif'], ['id' => $banka_id]);
+            header('Location: bankalar.php?deleted=1&warning=1');
+        } else {
+            // Kullanımda değil - fiziksel olarak sil
+            $db->delete('bankalar', ['id' => $banka_id]);
+            header('Location: bankalar.php?deleted=1');
+        }
         exit;
     }
 }
@@ -108,8 +120,13 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                 <?php endif; ?>
                 
                 <?php if (isset($_GET['deleted'])): ?>
-                <div style="background: #fee2e2; color: #dc2626; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-trash"></i> Banka silindi!
+                <div style="background: <?php echo isset($_GET['warning']) ? '#fef3c7' : '#fee2e2'; ?>; color: <?php echo isset($_GET['warning']) ? '#92400e' : '#dc2626'; ?>; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-<?php echo isset($_GET['warning']) ? 'exclamation-triangle' : 'trash'; ?>"></i>
+                    <?php if (isset($_GET['warning'])): ?>
+                        Banka kullanımda olduğu için pasif yapıldı! (Tahsilatlarda kullanılmış)
+                    <?php else: ?>
+                        Banka başarıyla silindi!
+                    <?php endif; ?>
                 </div>
                 <?php endif; ?>
 

@@ -52,19 +52,33 @@ $tahsilatlar = $db->query("
         t.*,
         m.firma_adi as musteri_adi,
         b.banka_adi,
-        p.ad_soyad as personel_adi
+        p.ad_soyad as personel_adi,
+        COALESCE(SUM(tm.maliyet_tutari), 0) as toplam_maliyet
     FROM tahsilatlar t
     LEFT JOIN musteriler m ON t.musteri_id = m.id
     LEFT JOIN bankalar b ON t.banka_id = b.id
     LEFT JOIN personel p ON t.personel_id = p.id
+    LEFT JOIN tahsilat_maliyetler tm ON t.id = tm.tahsilat_id
     $where_clause
+    GROUP BY t.id
     ORDER BY t.odeme_tarihi DESC
 ", $where_params);
 
-// Toplamları hesapla
-$toplam_kdv_dahil = array_sum(array_column($tahsilatlar, 'tutar_kdv_dahil'));
-$toplam_kdv_haric = array_sum(array_column($tahsilatlar, 'tutar_kdv_haric'));
-$toplam_kdv = array_sum(array_column($tahsilatlar, 'kdv_tutari'));
+// Toplamları hesapla (maliyet düşüldükten sonra)
+$toplam_kdv_dahil = 0;
+$toplam_kdv_haric = 0;
+$toplam_kdv = 0;
+$toplam_maliyet = 0;
+
+foreach ($tahsilatlar as $tahsilat) {
+    $maliyet = (float)$tahsilat['toplam_maliyet'];
+    $net_tutar = (float)$tahsilat['tutar_kdv_dahil'] - $maliyet;
+    
+    $toplam_kdv_dahil += $net_tutar;
+    $toplam_kdv_haric += ((float)$tahsilat['tutar_kdv_haric'] - $maliyet);
+    $toplam_kdv += (float)$tahsilat['kdv_tutari'];
+    $toplam_maliyet += $maliyet;
+}
 
 // Müşterileri, bankaları ve personeli al
 $musteriler = $db->select('musteriler', ['durum' => 'aktif'], 'firma_adi ASC');
@@ -210,9 +224,21 @@ $aylar = [
                                     } else {
                                         echo $filter_yil . ' Yılı';
                                     }
-                                    ?> - KDV Dahil
+                                    ?> - Tahsilat
                                 </div>
-                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_dahil, 0, ',', '.'); ?></div>
+                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_dahil + $toplam_maliyet, 0, ',', '.'); ?></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3);">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-minus-circle" style="font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">Toplam Maliyet</div>
+                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_maliyet, 0, ',', '.'); ?></div>
                             </div>
                         </div>
                     </div>
@@ -223,20 +249,8 @@ $aylar = [
                                 <i class="fas fa-hand-holding-usd" style="font-size: 24px;"></i>
                             </div>
                             <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Hariç</div>
-                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_haric, 0, ',', '.'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-percent" style="font-size: 24px;"></i>
-                            </div>
-                            <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Tutarı</div>
-                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv, 0, ',', '.'); ?></div>
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">Net Tutar</div>
+                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_dahil, 0, ',', '.'); ?></div>
                             </div>
                         </div>
                     </div>
@@ -268,9 +282,9 @@ $aylar = [
                                 <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Müşteri</th>
                                 <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Personel</th>
                                 <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Banka</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">KDV Hariç</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">KDV</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">KDV Dahil</th>
+                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Tahsilat</th>
+                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Maliyet</th>
+                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Net Tutar</th>
                                 <th style="padding: 12px; text-align: center; color: #64748b; font-weight: 600;">İşlemler</th>
                             </tr>
                         </thead>
@@ -300,14 +314,18 @@ $aylar = [
                                     <i class="fas fa-university" style="margin-right: 5px;"></i>
                                     <?php echo htmlspecialchars($tahsilat['banka_adi']); ?>
                                 </td>
-                                <td style="padding: 16px; text-align: right; color: #10b981; font-weight: 600;">
-                                    ₺<?php echo number_format($tahsilat['tutar_kdv_haric'], 2, ',', '.'); ?>
-                                </td>
-                                <td style="padding: 16px; text-align: right; color: #f59e0b; font-weight: 600;">
-                                    ₺<?php echo number_format($tahsilat['kdv_tutari'], 2, ',', '.'); ?>
-                                </td>
-                                <td style="padding: 16px; text-align: right; color: #3b82f6; font-weight: 700; font-size: 16px;">
+                                <td style="padding: 16px; text-align: right; color: #64748b; font-weight: 600;">
                                     ₺<?php echo number_format($tahsilat['tutar_kdv_dahil'], 2, ',', '.'); ?>
+                                </td>
+                                <td style="padding: 16px; text-align: right; color: #ef4444; font-weight: 600;">
+                                    <?php if ($tahsilat['toplam_maliyet'] > 0): ?>
+                                        -₺<?php echo number_format($tahsilat['toplam_maliyet'], 2, ',', '.'); ?>
+                                    <?php else: ?>
+                                        <span style="color: #cbd5e1;">₺0,00</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td style="padding: 16px; text-align: right; color: #10b981; font-weight: 700; font-size: 16px;">
+                                    ₺<?php echo number_format($tahsilat['tutar_kdv_dahil'] - $tahsilat['toplam_maliyet'], 2, ',', '.'); ?>
                                 </td>
                                 <td style="padding: 16px; text-align: center;">
                                     <div style="display: flex; gap: 8px; justify-content: center;">
@@ -328,9 +346,15 @@ $aylar = [
                         <tfoot>
                             <tr style="background: #f8fafc; font-weight: 700; border-top: 2px solid #e2e8f0;">
                                 <td colspan="4" style="padding: 16px; color: #1f2937;">TOPLAM</td>
-                                <td style="padding: 16px; text-align: right; color: #10b981;">₺<?php echo number_format($toplam_kdv_haric, 2, ',', '.'); ?></td>
-                                <td style="padding: 16px; text-align: right; color: #f59e0b;">₺<?php echo number_format($toplam_kdv, 2, ',', '.'); ?></td>
-                                <td style="padding: 16px; text-align: right; color: #3b82f6; font-size: 18px;">₺<?php echo number_format($toplam_kdv_dahil, 2, ',', '.'); ?></td>
+                                <td style="padding: 16px; text-align: right; color: #64748b;">
+                                    ₺<?php echo number_format($toplam_kdv_dahil + $toplam_maliyet, 2, ',', '.'); ?>
+                                </td>
+                                <td style="padding: 16px; text-align: right; color: #ef4444;">
+                                    -₺<?php echo number_format($toplam_maliyet, 2, ',', '.'); ?>
+                                </td>
+                                <td style="padding: 16px; text-align: right; color: #10b981; font-size: 18px;">
+                                    ₺<?php echo number_format($toplam_kdv_dahil, 2, ',', '.'); ?>
+                                </td>
                                 <td></td>
                             </tr>
                         </tfoot>
