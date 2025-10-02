@@ -68,6 +68,10 @@ $stats = getStats();
             <i class="fas fa-chart-line nav-icon"></i>
             <span class="nav-text">Raporlar</span>
         </a>
+        <a href="checklist.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'checklist.php') ? 'active' : ''; ?>">
+            <i class="fas fa-tasks nav-icon"></i>
+            <span class="nav-text">Checklist</span>
+        </a>
         <?php endif; ?>
     </nav>
 </div>
