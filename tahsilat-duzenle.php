@@ -46,9 +46,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($tutar_kdv_haric <= 0) $errors[] = "Geçerli bir tutar giriniz!";
     
     if (empty($errors)) {
-        // KDV hesapla
-        $kdv_tutari = $tutar_kdv_haric * 0.20;
-        $tutar_kdv_dahil = $tutar_kdv_haric + $kdv_tutari;
+        // KDV hesapla (KDV Yok checkbox'ına göre)
+        $kdv_yok = isset($_POST['kdv_yok']) && $_POST['kdv_yok'] == '1';
+        
+        if ($kdv_yok) {
+            // KDV yok - tutar direkt KDV dahil
+            $kdv_tutari = 0;
+            $tutar_kdv_dahil = $tutar_kdv_haric;
+        } else {
+            // KDV var - %20 hesapla
+            $kdv_tutari = $tutar_kdv_haric * 0.20;
+            $tutar_kdv_dahil = $tutar_kdv_haric + $kdv_tutari;
+        }
         
         $data = [
             'musteri_id' => $musteri_id,
@@ -63,6 +72,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
         
         if ($db->update('tahsilatlar', $data, ['id' => $tahsilat_id])) {
+            // Önce mevcut maliyetleri sil
+            $db->delete('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]);
+            
+            // Yeni maliyetleri kaydet
+            if (isset($_POST['maliyet_adi']) && is_array($_POST['maliyet_adi'])) {
+                foreach ($_POST['maliyet_adi'] as $index => $maliyet_adi) {
+                    if (!empty($maliyet_adi) && !empty($_POST['maliyet_tutari'][$index])) {
+                        $db->insert('tahsilat_maliyetler', [
+                            'tahsilat_id' => $tahsilat_id,
+                            'maliyet_adi' => trim($maliyet_adi),
+                            'maliyet_aciklama' => !empty($_POST['maliyet_aciklama'][$index]) ? trim($_POST['maliyet_aciklama'][$index]) : null,
+                            'maliyet_tutari' => (float)$_POST['maliyet_tutari'][$index]
+                        ]);
+                    }
+                }
+            }
+            
             header('Location: tahsilatlar.php?updated=1');
             exit;
         } else {
@@ -73,7 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $musteriler = $db->select('musteriler', ['durum' => 'aktif'], 'firma_adi ASC');
 $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
-$personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'], 'ad_soyad ASC');
+$personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); // Tüm personeller (admin + satışçı)
+$maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id], 'id ASC');
 ?>
 <!DOCTYPE html>
 <html lang="tr">
@@ -118,7 +145,8 @@ $personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'],
                 <?php endif; ?>
 
                 <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                    <form method="POST" action="tahsilat-duzenle.php?id=<?php echo $tahsilat_id; ?>">
+                    <form method="POST" action="tahsilat-duzenle.php?id=<?php echo $tahsilat_id; ?>" id="tahsilat-form">
+                        <input type="hidden" name="kdv_yok" id="kdv_yok_hidden" value="<?php echo $tahsilat['kdv_tutari'] == 0 ? '1' : '0'; ?>">
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Müşteri *</label>
@@ -174,6 +202,14 @@ $personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'],
                                        value="<?php echo $tahsilat['tutar_kdv_haric']; ?>"
                                        style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
                                        oninput="hesaplaKDV()">
+                                <div style="margin-top: 8px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: #64748b;">
+                                        <input type="checkbox" id="kdv_yok" onchange="toggleKDV()" 
+                                               <?php echo $tahsilat['kdv_tutari'] == 0 ? 'checked' : ''; ?>
+                                               style="width: 18px; height: 18px; cursor: pointer;">
+                                        <span>KDV Yok</span>
+                                    </label>
+                                </div>
                             </div>
                             
                             <div>
@@ -191,6 +227,75 @@ $personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'],
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Açıklama</label>
                             <textarea name="aciklama" rows="3" 
                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; resize: vertical;"><?php echo htmlspecialchars($tahsilat['aciklama']); ?></textarea>
+                        </div>
+                        
+                        <!-- Maliyetler -->
+                        <div style="margin-top: 30px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <label style="font-weight: 600; color: #374151; font-size: 16px;">
+                                    <i class="fas fa-minus-circle" style="color: #ef4444;"></i> Maliyetler
+                                </label>
+                                <button type="button" onclick="addMaliyet()" 
+                                        style="padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px;">
+                                    <i class="fas fa-plus"></i> Maliyet Ekle
+                                </button>
+                            </div>
+                            
+                            <div id="maliyetler-container" style="display: flex; flex-direction: column; gap: 12px;">
+                                <?php if (!empty($maliyetler)): ?>
+                                    <?php foreach ($maliyetler as $maliyet): ?>
+                                    <div class="maliyet-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;">
+                                        <div>
+                                            <input type="text" name="maliyet_adi[]" placeholder="Maliyet adı" 
+                                                   value="<?php echo htmlspecialchars($maliyet['maliyet_adi']); ?>"
+                                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="maliyet_aciklama[]" placeholder="Açıklama (opsiyonel)" 
+                                                   value="<?php echo htmlspecialchars($maliyet['maliyet_aciklama']); ?>"
+                                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                        </div>
+                                        <div>
+                                            <input type="number" name="maliyet_tutari[]" step="0.01" placeholder="Tutar (₺)" 
+                                                   value="<?php echo $maliyet['maliyet_tutari']; ?>"
+                                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                                                   oninput="updateTotalMaliyet()">
+                                        </div>
+                                        <button type="button" onclick="removeMaliyet(this)" 
+                                                style="padding: 10px 14px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <div class="maliyet-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;">
+                                        <div>
+                                            <input type="text" name="maliyet_adi[]" placeholder="Maliyet adı" 
+                                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                        </div>
+                                        <div>
+                                            <input type="text" name="maliyet_aciklama[]" placeholder="Açıklama (opsiyonel)" 
+                                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                        </div>
+                                        <div>
+                                            <input type="number" name="maliyet_tutari[]" step="0.01" placeholder="Tutar (₺)" 
+                                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                                                   oninput="updateTotalMaliyet()">
+                                        </div>
+                                        <button type="button" onclick="removeMaliyet(this)" 
+                                                style="padding: 10px 14px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            
+                            <div style="margin-top: 15px; padding: 12px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="font-weight: 600; color: #92400e;">Toplam Maliyet:</span>
+                                    <span id="toplam-maliyet" style="font-size: 18px; font-weight: 700; color: #f59e0b;">₺0,00</span>
+                                </div>
+                            </div>
                         </div>
                         
                         <div style="display: flex; gap: 12px; margin-top: 30px; justify-content: flex-end;">
@@ -213,19 +318,77 @@ $personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'],
             sidebar.classList.toggle('collapsed');
         }
         
+        function toggleKDV() {
+            const kdvYok = document.getElementById('kdv_yok').checked;
+            document.getElementById('kdv_yok_hidden').value = kdvYok ? '1' : '0';
+            hesaplaKDV();
+        }
+        
         function hesaplaKDV() {
+            const kdvYok = document.getElementById('kdv_yok').checked;
             const kdvHaric = parseFloat(document.getElementById('tutar_kdv_haric').value) || 0;
-            const kdv = kdvHaric * 0.20;
-            const kdvDahil = kdvHaric + kdv;
             
-            document.getElementById('kdv_tutari_display').value = 'KDV: ₺' + kdv.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-            document.getElementById('kdv_dahil_display').value = 'Toplam: ₺' + kdvDahil.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            if (kdvYok) {
+                // KDV yok - tutar direkt KDV dahil olarak kabul edilir
+                document.getElementById('kdv_tutari_display').value = 'KDV: ₺0,00';
+                document.getElementById('kdv_dahil_display').value = 'Toplam: ₺' + kdvHaric.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            } else {
+                // KDV var - %20 hesapla
+                const kdv = kdvHaric * 0.20;
+                const kdvDahil = kdvHaric + kdv;
+                
+                document.getElementById('kdv_tutari_display').value = 'KDV: ₺' + kdv.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('kdv_dahil_display').value = 'Toplam: ₺' + kdvDahil.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
         }
         
         // Sayfa yüklendiğinde KDV'yi hesapla
         window.addEventListener('DOMContentLoaded', function() {
             hesaplaKDV();
+            updateTotalMaliyet();
         });
+        
+        function addMaliyet() {
+            const container = document.getElementById('maliyetler-container');
+            const newItem = document.createElement('div');
+            newItem.className = 'maliyet-item';
+            newItem.style.cssText = 'background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;';
+            newItem.innerHTML = `
+                <div>
+                    <input type="text" name="maliyet_adi[]" placeholder="Maliyet adı" 
+                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                </div>
+                <div>
+                    <input type="text" name="maliyet_aciklama[]" placeholder="Açıklama (opsiyonel)" 
+                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                </div>
+                <div>
+                    <input type="number" name="maliyet_tutari[]" step="0.01" placeholder="Tutar (₺)" 
+                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                           oninput="updateTotalMaliyet()">
+                </div>
+                <button type="button" onclick="removeMaliyet(this)" 
+                        style="padding: 10px 14px; background: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            container.appendChild(newItem);
+        }
+        
+        function removeMaliyet(button) {
+            const item = button.closest('.maliyet-item');
+            item.remove();
+            updateTotalMaliyet();
+        }
+        
+        function updateTotalMaliyet() {
+            const inputs = document.querySelectorAll('input[name="maliyet_tutari[]"]');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseFloat(input.value) || 0;
+            });
+            document.getElementById('toplam-maliyet').textContent = '₺' + total.toLocaleString('tr-TR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        }
     </script>
 </body>
 </html>

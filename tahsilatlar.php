@@ -69,7 +69,7 @@ $toplam_kdv = array_sum(array_column($tahsilatlar, 'kdv_tutari'));
 // Müşterileri, bankaları ve personeli al
 $musteriler = $db->select('musteriler', ['durum' => 'aktif'], 'firma_adi ASC');
 $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
-$personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'], 'ad_soyad ASC');
+$personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); // Tüm personeller (admin + satışçı)
 
 $aylar = [
     1 => 'Ocak', 2 => 'Şubat', 3 => 'Mart', 4 => 'Nisan',
@@ -124,45 +124,6 @@ $aylar = [
                     <i class="fas fa-trash"></i> Tahsilat silindi!
                 </div>
                 <?php endif; ?>
-
-                <!-- Özet Kartlar -->
-                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
-                    <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-lira-sign" style="font-size: 24px;"></i>
-                            </div>
-                            <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Dahil</div>
-                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_dahil, 0, ',', '.'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-hand-holding-usd" style="font-size: 24px;"></i>
-                            </div>
-                            <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Hariç</div>
-                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_haric, 0, ',', '.'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-percent" style="font-size: 24px;"></i>
-                            </div>
-                            <div>
-                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Tutarı</div>
-                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv, 0, ',', '.'); ?></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Filtreleme -->
                 <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
@@ -232,6 +193,55 @@ $aylar = [
                         </div>
                     </form>
                 </div>
+
+                <!-- Özet Kartlar (Filtreye göre) -->
+                <?php if (!empty($tahsilatlar)): ?>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px;">
+                    <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-lira-sign" style="font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">
+                                    <?php 
+                                    if ($filter_ay) {
+                                        echo $aylar[$filter_ay] . ' ' . $filter_yil;
+                                    } else {
+                                        echo $filter_yil . ' Yılı';
+                                    }
+                                    ?> - KDV Dahil
+                                </div>
+                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_dahil, 0, ',', '.'); ?></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-hand-holding-usd" style="font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Hariç</div>
+                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv_haric, 0, ',', '.'); ?></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3);">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-percent" style="font-size: 24px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">KDV Tutarı</div>
+                                <div style="font-size: 28px; font-weight: 700;">₺<?php echo number_format($toplam_kdv, 0, ',', '.'); ?></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
 
                 <!-- Aksiyon Butonları -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
