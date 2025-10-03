@@ -29,11 +29,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             switch ($_POST['action']) {
                 case 'add_role':
                     if (!empty($_POST['rol_adi'])) {
-                        $stmt = $pdo->prepare("INSERT INTO roller (rol_adi, aciklama, renk) VALUES (?, ?, ?)");
+                        $stmt = $pdo->prepare("INSERT INTO roller (rol_adi, aciklama) VALUES (?, ?)");
                         $stmt->execute([
                             $_POST['rol_adi'],
-                            $_POST['aciklama'] ?? '',
-                            $_POST['renk'] ?? '#3b82f6'
+                            $_POST['aciklama'] ?? ''
                         ]);
                         $success_message = "Yeni rol başarıyla eklendi!";
                     }
@@ -181,10 +180,6 @@ mb_http_output('UTF-8');
                                     <input type="text" name="aciklama" class="form-input" placeholder="Rol açıklaması">
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Renk</label>
-                                    <input type="color" name="renk" class="form-input" value="#3b82f6">
-                                </div>
-                                <div class="form-group">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="fas fa-plus"></i>
                                         Rol Ekle
@@ -203,7 +198,6 @@ mb_http_output('UTF-8');
                             <div class="role-card">
                                 <div class="role-header">
                                     <div class="role-info">
-                                        <div class="role-color" style="background: <?php echo htmlspecialchars($rol['renk']); ?>;"></div>
                                         <div>
                                             <h4 class="text-primary role-name">
                                                 <?php echo htmlspecialchars($rol['rol_adi']); ?>
@@ -333,6 +327,7 @@ mb_http_output('UTF-8');
         document.querySelectorAll('.permissions-form').forEach(form => {
             form.classList.remove('active');
         });
+        
     });
     </script>
 </body>

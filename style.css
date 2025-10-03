@@ -1111,12 +1111,6 @@ body.dark-mode .role-card:hover {
     gap: 15px;
 }
 
-.role-color {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
 
 .role-name {
     font-size: 18px;
@@ -1240,6 +1234,7 @@ body.dark-mode .permission-item:hover {
     font-size: 20px;
     margin-bottom: 8px;
 }
+
 
 /* Dark mode ayarlar sayfası özel renkleri */
 html.dark-mode .permission-icon,
