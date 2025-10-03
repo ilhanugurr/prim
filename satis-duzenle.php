@@ -43,9 +43,12 @@ if (!$satis) {
     exit;
 }
 
-// Rol bazlı erişim kontrolü
-if (isSatisci() && $satis['personel_id'] != $_SESSION['personel_id']) {
-    // Satışçı sadece kendi satışlarını düzenleyebilir
+// Satış sahibinin bilgilerini al
+$satis_sahibi = $db->select('personel', ['id' => $satis['personel_id']])[0] ?? null;
+
+// Rol bazlı erişim kontrolü - Sadece admin herkesin satışını düzenleyebilir
+if (!isAdmin() && $satis['personel_id'] != $_SESSION['personel_id']) {
+    // Admin olmayan kullanıcı sadece kendi satışlarını düzenleyebilir
     header('Location: satislar.php');
     exit;
 }
@@ -89,6 +92,13 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
     $personel_id = !empty($_POST['personel_id']) ? (int)$_POST['personel_id'] : null;
+    
+    // Rol bazlı personel ID kontrolü - Sadece admin herkesin satışını düzenleyebilir
+    if (!isAdmin()) {
+        // Admin olmayan kullanıcı sadece kendi adına satış düzenleyebilir
+        $personel_id = $_SESSION['personel_id'];
+    }
+    
     $toplam_tutar = 0;
     
         // Satış detaylarını hesapla
@@ -119,7 +129,6 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
         'satis_tarihi' => $_POST['satis_tarihi'] ?? date('Y-m-d'),
         'toplam_tutar' => $toplam_tutar,
         'durum' => $_POST['durum'],
-        'banka_id' => !empty($_POST['banka_id']) ? (int)$_POST['banka_id'] : null,
         'onay_durumu' => 'beklemede', // Düzenleme sonrası tekrar onaya düşsün
         'onay_tarihi' => null,
         'onaylayan_id' => null
@@ -251,10 +260,19 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         </a>
                     </div>
                     
+                    <?php if (!isAdmin() && $satis_sahibi): ?>
+                    <!-- Admin olmayan kullanıcı için bilgi mesajı -->
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Bu satış <strong><?php echo htmlspecialchars($satis_sahibi['ad_soyad']); ?></strong> adına kayıtlıdır.</span>
+                    </div>
+                    <?php endif; ?>
+                    
                     <form method="POST" action="satis-duzenle.php?id=<?php echo $satis['id']; ?>" id="satisForm">
                         <input type="hidden" name="action" value="update_satis">
                         
                         <!-- Personel Seçimi -->
+                        <?php if (isAdmin()): ?>
                         <div style="margin-bottom: 30px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Personel Seçimi</label>
                             <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
@@ -266,6 +284,10 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        <?php else: ?>
+                        <!-- Satışçı için gizli personel ID -->
+                        <input type="hidden" name="personel_id" value="<?php echo $_SESSION['personel_id']; ?>">
+                        <?php endif; ?>
                         
                         <!-- Müşteri Seçimi -->
                         <div style="margin-bottom: 30px;">
@@ -283,18 +305,6 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                             </select>
                         </div>
                         
-                        <!-- Ödeme Yeri Seçimi -->
-                        <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ödeme Nereye Yapıldı</label>
-                            <select name="banka_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
-                                <option value="">Banka seçiniz</option>
-                                <?php foreach ($bankalar as $banka): ?>
-                                <option value="<?php echo $banka['id']; ?>" <?php echo $satis['banka_id'] == $banka['id'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($banka['banka_adi']); ?>
-                                </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
                         
                         <!-- Firma ve Ürün/Hizmet Seçimi -->
                         <div id="firma-urun-container">

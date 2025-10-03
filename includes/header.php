@@ -70,7 +70,30 @@ requireLogin();
                 ?>
             </div>
             <div style="font-size: 12px; color: #64748b;">
-                <?php echo ($_SESSION['rol'] ?? '') === 'admin' ? 'Sistem Yöneticisi' : 'Satış Temsilcisi'; ?>
+                <?php
+                // Rol adını veritabanından al
+                $rol_adi = $_SESSION['rol'] ?? '';
+                if ($rol_adi === 'admin') {
+                    echo 'Sistem Yöneticisi';
+                } else {
+                    // Veritabanından rol açıklamasını al
+                    try {
+                        require_once __DIR__ . '/../config/database.php';
+                        $db = Database::getInstance();
+                        $roller = $db->query("SELECT aciklama FROM roller WHERE rol_adi = ?", [$rol_adi]);
+                        if (!empty($roller)) {
+                            $aciklama = $roller[0]['aciklama'];
+                            // "Sistem Yöneticisi - Tüm yetkilere sahip" gibi açıklamadan sadece başlığı al
+                            $baslik = explode(' - ', $aciklama)[0];
+                            echo htmlspecialchars($baslik);
+                        } else {
+                            echo 'Kullanıcı';
+                        }
+                    } catch (Exception $e) {
+                        echo 'Kullanıcı';
+                    }
+                }
+                ?>
             </div>
         </div>
         <a href="logout.php" class="logout-btn" title="Çıkış Yap">
