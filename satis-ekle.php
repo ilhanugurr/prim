@@ -278,7 +278,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_satis') {
                                     
                                     <div>
                                         <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Birim Fiyat (KDV Dahil - ₺)</label>
-                                        <input type="number" name="fiyat[]" step="0.01" min="0" readonly style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: #f8fafc;">
+                                        <input type="number" name="fiyat[]" step="0.01" min="0" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                     </div>
                                     
                                     <div>

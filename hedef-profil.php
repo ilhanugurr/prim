@@ -43,7 +43,7 @@ $hedefler = $db->query("
             SELECT 1 FROM firmalar f2 WHERE f2.ust_firma_id = f.id AND f2.durum = 'aktif'
         ))
     )
-    ORDER BY h.yil DESC, h.ay DESC
+    ORDER BY h.yil DESC, h.ay ASC
 ", [$personel_id]);
 
 // Yılları grupla
@@ -139,8 +139,22 @@ $stats = getStats();
                             ];
                         }
                         
-                        // Yıllara göre sırala
-                        ksort($hedefler_grouped);
+                        // Yıllara ve aylara göre sırala (sayısal)
+                        uksort($hedefler_grouped, function($a, $b) {
+                            $parts_a = explode('_', $a);
+                            $parts_b = explode('_', $b);
+                            $yil_a = (int)$parts_a[0];
+                            $yil_b = (int)$parts_b[0];
+                            $ay_a = (int)$parts_a[1];
+                            $ay_b = (int)$parts_b[1];
+                            
+                            // Önce yıla göre sırala (en yeni önce)
+                            if ($yil_a != $yil_b) {
+                                return $yil_b - $yil_a; // DESC
+                            }
+                            // Aynı yılda ise aya göre sırala (en eski önce)
+                            return $ay_a - $ay_b; // ASC
+                        });
                         
                         $aylar = [
                             1 => 'Ocak', 2 => 'Şubat', 3 => 'Mart', 4 => 'Nisan',
