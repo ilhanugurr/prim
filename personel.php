@@ -73,7 +73,7 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                 <?php endif; ?>
 
                 <!-- Action Buttons -->
-                <?php if (isAdmin()): ?>
+                <?php if (hasPagePermission('personel', 'ekleme')): ?>
                 <div class="action-buttons">
                     <a href="personel-ekle.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
@@ -124,16 +124,18 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                                     
                                     <!-- Aksiyonlar -->
                                     <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                                        <?php if (isAdmin()): ?>
+                                        <?php if (hasPagePermission('personel', 'duzenleme')): ?>
                                         <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" 
                                            class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
                                             <i class="fas fa-edit"></i> Düzenle
                                         </a>
+                                        <?php if (hasPagePermission('personel', 'silme')): ?>
                                         <a href="personel.php?action=delete&id=<?php echo $personel['id']; ?>" 
                                            class="btn btn-danger" style="padding: 6px 12px; font-size: 11px;"
                                            onclick="return confirm('Bu personeli silmek istediğinizden emin misiniz?')">
                                             <i class="fas fa-trash"></i> Sil
                                         </a>
+                                        <?php endif; ?>
                                         <?php endif; ?>
                                         <a href="hedef-profil.php?personel_id=<?php echo $personel['id']; ?>" 
                                            class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">

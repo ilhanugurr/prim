@@ -17,6 +17,9 @@ requireLogin();
 // İstatistikleri al
 $stats = getStats();
 
+// Rolleri al
+$roller = $db->query("SELECT * FROM roller WHERE durum = 'aktif' ORDER BY rol_adi");
+
 // Personel ID kontrolü
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header("Location: personel.php");
@@ -162,12 +165,18 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
                             <small style="color: #6b7280;">Giriş yaparken kullanılacak (küçük harf, boşluksuz)</small>
                         </div>
                         
-                        <?php if (isAdmin()): ?>
+                        <?php if (hasPagePermission('personel', 'duzenleme')): ?>
                         <div style="margin-bottom: 30px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Rol *</label>
                             <select name="rol" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
-                                <option value="satisci" <?php echo (isset($personel['rol']) && $personel['rol'] == 'satisci') ? 'selected' : ''; ?>>Satışçı</option>
-                                <option value="admin" <?php echo (isset($personel['rol']) && $personel['rol'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
+                                <?php foreach ($roller as $rol): ?>
+                                <option value="<?php echo htmlspecialchars($rol['rol_adi']); ?>" <?php echo (isset($personel['rol']) && $personel['rol'] == $rol['rol_adi']) ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($rol['rol_adi']); ?>
+                                    <?php if ($rol['aciklama']): ?>
+                                        - <?php echo htmlspecialchars($rol['aciklama']); ?>
+                                    <?php endif; ?>
+                                </option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <?php endif; ?>

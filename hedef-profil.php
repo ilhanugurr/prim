@@ -352,6 +352,12 @@ $stats = getStats();
             font-weight: 500;
         }
 
+        html.dark-mode .personel-stats,
+        body.dark-mode .personel-stats {
+            background: #1e3a8a;
+            color: #93c5fd;
+        }
+
         .hedefler-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -379,6 +385,11 @@ $stats = getStats();
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid #f1f5f9;
+        }
+
+        html.dark-mode .hedef-header,
+        body.dark-mode .hedef-header {
+            border-bottom-color: #374151;
         }
 
         .hedef-info h3 {
@@ -422,9 +433,22 @@ $stats = getStats();
             border: 1px solid var(--border-color);
         }
 
+        html.dark-mode .btn-edit,
+        body.dark-mode .btn-edit {
+            background: #374151;
+            color: #e5e7eb;
+            border-color: #4b5563;
+        }
+
         .btn-edit:hover {
             background: #e5e7eb;
             color: #1f2937;
+        }
+
+        html.dark-mode .btn-edit:hover,
+        body.dark-mode .btn-edit:hover {
+            background: #4b5563;
+            color: #f3f4f6;
         }
 
         .btn-delete {
@@ -433,9 +457,22 @@ $stats = getStats();
             border: 1px solid #fecaca;
         }
 
+        html.dark-mode .btn-delete,
+        body.dark-mode .btn-delete {
+            background: #7f1d1d;
+            color: #fecaca;
+            border-color: #991b1b;
+        }
+
         .btn-delete:hover {
             background: #fecaca;
             color: #b91c1c;
+        }
+
+        html.dark-mode .btn-delete:hover,
+        body.dark-mode .btn-delete:hover {
+            background: #991b1b;
+            color: #fecaca;
         }
 
         .firma-list {
@@ -483,6 +520,11 @@ $stats = getStats();
             border-top: 1px solid #e5e7eb;
         }
 
+        html.dark-mode .firma-progress,
+        body.dark-mode .firma-progress {
+            border-top-color: #374151;
+        }
+
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -496,6 +538,11 @@ $stats = getStats();
             font-size: 64px;
             color: #d1d5db;
             margin-bottom: 20px;
+        }
+
+        html.dark-mode .empty-state i,
+        body.dark-mode .empty-state i {
+            color: #4b5563;
         }
 
         .empty-state h3 {
@@ -513,6 +560,11 @@ $stats = getStats();
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #e5e7eb;
+        }
+
+        html.dark-mode .progress-section,
+        body.dark-mode .progress-section {
+            border-top-color: #374151;
         }
 
         .progress-header {

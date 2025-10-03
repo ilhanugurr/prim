@@ -151,8 +151,8 @@ $recent_activities = $db->query("
                     </div>
                 </div>
 
-                <!-- Quick Actions (Sadece Admin) -->
-                <?php if (isAdmin()): 
+                <!-- Quick Actions (Yetkili Kullanıcılar) -->
+                <?php if (hasPagePermission('ana-sayfa', 'goruntuleme')): 
                     // Son 3 ayın verilerini hazırla
                     $aylar_data = [];
                     $ay_isimleri = [
@@ -281,7 +281,7 @@ $recent_activities = $db->query("
         }
         
         // Firma Satış Grafikleri
-        <?php if (isAdmin()): ?>
+        <?php if (hasPagePermission('ana-sayfa', 'goruntuleme')): ?>
         document.addEventListener('DOMContentLoaded', function() {
             const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
             

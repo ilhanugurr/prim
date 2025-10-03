@@ -36,6 +36,65 @@ function isSatisci() {
 }
 
 /**
+ * Kullanıcının belirli bir sayfaya erişim yetkisi var mı kontrol et
+ */
+function hasPagePermission($sayfa_adi, $yetki_tipi = 'goruntuleme') {
+    if (!isLoggedIn()) {
+        return false;
+    }
+    
+    // Admin her zaman tam yetkiye sahip
+    if ($_SESSION['rol'] === 'admin') {
+        return true;
+    }
+    
+    try {
+        // Database sınıfını kullan
+        require_once __DIR__ . '/../config/database.php';
+        $db = Database::getInstance();
+        
+        // Kullanıcının rol ID'sini al
+        $roller = $db->query("SELECT id FROM roller WHERE rol_adi = ?", [$_SESSION['rol']]);
+        if (empty($roller)) {
+            return false;
+        }
+        $rol_id = $roller[0]['id'];
+        
+        // Sayfa ID'sini al
+        $sayfalar = $db->query("SELECT id FROM sayfalar WHERE sayfa_adi = ?", [$sayfa_adi]);
+        if (empty($sayfalar)) {
+            return false;
+        }
+        $sayfa_id = $sayfalar[0]['id'];
+        
+        // İzin kontrolü
+        $izinler = $db->query("SELECT yetki_tipi FROM rol_sayfa_izinleri WHERE rol_id = ? AND sayfa_id = ?", [$rol_id, $sayfa_id]);
+        if (empty($izinler)) {
+            return false;
+        }
+        
+        $izin_yetki = $izinler[0]['yetki_tipi'];
+        
+        // Yetki tipi kontrolü
+        $yetki_hierarşisi = [
+            'goruntuleme' => 1,
+            'ekleme' => 2,
+            'duzenleme' => 3,
+            'silme' => 4,
+            'tam_yetki' => 5
+        ];
+        
+        $kullanici_yetki = $yetki_hierarşisi[$izin_yetki] ?? 0;
+        $gerekli_yetki = $yetki_hierarşisi[$yetki_tipi] ?? 1;
+        
+        return $kullanici_yetki >= $gerekli_yetki;
+        
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+/**
  * Giriş yapmamış kullanıcıları giriş sayfasına yönlendir
  */
 function requireLogin() {

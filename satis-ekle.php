@@ -28,8 +28,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'get_products' && isset($_GET['
 $stats = getStats();
 
 // Personelleri al (rol bazlı filtreleme)
-if (isAdmin()) {
-    // Admin tüm personelleri görür
+if (hasPagePermission('satislar', 'ekleme')) {
+    // Yetkili kullanıcı tüm personelleri görür
     $personeller = $db->select('personel', [], 'ad_soyad ASC');
 } else {
     // Satışçı sadece kendini görür

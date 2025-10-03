@@ -19,8 +19,8 @@ requireLogin();
 $stats = getStats();
 
 // Personelleri al (rol bazlı filtreleme)
-if (isAdmin()) {
-    // Admin tüm personelleri görür
+if (hasPagePermission('primler', 'goruntuleme')) {
+    // Yetkili kullanıcı tüm personelleri görür
     $personeller = $db->select('personel', [], 'ad_soyad ASC');
 } else {
     // Satışçı sadece kendini görür
@@ -102,7 +102,7 @@ $aylar = [
                 </div>
 
                 <!-- Action Buttons -->
-                <?php if (isAdmin()): ?>
+                <?php if (hasPagePermission('primler', 'ekleme')): ?>
                 <div class="action-buttons">
                     <a href="personel-prim-oranlari.php" class="btn btn-primary">
                         <i class="fas fa-percentage"></i>

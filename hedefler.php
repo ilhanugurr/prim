@@ -66,8 +66,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['person
 }
 
 // Personelleri al (rol bazlı filtreleme)
-if (isAdmin()) {
-    // Admin tüm personelleri görür
+if (hasPagePermission('hedefler', 'goruntuleme')) {
+    // Yetkili kullanıcı tüm personelleri görür
     $personeller = getPersonel();
 } else {
     // Satışçı sadece kendini görür
@@ -78,8 +78,8 @@ $firmalar = getFirmalar();
 $stats = getStats();
 
 // Hedefleri al (rol bazlı filtreleme)
-if (isAdmin()) {
-    // Admin tüm hedefleri görür
+if (hasPagePermission('hedefler', 'goruntuleme')) {
+    // Yetkili kullanıcı tüm hedefleri görür
     $hedefler = getHedefler();
 } else {
     // Satışçı sadece kendi hedeflerini görür
@@ -142,7 +142,7 @@ if (isAdmin()) {
                 <?php endif; ?>
 
                 <!-- Action Buttons -->
-                <?php if (isAdmin()): ?>
+                <?php if (hasPagePermission('hedefler', 'ekleme')): ?>
                 <div class="action-buttons">
                     <a href="hedef-ekle.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
@@ -195,8 +195,8 @@ if (isAdmin()) {
                                 <div class="personel-actions">
                                     <span class="hedef-count"><?php echo count($personel_data['hedefler']); ?> Hedef</span>
                                     <a href="hedef-profil.php?personel_id=<?php echo $personel_id; ?>" class="btn-edit-profile">
-                                        <i class="fas fa-<?php echo isAdmin() ? 'edit' : 'eye'; ?>"></i>
-                                        <?php echo isAdmin() ? 'Hedef Düzenle' : 'Hedefleri Görüntüle'; ?>
+                                        <i class="fas fa-<?php echo hasPagePermission('hedefler', 'duzenleme') ? 'edit' : 'eye'; ?>"></i>
+                                        <?php echo hasPagePermission('hedefler', 'duzenleme') ? 'Hedef Düzenle' : 'Hedefleri Görüntüle'; ?>
                                     </a>
                                 </div>
                             </div>

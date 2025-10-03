@@ -92,7 +92,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 <?php endif; ?>
 
                 <!-- Action Buttons -->
-                <?php if (isAdmin()): ?>
+                <?php if (hasPagePermission('firmalar', 'ekleme')): ?>
                 <div class="action-buttons">
                     <a href="firma-ekle.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
@@ -105,9 +105,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                 <div class="dashboard-grid">
                     <?php foreach ($ana_firmalar as $ana_firma): ?>
                         <!-- Ana Firma -->
-                        <div class="dashboard-card" style="<?php echo !empty($ana_firma['alt_firmalar']) ? 'background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 2px solid #3b82f6;' : ''; ?>">
+                        <div class="dashboard-card <?php echo !empty($ana_firma['alt_firmalar']) ? 'main-company-card' : ''; ?>">
                             <div class="card-header">
-                                <div class="card-icon" style="<?php echo !empty($ana_firma['alt_firmalar']) ? 'background: linear-gradient(135deg, #3b82f6, #1d4ed8);' : ''; ?>">
+                                <div class="card-icon <?php echo !empty($ana_firma['alt_firmalar']) ? 'main-company-icon' : ''; ?>">
                                     <i class="fas <?php echo !empty($ana_firma['alt_firmalar']) ? 'fa-building' : 'fa-industry'; ?>"></i>
                                 </div>
                                 <div class="card-title">
@@ -134,12 +134,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                             
                             <!-- Alt Firmalar (Ana firmanın içinde) -->
                             <?php if (!empty($ana_firma['alt_firmalar'])): ?>
-                                <div style="background: var(--bg-card); border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #e0f2fe;">
+                                <div class="subsidiaries-container">
                                     <h4 style="font-size: 13px; font-weight: 600; color: #3b82f6; margin-bottom: 12px;">
                                         <i class="fas fa-sitemap"></i> Alt Firmalar
                                     </h4>
                                     <?php foreach ($ana_firma['alt_firmalar'] as $alt_firma): ?>
-                                        <div style="background: var(--bg-secondary); border-left: 3px solid #3b82f6; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                                        <div class="subsidiary-item">
                                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                                 <div style="display: flex; align-items: center; gap: 8px;">
                                                     <i class="fas fa-arrow-right" style="color: #3b82f6; font-size: 12px;"></i>
@@ -152,7 +152,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                                 </div>
                                             </div>
                                             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                                                <?php if (isAdmin()): ?>
+                                                <?php if (hasPagePermission('firmalar', 'duzenleme')): ?>
                                                 <a href="firma-duzenle.php?id=<?php echo $alt_firma['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
                                                     <i class="fas fa-edit"></i> Düzenle
                                                 </a>
@@ -178,7 +178,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                 </span>
                             </div>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <?php if (isAdmin()): ?>
+                                <?php if (hasPagePermission('firmalar', 'duzenleme')): ?>
                                 <a href="firma-duzenle.php?id=<?php echo $ana_firma['id']; ?>" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
                                     <i class="fas fa-edit"></i> Düzenle
                                 </a>

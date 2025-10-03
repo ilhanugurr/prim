@@ -89,7 +89,7 @@ $komisyonlar = getFirmaKomisyonlar($firma_id);
         <!-- Sidebar -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <img src="seomew-logo.png" alt="SyncMEW Logo" style="height: 52px; margin-bottom: 0;">
+                <img src="seomew-logo.png" alt="SyncMEW Logo" class="logo-img" style="height: 52px; margin-bottom: 0;">
             </div>
             
             <nav class="sidebar-nav">

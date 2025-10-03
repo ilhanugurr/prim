@@ -151,7 +151,7 @@ $satislar = $db->query("
                 <!-- Filtreleme -->
                 <div style="background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
                     <form method="GET" action="satislar.php" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
-                        <?php if (isAdmin()): ?>
+                        <?php if (hasPagePermission('satislar', 'goruntuleme')): ?>
                         <div>
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Satışçı</label>
                             <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
@@ -191,7 +191,7 @@ $satislar = $db->query("
                             </select>
                         </div>
                         
-                        <?php if (isAdmin()): ?>
+                        <?php if (hasPagePermission('satislar', 'duzenleme')): ?>
                         <div>
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Onay Durumu</label>
                             <select name="onay_durumu" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
@@ -333,7 +333,7 @@ $satislar = $db->query("
                                             </td>
                                             <td style="padding: 15px;">
                                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                                    <?php if (isAdmin() && $onay_durumu == 'beklemede'): ?>
+                                                    <?php if (hasPagePermission('satislar', 'duzenleme') && $onay_durumu == 'beklemede'): ?>
                                                     <a href="satislar.php?action=approve&id=<?php echo $satis['id']; ?>" 
                                                        class="btn btn-success" 
                                                        style="padding: 6px 12px; font-size: 11px;"

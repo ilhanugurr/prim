@@ -108,7 +108,7 @@ $urunler = $db->query($query);
                                 <?php endif; ?>
                             </form>
                         </div>
-                        <?php if (isAdmin()): ?>
+                        <?php if (hasPagePermission('urun-hizmet', 'ekleme')): ?>
                         <a href="urun-ekle.php" class="btn btn-primary" style="white-space: nowrap;">
                             <i class="fas fa-plus"></i>
                             Yeni Ürün/Hizmet Ekle
@@ -221,16 +221,18 @@ $urunler = $db->query($query);
                                             </td>
                                             <td style="padding: 15px;">
                                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                                    <?php if (isAdmin()): ?>
+                                                    <?php if (hasPagePermission('urun-hizmet', 'duzenleme')): ?>
                                                     <a href="urun-duzenle.php?id=<?php echo $urun['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
                                                         <i class="fas fa-edit"></i> Düzenle
                                                     </a>
+                                                    <?php if (hasPagePermission('urun-hizmet', 'silme')): ?>
                                                     <a href="urun-hizmet.php?action=delete&id=<?php echo $urun['id']; ?>" 
                                                        class="btn btn-danger" 
                                                        style="padding: 6px 12px; font-size: 11px;"
                                                        onclick="return confirm('Bu ürün/hizmeti silmek istediğinizden emin misiniz?')">
                                                        <i class="fas fa-trash"></i> Sil
                                                     </a>
+                                                    <?php endif; ?>
                                                     <?php endif; ?>
                                                 </div>
                                             </td>

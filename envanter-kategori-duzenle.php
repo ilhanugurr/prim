@@ -11,8 +11,8 @@ mb_internal_encoding('UTF-8');
 require_once 'config/database.php';
 require_once 'includes/auth.php';
 
-// Admin kontrolü
-if (!isAdmin()) {
+// İzin kontrolü
+if (!hasPagePermission('envanter', 'duzenleme')) {
     header("Location: index.php");
     exit;
 }

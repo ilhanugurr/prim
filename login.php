@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SeoMEW Prim Sistemi - Giriş</title>
+    <title>SeoMEW Nakit Akışı - Giriş</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -86,8 +86,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
         }
 
         .login-container {
-            background: var(--bg-card);
+            background: white;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
@@ -117,12 +117,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
 
         .login-header h1 {
             font-size: 24px;
-            color: #1f2937;
+            color: #1e293b;
             margin-bottom: 8px;
+            font-weight: 700;
         }
 
         .login-header p {
-            color: #6b7280;
+            color: #64748b;
             font-size: 14px;
         }
 
@@ -132,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
 
         .form-group label {
             display: block;
-            color: var(--text-primary);
+            color: #374151;
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
@@ -147,29 +148,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--text-muted);
+            color: #9ca3af;
             font-size: 16px;
         }
 
         .form-control {
             width: 100%;
             padding: 12px 16px 12px 48px;
-            border: 2px solid #e5e7eb;
+            border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 15px;
             transition: all 0.3s;
             outline: none;
+            background: white;
+            color: #1e293b;
         }
 
         .form-control:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .btn-login {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -182,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
         }
 
         .btn-login:active {
@@ -209,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
         .login-footer {
             margin-top: 24px;
             text-align: center;
-            color: #6b7280;
+            color: #64748b;
             font-size: 13px;
         }
 
@@ -227,8 +230,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
 <body>
     <div class="login-container">
         <div class="login-header">
-            <img src="seomew-logo.png" alt="SeoMEW Logo">
-            <h1>Prim Sistemi</h1>
+            <img src="seomew-logo.png" alt="SeoMEW Logo" class="logo-img">
+            <h1>Nakit Akışı</h1>
             <p>Hesabınıza giriş yapın</p>
         </div>
 
