@@ -277,7 +277,7 @@ $aylar = [
                     <?php if (!empty($tahsilatlar)): ?>
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                            <tr style="background: var(--bg-secondary); border-bottom: 2px solid var(--border-color);">
                                 <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Ödeme Tarihi</th>
                                 <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Müşteri</th>
                                 <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Personel</th>
@@ -290,8 +290,8 @@ $aylar = [
                         </thead>
                         <tbody>
                             <?php foreach ($tahsilatlar as $tahsilat): ?>
-                            <tr style="border-bottom: 1px solid #e2e8f0;">
-                                <td style="padding: 16px; color: #1f2937;">
+                            <tr style="border-bottom: 1px solid var(--border-color);">
+                                <td style="padding: 16px; color: var(--text-primary);">
                                     <div style="font-weight: 600;"><?php echo date('d.m.Y', strtotime($tahsilat['odeme_tarihi'])); ?></div>
                                     <?php if ($tahsilat['fatura_tarihi']): ?>
                                     <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
@@ -299,7 +299,7 @@ $aylar = [
                                     </div>
                                     <?php endif; ?>
                                 </td>
-                                <td style="padding: 16px; color: #1f2937; font-weight: 500;">
+                                <td style="padding: 16px; color: var(--text-primary); font-weight: 500;">
                                     <?php echo htmlspecialchars($tahsilat['musteri_adi']); ?>
                                 </td>
                                 <td style="padding: 16px; color: var(--text-secondary);">
@@ -344,8 +344,8 @@ $aylar = [
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-                            <tr style="background: var(--bg-secondary); font-weight: 700; border-top: 2px solid #e2e8f0;">
-                                <td colspan="4" style="padding: 16px; color: #1f2937;">TOPLAM</td>
+                            <tr style="background: var(--bg-secondary); font-weight: 700; border-top: 2px solid var(--border-color);">
+                                <td colspan="4" style="padding: 16px; color: var(--text-primary);">TOPLAM</td>
                                 <td style="padding: 16px; text-align: right; color: var(--text-secondary);">
                                     ₺<?php echo number_format($toplam_kdv_dahil + $toplam_maliyet, 2, ',', '.'); ?>
                                 </td>
@@ -361,9 +361,9 @@ $aylar = [
                     </table>
                     <?php else: ?>
                     <div class="text-secondary" style="text-align: center; padding: 60px;">
-                        <i class="fas fa-money-bill-wave" style="font-size: 64px; margin-bottom: 20px; color: #cbd5e1;"></i>
+                        <i class="fas fa-money-bill-wave" style="font-size: 64px; margin-bottom: 20px; color: var(--text-muted);"></i>
                         <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Tahsilat kaydı bulunamadı</h3>
-                        <p style="font-size: 16px; margin-bottom: 20px;">Seçili filtrelere göre tahsilat bulunamadı.</p>
+                        <p style="font-size: 16px; margin-bottom: 20px; color: var(--text-secondary);">Seçili filtrelere göre tahsilat bulunamadı.</p>
                         <a href="tahsilat-ekle.php" style="padding: 12px 24px; background: #10b981; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
                             <i class="fas fa-plus"></i> Yeni Tahsilat Ekle
                         </a>

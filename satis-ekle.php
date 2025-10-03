@@ -211,10 +211,19 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_satis') {
                         </a>
                     </div>
                     
+                    <?php if (!isAdmin()): ?>
+                    <!-- Satışçı için bilgi mesajı -->
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-info-circle"></i>
+                        <span>Bu satış <strong><?php echo htmlspecialchars($_SESSION['ad_soyad']); ?></strong> adına kaydedilecektir.</span>
+                    </div>
+                    <?php endif; ?>
+                    
                     <form method="POST" action="satis-ekle.php" id="satisForm">
                         <input type="hidden" name="action" value="add_satis">
                         
                         <!-- Personel Seçimi -->
+                        <?php if (isAdmin()): ?>
                         <div style="margin-bottom: 30px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Personel Seçimi</label>
                             <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
@@ -226,6 +235,10 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_satis') {
                                 <?php endforeach; ?>
                             </select>
                         </div>
+                        <?php else: ?>
+                        <!-- Satışçı için gizli personel ID -->
+                        <input type="hidden" name="personel_id" value="<?php echo $_SESSION['personel_id']; ?>">
+                        <?php endif; ?>
                         
                         <!-- Müşteri Seçimi -->
                         <div style="margin-bottom: 30px;">

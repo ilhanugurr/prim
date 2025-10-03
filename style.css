@@ -1297,3 +1297,40 @@ body.dark-mode .permission-item:hover {
 .text-muted {
     color: var(--text-muted);
 }
+
+/* Tahsilat sayfası dark mode düzeltmeleri */
+html.dark-mode .alert-success,
+body.dark-mode .alert-success {
+    background: #064e3b !important;
+    color: #a7f3d0 !important;
+    border: 1px solid #065f46;
+}
+
+html.dark-mode .alert-info,
+body.dark-mode .alert-info {
+    background: #1e3a8a !important;
+    color: #93c5fd !important;
+    border: 1px solid #1e40af;
+}
+
+html.dark-mode .alert-error,
+body.dark-mode .alert-error {
+    background: #7f1d1d !important;
+    color: #fecaca !important;
+    border: 1px solid #991b1b;
+}
+
+html.dark-mode .alert-info,
+body.dark-mode .alert-info {
+    background: #1e3a8a !important;
+    color: #93c5fd !important;
+    border: 1px solid #1e40af;
+}
+
+/* Satış ekleme sayfası bilgi mesajı dark mode */
+html.dark-mode div[style*="background: #f0f9ff"],
+body.dark-mode div[style*="background: #f0f9ff"] {
+    background: #1e3a8a !important;
+    border-color: #1e40af !important;
+    color: #93c5fd !important;
+}
