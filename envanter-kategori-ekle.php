@@ -9,6 +9,7 @@ header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
 require_once 'config/database.php';
+require_once 'includes/auth.php';
 
 // Admin kontrolü
 if (!isAdmin()) {
@@ -102,14 +103,14 @@ $renkler = [
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="envanter.php" style="color: #3b82f6; text-decoration: none;">Envanter</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="envanter-kategoriler.php" style="color: #3b82f6; text-decoration: none;">Kategoriler</span>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Yeni Kategori Ekle</span>
+                        <span style="color: var(--text-primary);">Yeni Kategori Ekle</span>
                     </nav>
                 </div>
 
@@ -127,9 +128,9 @@ $renkler = [
                 <?php endif; ?>
 
                 <!-- Form -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Yeni Kategori Ekle</h2>
+                        <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Yeni Kategori Ekle</h2>
                         <a href="envanter-kategoriler.php" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Kategori Listesi
@@ -141,15 +142,15 @@ $renkler = [
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Kategori Adı *</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Kategori Adı *</label>
                                 <input type="text" name="kategori_adi" value="<?php echo isset($data['kategori_adi']) ? htmlspecialchars($data['kategori_adi']) : ''; ?>" required 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                        placeholder="Örn: Teknoloji, Mobilya, Ofis Malzemeleri" maxlength="100">
                             </div>
                             
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
-                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Durum</label>
+                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="aktif" <?php echo (!isset($data['durum']) || $data['durum'] == 'aktif') ? 'selected' : ''; ?>>Aktif</option>
                                     <option value="pasif" <?php echo (isset($data['durum']) && $data['durum'] == 'pasif') ? 'selected' : ''; ?>>Pasif</option>
                                 </select>
@@ -157,39 +158,39 @@ $renkler = [
                         </div>
                         
                         <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Açıklama</label>
-                            <textarea name="aciklama" rows="3" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; resize: vertical;" 
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Açıklama</label>
+                            <textarea name="aciklama" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; resize: vertical;" 
                                       placeholder="Kategori hakkında detaylı açıklama"><?php echo isset($data['aciklama']) ? htmlspecialchars($data['aciklama']) : ''; ?></textarea>
                         </div>
                         
                         <!-- Renk Seçimi -->
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 15px; font-weight: 600; color: #374151;">Kategori Rengi</label>
+                            <label style="display: block; margin-bottom: 15px; font-weight: 600; color: var(--text-primary);">Kategori Rengi</label>
                             
                             <!-- Önceden Tanımlı Renkler -->
                             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 15px;">
                                 <?php foreach ($renkler as $renk_kodu => $renk_adi): ?>
-                                    <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; cursor: pointer; transition: all 0.2s; <?php echo (isset($data['renk']) && $data['renk'] == $renk_kodu) || (!isset($data['renk']) && $renk_kodu == '#3b82f6') ? 'border-color: ' . $renk_kodu . '; background: ' . $renk_kodu . '15;' : ''; ?>" 
+                                    <label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; cursor: pointer; transition: all 0.2s; <?php echo (isset($data['renk']) && $data['renk'] == $renk_kodu) || (!isset($data['renk']) && $renk_kodu == '#3b82f6') ? 'border-color: ' . $renk_kodu . '; background: ' . $renk_kodu . '15;' : ''; ?>" 
                                            onmouseover="this.style.borderColor='<?php echo $renk_kodu; ?>'; this.style.backgroundColor='<?php echo $renk_kodu; ?>15';" 
                                            onmouseout="if (!this.querySelector('input').checked) { this.style.borderColor='#e2e8f0'; this.style.backgroundColor='transparent'; }">
                                         <input type="radio" name="renk" value="<?php echo $renk_kodu; ?>" 
                                                <?php echo (isset($data['renk']) && $data['renk'] == $renk_kodu) || (!isset($data['renk']) && $renk_kodu == '#3b82f6') ? 'checked' : ''; ?>
                                                style="margin: 0;" onchange="updateColorPreview()">
                                         <div style="width: 20px; height: 20px; background: <?php echo $renk_kodu; ?>; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"></div>
-                                        <span style="font-weight: 500; color: #374151;"><?php echo $renk_adi; ?></span>
+                                        <span style="font-weight: 500; color: var(--text-primary);"><?php echo $renk_adi; ?></span>
                                     </label>
                                 <?php endforeach; ?>
                             </div>
                             
                             <!-- Özel Renk Girişi -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Özel Renk (Hex Kodu)</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Özel Renk (Hex Kodu)</label>
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <input type="color" id="custom_color" value="<?php echo isset($data['renk']) ? $data['renk'] : '#3b82f6'; ?>" 
-                                           style="width: 60px; height: 40px; border: 1px solid #d1d5db; border-radius: 8px; cursor: pointer;" 
+                                           style="width: 60px; height: 40px; border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer;" 
                                            onchange="selectCustomColor()">
                                     <input type="text" id="custom_color_text" value="<?php echo isset($data['renk']) ? $data['renk'] : '#3b82f6'; ?>" 
-                                           style="flex: 1; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; font-family: monospace;"
+                                           style="flex: 1; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: monospace;"
                                            placeholder="#3b82f6" maxlength="7" onchange="validateCustomColor()">
                                     <button type="button" onclick="applyCustomColor()" class="btn btn-secondary" style="padding: 12px 20px;">
                                         <i class="fas fa-check"></i> Uygula
@@ -198,12 +199,12 @@ $renkler = [
                             </div>
                             
                             <!-- Renk Önizleme -->
-                            <div style="margin-top: 15px; padding: 15px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                            <div style="margin-top: 15px; padding: 15px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);">
                                 <div style="display: flex; align-items: center; gap: 15px;">
-                                    <span style="font-weight: 600; color: #374151;">Önizleme:</span>
+                                    <span style="font-weight: 600; color: var(--text-primary);">Önizleme:</span>
                                     <div id="color_preview" style="display: flex; align-items: center; gap: 10px; padding: 8px 15px; border-radius: 20px; background: <?php echo isset($data['renk']) ? $data['renk'] : '#3b82f6'; ?>15; border: 2px solid <?php echo isset($data['renk']) ? $data['renk'] : '#3b82f6'; ?>;">
                                         <div style="width: 12px; height: 12px; background: <?php echo isset($data['renk']) ? $data['renk'] : '#3b82f6'; ?>; border-radius: 50%;"></div>
-                                        <span style="font-weight: 500; color: #374151;">Örnek Kategori</span>
+                                        <span style="font-weight: 500; color: var(--text-primary);">Örnek Kategori</span>
                                     </div>
                                 </div>
                             </div>

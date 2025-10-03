@@ -112,12 +112,12 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="personel.php" style="color: #3b82f6; text-decoration: none;">Personel</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Personel Düzenle</span>
+                        <span style="color: var(--text-primary);">Personel Düzenle</span>
                     </nav>
                 </div>
 
@@ -135,9 +135,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
                 <?php endif; ?>
 
                 <!-- Form -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Personel Bilgilerini Düzenle</h2>
+                        <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Personel Bilgilerini Düzenle</h2>
                         <a href="personel.php" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Personel Listesi
@@ -148,24 +148,24 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
                         <input type="hidden" name="action" value="update_personel">
                         
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ad Soyad *</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ad Soyad *</label>
                             <input type="text" name="ad_soyad" value="<?php echo htmlspecialchars($personel['ad_soyad']); ?>" required 
-                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                   style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                    placeholder="Örn: Ahmet Yılmaz">
                         </div>
                         
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Kullanıcı Adı *</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Kullanıcı Adı *</label>
                             <input type="text" name="kullanici_adi" value="<?php echo htmlspecialchars($personel['kullanici_adi'] ?? ''); ?>" required 
-                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                   style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                    placeholder="Örn: ahmet">
                             <small style="color: #6b7280;">Giriş yaparken kullanılacak (küçük harf, boşluksuz)</small>
                         </div>
                         
                         <?php if (isAdmin()): ?>
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Rol *</label>
-                            <select name="rol" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Rol *</label>
+                            <select name="rol" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="satisci" <?php echo (isset($personel['rol']) && $personel['rol'] == 'satisci') ? 'selected' : ''; ?>>Satışçı</option>
                                 <option value="admin" <?php echo (isset($personel['rol']) && $personel['rol'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
                             </select>
@@ -173,17 +173,17 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
                         <?php endif; ?>
                         
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Yeni Şifre</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Yeni Şifre</label>
                             <input type="password" name="yeni_sifre" 
-                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                   style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                    placeholder="Yeni şifre girin (boş bırakırsanız değişmez)">
-                            <small style="color: #64748b; font-size: 12px; margin-top: 5px; display: block;">En az 6 karakter olmalıdır</small>
+                            <small style="color: var(--text-secondary); font-size: 12px; margin-top: 5px; display: block;">En az 6 karakter olmalıdır</small>
                         </div>
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
-                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Durum</label>
+                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="aktif" <?php echo $personel['durum'] == 'aktif' ? 'selected' : ''; ?>>Aktif</option>
                                     <option value="pasif" <?php echo $personel['durum'] == 'pasif' ? 'selected' : ''; ?>>Pasif</option>
                                 </select>
@@ -191,16 +191,16 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_personel') 
                         </div>
                         
                         <!-- Mevcut Bilgiler -->
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-                            <h3 style="font-size: 16px; font-weight: 600; color: #374151; margin-bottom: 15px;">Mevcut Bilgiler</h3>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 15px;">Mevcut Bilgiler</h3>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
                                 <div>
-                                    <span style="color: #64748b;">Oluşturma Tarihi:</span>
-                                    <span style="color: #1e293b; font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($personel['olusturma_tarihi'])); ?></span>
+                                    <span style="color: var(--text-secondary);">Oluşturma Tarihi:</span>
+                                    <span style="color: var(--text-primary); font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($personel['olusturma_tarihi'])); ?></span>
                                 </div>
                                 <div>
-                                    <span style="color: #64748b;">Son Güncelleme:</span>
-                                    <span style="color: #1e293b; font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($personel['son_guncelleme'])); ?></span>
+                                    <span style="color: var(--text-secondary);">Son Güncelleme:</span>
+                                    <span style="color: var(--text-primary); font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($personel['son_guncelleme'])); ?></span>
                                 </div>
                             </div>
                         </div>

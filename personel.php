@@ -52,10 +52,10 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Personel</span>
+                        <span style="color: var(--text-primary);">Personel</span>
                     </nav>
                 </div>
 
@@ -83,13 +83,13 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                 <?php endif; ?>
 
                 <!-- Personel Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Personel Listesi</h2>
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Personel Listesi</h2>
                     
                     <?php if (!empty($personeller)): ?>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <?php foreach ($personeller as $personel): ?>
-                                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 16px; transition: all 0.2s ease;">
+                                <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px; display: flex; align-items: center; gap: 16px; transition: all 0.2s ease;">
                                     <!-- İkon -->
                                     <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
                                         <i class="fas fa-user" style="color: white; font-size: 16px;"></i>
@@ -97,10 +97,10 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                                     
                                     <!-- Ad Soyad -->
                                     <div style="flex: 1; min-width: 0;">
-                                        <div style="font-size: 15px; font-weight: 600; color: #1e293b;">
+                                        <div style="font-size: 15px; font-weight: 600; color: var(--text-primary);">
                                             <?php echo htmlspecialchars($personel['ad_soyad']); ?>
                                         </div>
-                                        <div style="font-size: 13px; color: #64748b; margin-top: 2px;">
+                                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 2px;">
                                             <i class="fas fa-at" style="margin-right: 4px;"></i>
                                             <?php echo htmlspecialchars($personel['kullanici_adi']); ?>
                                         </div>
@@ -144,9 +144,9 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                             <?php endforeach; ?>
                         </div>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 60px; color: #64748b;">
+                        <div class="text-secondary" style="text-align: center; padding: 60px;">
                             <i class="fas fa-users" style="font-size: 64px; margin-bottom: 20px; color: #d1d5db;"></i>
-                            <h3 style="font-size: 20px; margin-bottom: 8px; color: #374151;">Henüz personel eklenmemiş</h3>
+                            <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Henüz personel eklenmemiş</h3>
                             <p style="font-size: 16px; margin-bottom: 20px;">Sisteme personel ekleyerek başlayın.</p>
                             <a href="personel-ekle.php" class="btn btn-primary">
                                 <i class="fas fa-plus"></i>

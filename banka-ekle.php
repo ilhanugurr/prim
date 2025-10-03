@@ -53,12 +53,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="content-area">
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Yeni Banka</span>
+                        <span style="color: var(--text-primary);">Yeni Banka</span>
                     </nav>
                 </div>
 
@@ -71,16 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <?php endif; ?>
 
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); max-width: 600px;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); max-width: 600px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">
                         <i class="fas fa-university"></i> Yeni Banka Ekle
                     </h2>
                     
                     <form method="POST" action="banka-ekle.php">
                         <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Banka Adı *</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Banka Adı *</label>
                             <input type="text" name="banka_adi" required 
-                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                   style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                    placeholder="Örn: Ziraat Bankası">
                         </div>
                         

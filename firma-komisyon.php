@@ -149,12 +149,12 @@ $komisyonlar = getFirmaKomisyonlar($firma_id);
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="firmalar.php" style="color: #3b82f6; text-decoration: none;">Firmalar</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;"><?php echo htmlspecialchars($firma['firma_adi']); ?> Komisyonları</span>
+                        <span style="color: var(--text-primary);"><?php echo htmlspecialchars($firma['firma_adi']); ?> Komisyonları</span>
                     </nav>
                 </div>
 
@@ -184,27 +184,27 @@ $komisyonlar = getFirmaKomisyonlar($firma_id);
                 </div>
 
                 <!-- Komisyon Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Komisyon Oranları</h2>
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Komisyon Oranları</h2>
                     
                     <?php if (!empty($komisyonlar)): ?>
                         <div style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
-                                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">Fiyat Aralığı</th>
-                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">Komisyon Oranı</th>
-                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">Durum</th>
-                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: #374151;">İşlemler</th>
+                                    <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-primary);">Fiyat Aralığı</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-primary);">Komisyon Oranı</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-primary);">Durum</th>
+                                        <th style="padding: 12px; text-align: left; font-weight: 600; color: var(--text-primary);">İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($komisyonlar as $komisyon): ?>
                                         <tr style="border-bottom: 1px solid #e2e8f0;">
-                                            <td style="padding: 12px; color: #1e293b;">
+                                            <td style="padding: 12px; color: var(--text-primary);">
                                                 <?php echo number_format($komisyon['min_fiyat'], 2); ?>₺ - <?php echo number_format($komisyon['max_fiyat'], 2); ?>₺
                                             </td>
-                                            <td style="padding: 12px; color: #1e293b; font-weight: 600;">
+                                            <td style="padding: 12px; color: var(--text-primary); font-weight: 600;">
                                                 %<?php echo number_format($komisyon['komisyon_orani'], 2); ?>
                                             </td>
                                             <td style="padding: 12px;">
@@ -233,7 +233,7 @@ $komisyonlar = getFirmaKomisyonlar($firma_id);
                             </table>
                         </div>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 40px; color: #64748b;">
+                        <div class="text-secondary" style="text-align: center; padding: 40px;">
                             <i class="fas fa-chart-line" style="font-size: 48px; margin-bottom: 16px; color: #d1d5db;"></i>
                             <p style="font-size: 16px; margin-bottom: 8px;">Henüz komisyon oranı tanımlanmamış</p>
                             <p style="font-size: 14px;">Bu firma için komisyon oranları ekleyerek başlayın.</p>
@@ -248,8 +248,8 @@ $komisyonlar = getFirmaKomisyonlar($firma_id);
     <div id="addModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
         <div class="modal-content" style="background-color: white; margin: 5% auto; padding: 30px; border-radius: 12px; width: 90%; max-width: 600px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Yeni Komisyon Oranı Ekle</h2>
-                <span onclick="closeAddModal()" style="cursor: pointer; font-size: 24px; color: #64748b;">&times;</span>
+                <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Yeni Komisyon Oranı Ekle</h2>
+                <span onclick="closeAddModal()" style="cursor: pointer; font-size: 24px; color: var(--text-secondary);">&times;</span>
             </div>
             
             <form method="POST" action="firma-komisyon.php?firma_id=<?php echo $firma_id; ?>">
@@ -257,28 +257,28 @@ $komisyonlar = getFirmaKomisyonlar($firma_id);
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Minimum Fiyat (₺) *</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Minimum Fiyat (₺) *</label>
                         <input type="number" name="min_fiyat" step="0.01" min="0" required 
-                               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                               style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                     </div>
                     
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Maksimum Fiyat (₺) *</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Maksimum Fiyat (₺) *</label>
                         <input type="number" name="max_fiyat" step="0.01" min="0" required 
-                               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                               style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                     </div>
                 </div>
                 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Komisyon Oranı (%) *</label>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Komisyon Oranı (%) *</label>
                         <input type="number" name="komisyon_orani" step="0.01" min="0" max="100" required 
-                               style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                               style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                     </div>
                     
                     <div>
-                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
-                        <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Durum</label>
+                        <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                             <option value="aktif">Aktif</option>
                             <option value="pasif">Pasif</option>
                         </select>

@@ -9,6 +9,7 @@ header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
 require_once 'config/database.php';
+require_once 'includes/auth.php';
 
 // Admin kontrolü
 if (!isAdmin()) {
@@ -46,7 +47,6 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
     $data = [
         'urun_adi' => trim($_POST['urun_adi']),
         'aciklama' => trim($_POST['aciklama']),
-        'miktar' => (int)$_POST['miktar'],
         'personel_id' => !empty($_POST['personel_id']) ? (int)$_POST['personel_id'] : null,
         'kategori' => trim($_POST['kategori']),
         'durum' => $_POST['durum']
@@ -56,9 +56,6 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
     $errors = [];
     if (empty($data['urun_adi'])) {
         $errors[] = "Ürün adı zorunludur!";
-    }
-    if ($data['miktar'] < 0) {
-        $errors[] = "Miktar 0'dan küçük olamaz!";
     }
     
     if (empty($errors)) {
@@ -99,12 +96,12 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="envanter.php" style="color: #3b82f6; text-decoration: none;">Envanter</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Envanter Düzenle</span>
+                        <span style="color: var(--text-primary);">Envanter Düzenle</span>
                     </nav>
                 </div>
 
@@ -122,9 +119,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
                 <?php endif; ?>
 
                 <!-- Form -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
+                <div class="white-card" style="padding: 30px; margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Envanter Kaydı Düzenle</h2>
+                        <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Envanter Kaydı Düzenle</h2>
                         <a href="envanter.php" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Envanter Listesi
@@ -136,15 +133,15 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ürün Adı *</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ürün Adı *</label>
                                 <input type="text" name="urun_adi" value="<?php echo htmlspecialchars($envanter['urun_adi']); ?>" required 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                        placeholder="Örn: Laptop, Telefon, Masa">
                             </div>
                             
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Kategori</label>
-                                <select name="kategori" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Kategori</label>
+                                <select name="kategori" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Kategori Seçiniz</option>
                                     <?php foreach ($kategoriler as $kategori): ?>
                                         <option value="<?php echo htmlspecialchars($kategori['kategori_adi']); ?>" <?php echo $envanter['kategori'] == $kategori['kategori_adi'] ? 'selected' : ''; ?>>
@@ -156,22 +153,16 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
                         </div>
                         
                         <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Açıklama</label>
-                            <textarea name="aciklama" rows="3" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; resize: vertical;" 
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Açıklama</label>
+                            <textarea name="aciklama" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; resize: vertical;" 
                                       placeholder="Ürün hakkında detaylı açıklama"><?php echo htmlspecialchars($envanter['aciklama']); ?></textarea>
                         </div>
                         
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Miktar *</label>
-                            <input type="number" name="miktar" min="0" value="<?php echo $envanter['miktar']; ?>" required 
-                                   style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
-                                   placeholder="0">
-                        </div>
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Sorumlu Personel</label>
-                                <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Sorumlu Personel</label>
+                                <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Personel Seçiniz</option>
                                     <?php foreach ($personeller as $personel): ?>
                                         <option value="<?php echo $personel['id']; ?>" <?php echo $envanter['personel_id'] == $personel['id'] ? 'selected' : ''; ?>>
@@ -182,8 +173,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
                             </div>
                             
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
-                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Durum</label>
+                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="aktif" <?php echo $envanter['durum'] == 'aktif' ? 'selected' : ''; ?>>Aktif</option>
                                     <option value="pasif" <?php echo $envanter['durum'] == 'pasif' ? 'selected' : ''; ?>>Pasif</option>
                                 </select>
@@ -191,16 +182,16 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_envanter') 
                         </div>
                         
                         <!-- Mevcut Bilgiler -->
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-                            <h3 style="font-size: 16px; font-weight: 600; color: #374151; margin-bottom: 15px;">Mevcut Bilgiler</h3>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 15px;">Mevcut Bilgiler</h3>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
                                 <div>
-                                    <span style="color: #64748b;">Oluşturma Tarihi:</span>
-                                    <span style="color: #1e293b; font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($envanter['olusturma_tarihi'])); ?></span>
+                                    <span style="color: var(--text-secondary);">Oluşturma Tarihi:</span>
+                                    <span style="color: var(--text-primary); font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($envanter['olusturma_tarihi'])); ?></span>
                                 </div>
                                 <div>
-                                    <span style="color: #64748b;">Son Güncelleme:</span>
-                                    <span style="color: #1e293b; font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($envanter['son_guncelleme'])); ?></span>
+                                    <span style="color: var(--text-secondary);">Son Güncelleme:</span>
+                                    <span style="color: var(--text-primary); font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($envanter['son_guncelleme'])); ?></span>
                                 </div>
                             </div>
                         </div>

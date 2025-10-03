@@ -80,12 +80,12 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_firma') {
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="firmalar.php" style="color: #3b82f6; text-decoration: none;">Firmalar</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Yeni Firma Ekle</span>
+                        <span style="color: var(--text-primary);">Yeni Firma Ekle</span>
                     </nav>
                 </div>
 
@@ -103,9 +103,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_firma') {
                 <?php endif; ?>
 
                 <!-- Form Card -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
+                <div class="white-card" style="padding: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Firma Bilgileri</h2>
+                        <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Firma Bilgileri</h2>
                         <a href="firmalar.php" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Geri Dön
@@ -117,14 +117,14 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_firma') {
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Firma Adı *</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Firma Adı *</label>
                                 <input type="text" name="firma_adi" value="<?php echo htmlspecialchars($data['firma_adi']); ?>" required 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                             </div>
                             
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Üst Firma (Opsiyonel)</label>
-                                <select name="ust_firma_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Üst Firma (Opsiyonel)</label>
+                                <select name="ust_firma_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Ana Firma (Üst Firma Yok)</option>
                                     <?php foreach ($ana_firmalar_list as $ana_firma): ?>
                                         <option value="<?php echo $ana_firma['id']; ?>" <?php echo (isset($data['ust_firma_id']) && $data['ust_firma_id'] == $ana_firma['id']) ? 'selected' : ''; ?>>
@@ -132,7 +132,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_firma') {
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
-                                <div style="font-size: 12px; color: #64748b; margin-top: 4px;">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
                                     <i class="fas fa-info-circle"></i> Alt firma olarak eklemek için üst firma seçin
                                 </div>
                             </div>
@@ -140,8 +140,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_firma') {
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
-                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Durum</label>
+                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="aktif" <?php echo $data['durum'] == 'aktif' ? 'selected' : ''; ?>>Aktif</option>
                                     <option value="pasif" <?php echo $data['durum'] == 'pasif' ? 'selected' : ''; ?>>Pasif</option>
                                 </select>

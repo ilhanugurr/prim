@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
         }
 
         .login-container {
-            background: white;
+            background: var(--bg-card);
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             width: 100%;
@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
 
         .form-group label {
             display: block;
-            color: #374151;
+            color: var(--text-primary);
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 14px;
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['kullanici_adi']) && i
             left: 16px;
             top: 50%;
             transform: translateY(-50%);
-            color: #9ca3af;
+            color: var(--text-muted);
             font-size: 16px;
         }
 

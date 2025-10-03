@@ -107,12 +107,12 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Yeni Tahsilat</span>
+                        <span style="color: var(--text-primary);">Yeni Tahsilat</span>
                     </nav>
                 </div>
 
@@ -128,14 +128,14 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                 <?php endif; ?>
 
                 <!-- Form -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
                     <form method="POST" action="tahsilat-ekle.php" id="tahsilat-form">
                         <input type="hidden" name="kdv_yok" id="kdv_yok_hidden" value="0">
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
                             <!-- Müşteri Seçimi -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Müşteri *</label>
-                                <select name="musteri_id" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Müşteri *</label>
+                                <select name="musteri_id" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Müşteri Seçiniz</option>
                                     <?php foreach ($musteriler as $m): ?>
                                         <option value="<?php echo $m['id']; ?>"><?php echo htmlspecialchars($m['firma_adi']); ?></option>
@@ -145,8 +145,8 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                             
                             <!-- Personel Seçimi -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Personel</label>
-                                <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Personel</label>
+                                <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Personel Seçiniz (Opsiyonel)</option>
                                     <?php foreach ($personeller as $p): ?>
                                         <option value="<?php echo $p['id']; ?>"><?php echo htmlspecialchars($p['ad_soyad']); ?></option>
@@ -156,8 +156,8 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                             
                             <!-- Banka Seçimi -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Banka *</label>
-                                <select name="banka_id" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Banka *</label>
+                                <select name="banka_id" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Banka Seçiniz</option>
                                     <?php foreach ($bankalar as $b): ?>
                                         <option value="<?php echo $b['id']; ?>"><?php echo htmlspecialchars($b['banka_adi']); ?></option>
@@ -167,28 +167,28 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                             
                             <!-- Ödeme Tarihi -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ödeme Tarihi *</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ödeme Tarihi *</label>
                                 <input type="date" name="odeme_tarihi" value="<?php echo date('Y-m-d'); ?>" required 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                             </div>
                             
                             <!-- Fatura Tarihi -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Fatura Tarihi</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Fatura Tarihi</label>
                                 <input type="date" name="fatura_tarihi" 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                             </div>
                             
                             <!-- Tutar KDV Hariç -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">
                                     Tutar (KDV Hariç) *
                                 </label>
                                 <input type="number" name="tutar_kdv_haric" id="tutar_kdv_haric" step="0.01" required 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                        oninput="hesaplaKDV()">
                                 <div style="margin-top: 8px;">
-                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: #64748b;">
+                                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: var(--text-secondary);">
                                         <input type="checkbox" id="kdv_yok" onchange="toggleKDV()" 
                                                style="width: 18px; height: 18px; cursor: pointer;">
                                         <span>KDV Yok</span>
@@ -198,16 +198,16 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                             
                             <!-- KDV ve Toplam (Otomatik) -->
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">KDV Dahil Toplam</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">KDV Dahil Toplam</label>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                     <div>
                                         <input type="text" id="kdv_tutari_display" readonly 
-                                               style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; background: #f8fafc; color: #f59e0b; font-weight: 600;"
+                                               style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--bg-secondary); color: #f59e0b; font-weight: 600;"
                                                placeholder="KDV: ₺0">
                                     </div>
                                     <div>
                                         <input type="text" id="kdv_dahil_display" readonly 
-                                               style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; background: #f8fafc; color: #3b82f6; font-weight: 700;"
+                                               style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--bg-secondary); color: #3b82f6; font-weight: 700;"
                                                placeholder="Toplam: ₺0">
                                     </div>
                                 </div>
@@ -216,16 +216,16 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                         
                         <!-- Açıklama (Tam genişlik) -->
                         <div style="margin-top: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Açıklama</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Açıklama</label>
                             <textarea name="aciklama" rows="3" 
-                                      style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; resize: vertical;"
+                                      style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; resize: vertical;"
                                       placeholder="Ödeme ile ilgili notlar..."></textarea>
                         </div>
                         
                         <!-- Maliyetler -->
                         <div style="margin-top: 30px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <label style="font-weight: 600; color: #374151; font-size: 16px;">
+                                <label style="font-weight: 600; color: var(--text-primary); font-size: 16px;">
                                     <i class="fas fa-minus-circle" style="color: #ef4444;"></i> Maliyetler
                                 </label>
                                 <button type="button" onclick="addMaliyet()" 
@@ -235,18 +235,18 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                             </div>
                             
                             <div id="maliyetler-container" style="display: flex; flex-direction: column; gap: 12px;">
-                                <div class="maliyet-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;">
+                                <div class="maliyet-item" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;">
                                     <div>
                                         <input type="text" name="maliyet_adi[]" placeholder="Maliyet adı" 
-                                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                               style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                                     </div>
                                     <div>
                                         <input type="text" name="maliyet_aciklama[]" placeholder="Açıklama (opsiyonel)" 
-                                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                               style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                                     </div>
                                     <div>
                                         <input type="number" name="maliyet_tutari[]" step="0.01" placeholder="Tutar (₺)" 
-                                               style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                                               style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;"
                                                oninput="updateTotalMaliyet()">
                                     </div>
                                     <button type="button" onclick="removeMaliyet(this)" 
@@ -313,19 +313,19 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
             const container = document.getElementById('maliyetler-container');
             const newItem = document.createElement('div');
             newItem.className = 'maliyet-item';
-            newItem.style.cssText = 'background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;';
+            newItem.style.cssText = 'background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; display: grid; grid-template-columns: 2fr 3fr 1.5fr auto; gap: 12px; align-items: start;';
             newItem.innerHTML = `
                 <div>
                     <input type="text" name="maliyet_adi[]" placeholder="Maliyet adı" 
-                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                           style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                 </div>
                 <div>
                     <input type="text" name="maliyet_aciklama[]" placeholder="Açıklama (opsiyonel)" 
-                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                           style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                 </div>
                 <div>
                     <input type="number" name="maliyet_tutari[]" step="0.01" placeholder="Tutar (₺)" 
-                           style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;"
+                           style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;"
                            oninput="updateTotalMaliyet()">
                 </div>
                 <button type="button" onclick="removeMaliyet(this)" 

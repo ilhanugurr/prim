@@ -9,6 +9,19 @@ require_once 'auth.php';
 requireLogin();
 ?>
 
+<!-- Dark Mode Script - Must be before any content to prevent FOUC -->
+<script>
+    (function() {
+        // Apply dark mode immediately to prevent flash of white content
+        const savedTheme = localStorage.getItem('darkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            document.documentElement.classList.add('dark-mode');
+        }
+    })();
+</script>
+
 <!-- Top Bar -->
 <div class="top-bar">
     <div style="display: flex; align-items: center;">
@@ -19,6 +32,11 @@ requireLogin();
     </div>
     
     <div class="user-info">
+        <!-- Dark Mode Toggle -->
+        <button id="darkModeToggle" class="dark-mode-toggle" title="Dark Mode">
+            <i class="fas fa-moon" id="darkModeIcon"></i>
+        </button>
+        
         <div class="user-avatar">
             <?php 
             $ad_soyad = '';
@@ -74,6 +92,33 @@ requireLogin();
         color: #dc2626;
         background: #fef2f2;
     }
+
+    .dark-mode-toggle {
+        background: transparent;
+        border: 2px solid #e2e8f0;
+        color: #64748b;
+        padding: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dark-mode-toggle:hover {
+        background: #f8fafc;
+        border-color: #3b82f6;
+        color: #3b82f6;
+        transform: scale(1.05);
+    }
+
+    .dark-mode-toggle i {
+        font-size: 16px;
+    }
 </style>
 
 <script>
@@ -81,4 +126,40 @@ requireLogin();
         const sidebar = document.getElementById('sidebar');
         sidebar.classList.toggle('collapsed');
     }
+
+    // Dark Mode Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const darkModeIcon = document.getElementById('darkModeIcon');
+        const body = document.body;
+        const html = document.documentElement;
+
+        // Get saved theme from localStorage
+        const savedTheme = localStorage.getItem('darkMode');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        // Apply saved theme or system preference
+        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+            body.classList.add('dark-mode');
+            html.classList.add('dark-mode');
+            darkModeIcon.className = 'fas fa-sun';
+            darkModeToggle.title = 'Light Mode';
+        }
+
+        // Toggle dark mode
+        darkModeToggle.addEventListener('click', function() {
+            body.classList.toggle('dark-mode');
+            html.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'dark');
+                darkModeIcon.className = 'fas fa-sun';
+                darkModeToggle.title = 'Light Mode';
+            } else {
+                localStorage.setItem('darkMode', 'light');
+                darkModeIcon.className = 'fas fa-moon';
+                darkModeToggle.title = 'Dark Mode';
+            }
+        });
+    });
 </script>

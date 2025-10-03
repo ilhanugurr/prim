@@ -77,27 +77,27 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Raporlar</span>
+                        <span style="color: var(--text-primary);">Raporlar</span>
                     </nav>
                 </div>
 
                 <!-- Filtre -->
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
                     <form method="GET" action="raporlar.php" style="display: flex; gap: 15px; align-items: end;">
                         <div style="flex: 1;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Yıl</label>
-                            <select name="yil" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Yıl</label>
+                            <select name="yil" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px;">
                                 <?php for ($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
                                     <option value="<?php echo $y; ?>" <?php echo $selected_yil == $y ? 'selected' : ''; ?>><?php echo $y; ?></option>
                                 <?php endfor; ?>
                             </select>
                         </div>
                         <div style="flex: 1;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ay</label>
-                            <select name="ay" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ay</label>
+                            <select name="ay" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px;">
                                 <?php foreach ($aylar as $ay_num => $ay_adi): ?>
                                     <option value="<?php echo $ay_num; ?>" <?php echo $selected_ay == $ay_num ? 'selected' : ''; ?>><?php echo $ay_adi; ?></option>
                                 <?php endforeach; ?>
@@ -160,17 +160,17 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
 
                 <!-- Personel Detayları -->
                 <?php if (!empty($personel_detaylari)): ?>
-                <div style="background: white; border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
                     <h3 style="color: #1f2937; margin-bottom: 20px;">Personel Bazında Detaylar</h3>
                     
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Personel</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Net Satış</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Prim</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Prim Oranı</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Firmalar</th>
+                            <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                                <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Personel</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Net Satış</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Prim</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Prim Oranı</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Firmalar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -187,17 +187,17 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                                 <td style="padding: 16px; text-align: right; color: #f59e0b; font-weight: 600;">
                                     ₺<?php echo number_format($detay['prim'], 0, ',', '.'); ?>
                                 </td>
-                                <td style="padding: 16px; text-align: right; color: #64748b;">
+                                <td style="padding: 16px; text-align: right; color: var(--text-secondary);">
                                     %<?php echo number_format($prim_orani_ort, 1); ?>
                                 </td>
-                                <td style="padding: 16px; text-align: right; color: #64748b;">
+                                <td style="padding: 16px; text-align: right; color: var(--text-secondary);">
                                     <?php echo count($detay['prim_detaylari']); ?> firma
                                 </td>
                             </tr>
                             <!-- Firma detayları -->
                             <tr>
                                 <td colspan="5" style="padding: 0 16px 16px 48px;">
-                                    <div style="background: #f8fafc; padding: 12px; border-radius: 8px;">
+                                    <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px;">
                                         <?php foreach ($detay['prim_detaylari'] as $firma_detay): ?>
                                         <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
                                             <span style="color: #475569; font-size: 14px;">
@@ -207,7 +207,7 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                                             <div style="display: flex; gap: 20px; font-size: 14px;">
                                                 <span style="color: #3b82f6;">₺<?php echo number_format($firma_detay['satis_tutari'], 0, ',', '.'); ?></span>
                                                 <span style="color: #94a3b8;">×</span>
-                                                <span style="color: #64748b;">%<?php echo $firma_detay['prim_orani']; ?></span>
+                                                <span style="color: var(--text-secondary);">%<?php echo $firma_detay['prim_orani']; ?></span>
                                                 <span style="color: #94a3b8;">=</span>
                                                 <span style="color: #f59e0b; font-weight: 600;">₺<?php echo number_format($firma_detay['prim_tutari'], 0, ',', '.'); ?></span>
                                             </div>
@@ -219,11 +219,11 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-                            <tr style="background: #f8fafc; font-weight: 700; border-top: 2px solid #e2e8f0;">
+                            <tr style="background: var(--bg-secondary); font-weight: 700; border-top: 2px solid #e2e8f0;">
                                 <td style="padding: 16px; color: #1f2937;">TOPLAM</td>
                                 <td style="padding: 16px; text-align: right; color: #3b82f6;">₺<?php echo number_format($toplam_net_satis, 0, ',', '.'); ?></td>
                                 <td style="padding: 16px; text-align: right; color: #f59e0b;">₺<?php echo number_format($toplam_prim, 0, ',', '.'); ?></td>
-                                <td style="padding: 16px; text-align: right; color: #64748b;">
+                                <td style="padding: 16px; text-align: right; color: var(--text-secondary);">
                                     %<?php echo $toplam_net_satis > 0 ? number_format(($toplam_prim / $toplam_net_satis) * 100, 1) : 0; ?>
                                 </td>
                                 <td></td>
@@ -257,9 +257,9 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                 </div>
 
                 <?php else: ?>
-                <div style="background: white; border-radius: 12px; padding: 60px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 60px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
                     <i class="fas fa-chart-line" style="font-size: 64px; color: #cbd5e1; margin-bottom: 20px;"></i>
-                    <h3 style="color: #64748b; margin-bottom: 8px;">Veri Bulunamadı</h3>
+                    <h3 style="color: var(--text-secondary); margin-bottom: 8px;">Veri Bulunamadı</h3>
                     <p style="color: #94a3b8;">Bu ay için satış verisi bulunmamaktadır.</p>
                 </div>
                 <?php endif; ?>

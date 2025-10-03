@@ -121,7 +121,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                             </div>
                             <div style="margin-bottom: 15px;">
                                 <div style="display: flex; align-items: center; font-size: 14px;">
-                                    <i class="fas fa-clock" style="width: 20px; color: #64748b; margin-right: 10px;"></i>
+                                    <i class="fas fa-clock" style="width: 20px; color: var(--text-secondary); margin-right: 10px;"></i>
                                     <span>Son güncelleme: <?php echo date('d.m.Y H:i', strtotime($ana_firma['son_guncelleme'])); ?></span>
                                 </div>
                                 <?php if (!empty($ana_firma['alt_firmalar'])): ?>
@@ -134,16 +134,16 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                             
                             <!-- Alt Firmalar (Ana firmanın içinde) -->
                             <?php if (!empty($ana_firma['alt_firmalar'])): ?>
-                                <div style="background: white; border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #e0f2fe;">
+                                <div style="background: var(--bg-card); border-radius: 8px; padding: 15px; margin-bottom: 15px; border: 1px solid #e0f2fe;">
                                     <h4 style="font-size: 13px; font-weight: 600; color: #3b82f6; margin-bottom: 12px;">
                                         <i class="fas fa-sitemap"></i> Alt Firmalar
                                     </h4>
                                     <?php foreach ($ana_firma['alt_firmalar'] as $alt_firma): ?>
-                                        <div style="background: #f8fafc; border-left: 3px solid #3b82f6; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
+                                        <div style="background: var(--bg-secondary); border-left: 3px solid #3b82f6; padding: 12px; margin-bottom: 10px; border-radius: 6px;">
                                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                                 <div style="display: flex; align-items: center; gap: 8px;">
                                                     <i class="fas fa-arrow-right" style="color: #3b82f6; font-size: 12px;"></i>
-                                                    <span style="font-weight: 600; color: #1e293b; font-size: 14px;">
+                                                    <span style="font-weight: 600; color: var(--text-primary); font-size: 14px;">
                                                         <?php echo htmlspecialchars($alt_firma['firma_adi']); ?>
                                                     </span>
                                                     <span class="status-badge status-<?php echo $alt_firma['durum'] == 'aktif' ? 'active' : 'inactive'; ?>" style="font-size: 10px; padding: 3px 8px;">

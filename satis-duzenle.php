@@ -219,12 +219,12 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="satislar.php" style="color: #3b82f6; text-decoration: none;">Satışlar</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Satış Düzenle #<?php echo $satis['id']; ?></span>
+                        <span style="color: var(--text-primary);">Satış Düzenle #<?php echo $satis['id']; ?></span>
                     </nav>
                 </div>
 
@@ -242,9 +242,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                 <?php endif; ?>
 
                 <!-- Form -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Satış Bilgileri</h2>
+                        <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Satış Bilgileri</h2>
                         <a href="satislar.php" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Satış Listesi
@@ -256,8 +256,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         
                         <!-- Personel Seçimi -->
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Personel Seçimi</label>
-                            <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Personel Seçimi</label>
+                            <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Personel Seçiniz</option>
                                 <?php foreach ($personeller as $personel): ?>
                                     <option value="<?php echo $personel['id']; ?>" <?php echo $satis['personel_id'] == $personel['id'] ? 'selected' : ''; ?>>
@@ -269,8 +269,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         
                         <!-- Müşteri Seçimi -->
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Müşteri Seçimi</label>
-                            <select name="musteri_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Müşteri Seçimi</label>
+                            <select name="musteri_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Müşteri seçiniz</option>
                                 <?php 
                                 $musteriler = getMusteriler();
@@ -285,8 +285,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         
                         <!-- Ödeme Yeri Seçimi -->
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ödeme Nereye Yapıldı</label>
-                            <select name="banka_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ödeme Nereye Yapıldı</label>
+                            <select name="banka_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Banka seçiniz</option>
                                 <?php foreach ($bankalar as $banka): ?>
                                 <option value="<?php echo $banka['id']; ?>" <?php echo $satis['banka_id'] == $banka['id'] ? 'selected' : ''; ?>>
@@ -300,9 +300,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         <div id="firma-urun-container">
                             <?php if (!empty($satis_detaylar)): ?>
                                 <?php foreach ($satis_detaylar as $index => $detay): ?>
-                                    <div class="firma-urun-group" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #f8fafc;">
+                                    <div class="firma-urun-group" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px; background: var(--bg-secondary);">
                                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                            <h3 style="font-size: 18px; font-weight: 600; color: #1e293b;">Firma ve Ürün/Hizmet Seçimi</h3>
+                                            <h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary);">Firma ve Ürün/Hizmet Seçimi</h3>
                                             <button type="button" onclick="removeFirmaGroup(this)" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">
                                                 <i class="fas fa-trash"></i> Kaldır
                                             </button>
@@ -310,8 +310,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                         
                                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                             <div>
-                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Firma Seçimi *</label>
-                                                <select name="firma_id[]" class="firma-select" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="loadProducts(this)">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Firma Seçimi *</label>
+                                                <select name="firma_id[]" class="firma-select" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="loadProducts(this)">
                                                     <option value="">Firma Seçiniz</option>
                                                     <?php foreach ($firmalar as $firma): ?>
                                                         <option value="<?php echo $firma['id']; ?>" <?php echo $detay['firma_id'] == $firma['id'] ? 'selected' : ''; ?>>
@@ -322,8 +322,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                             </div>
                                             
                                             <div>
-                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ürün/Hizmet Seçimi *</label>
-                                                <select name="urun_id[]" class="urun-select" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="updatePrice(this)" data-selected="<?php echo $detay['urun_hizmet_id']; ?>">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ürün/Hizmet Seçimi *</label>
+                                                <select name="urun_id[]" class="urun-select" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="updatePrice(this)" data-selected="<?php echo $detay['urun_hizmet_id']; ?>">
                                                     <option value="">Önce firma seçiniz</option>
                                                 </select>
                                             </div>
@@ -331,31 +331,31 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                         
                                         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
                                             <div>
-                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Miktar *</label>
-                                                <input type="number" name="miktar[]" min="1" value="<?php echo $detay['miktar']; ?>" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Miktar *</label>
+                                                <input type="number" name="miktar[]" min="1" value="<?php echo $detay['miktar']; ?>" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                             </div>
                                             
                                             <div>
-                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Birim Fiyat (KDV Dahil - ₺)</label>
-                                                <input type="number" name="fiyat[]" step="0.01" min="0" value="<?php echo $detay['birim_fiyat'] * 1.20; ?>" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Birim Fiyat (KDV Dahil - ₺)</label>
+                                                <input type="number" name="fiyat[]" step="0.01" min="0" value="<?php echo $detay['birim_fiyat'] * 1.20; ?>" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                             </div>
                                             
                                             <div>
-                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">İndirim (%)</label>
-                                                <input type="number" name="indirim[]" step="0.01" min="0" max="100" value="<?php echo $detay['indirim_orani'] ?? 0; ?>" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">İndirim (%)</label>
+                                                <input type="number" name="indirim[]" step="0.01" min="0" max="100" value="<?php echo $detay['indirim_orani'] ?? 0; ?>" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                             </div>
                                             
                                             <div>
-                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Toplam (₺)</label>
-                                                <input type="number" name="toplam[]" step="0.01" value="<?php echo $detay['toplam_fiyat']; ?>" readonly style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: #f8fafc; font-weight: 600;">
+                                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Toplam (₺)</label>
+                                                <input type="number" name="toplam[]" step="0.01" value="<?php echo $detay['toplam_fiyat']; ?>" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--bg-secondary); font-weight: 600;">
                                             </div>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <div class="firma-urun-group" style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; margin-bottom: 20px; background: #f8fafc;">
+                                <div class="firma-urun-group" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px; background: var(--bg-secondary);">
                                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                                        <h3 style="font-size: 18px; font-weight: 600; color: #1e293b;">Firma ve Ürün/Hizmet Seçimi</h3>
+                                        <h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary);">Firma ve Ürün/Hizmet Seçimi</h3>
                                         <button type="button" onclick="removeFirmaGroup(this)" class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">
                                             <i class="fas fa-trash"></i> Kaldır
                                         </button>
@@ -363,8 +363,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                     
                                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                         <div>
-                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Firma Seçimi *</label>
-                                            <select name="firma_id[]" class="firma-select" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="loadProducts(this)">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Firma Seçimi *</label>
+                                            <select name="firma_id[]" class="firma-select" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="loadProducts(this)">
                                                 <option value="">Firma Seçiniz</option>
                                                 <?php foreach ($firmalar as $firma): ?>
                                                     <option value="<?php echo $firma['id']; ?>">
@@ -375,8 +375,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                         </div>
                                         
                                         <div>
-                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ürün/Hizmet Seçimi *</label>
-                                            <select name="urun_id[]" class="urun-select" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="updatePrice(this)">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ürün/Hizmet Seçimi *</label>
+                                            <select name="urun_id[]" class="urun-select" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="updatePrice(this)">
                                                 <option value="">Önce firma seçiniz</option>
                                             </select>
                                         </div>
@@ -384,23 +384,23 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                     
                                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
                                         <div>
-                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Miktar *</label>
-                                            <input type="number" name="miktar[]" min="1" value="1" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Miktar *</label>
+                                            <input type="number" name="miktar[]" min="1" value="1" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                         </div>
                                         
                                         <div>
-                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Birim Fiyat (KDV Dahil - ₺)</label>
-                                            <input type="number" name="fiyat[]" step="0.01" min="0" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Birim Fiyat (KDV Dahil - ₺)</label>
+                                            <input type="number" name="fiyat[]" step="0.01" min="0" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                         </div>
                                         
                                         <div>
-                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">İndirim (%)</label>
-                                            <input type="number" name="indirim[]" step="0.01" min="0" max="100" value="0" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">İndirim (%)</label>
+                                            <input type="number" name="indirim[]" step="0.01" min="0" max="100" value="0" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;" onchange="calculateTotal(this)">
                                         </div>
                                         
                                         <div>
-                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Toplam (₺)</label>
-                                            <input type="number" name="toplam[]" step="0.01" readonly style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: #f8fafc; font-weight: 600;">
+                                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Toplam (₺)</label>
+                                            <input type="number" name="toplam[]" step="0.01" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--bg-secondary); font-weight: 600;">
                                         </div>
                                     </div>
                                 </div>
@@ -418,7 +418,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         <!-- Maliyetler -->
                         <div style="margin-bottom: 30px;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <label style="font-weight: 600; color: #374151; font-size: 16px;">Maliyetler</label>
+                                <label style="font-weight: 600; color: var(--text-primary); font-size: 16px;">Maliyetler</label>
                                 <button type="button" id="addMaliyet" style="background: #3b82f6; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px;">
                                     <i class="fas fa-plus"></i>
                                     Yeni Maliyet Ekle
@@ -428,19 +428,19 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                             <div id="maliyetContainer">
                                 <?php if (!empty($maliyetler)): ?>
                                     <?php foreach ($maliyetler as $maliyet): ?>
-                                        <div class="maliyet-item" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 10px;">
+                                        <div class="maliyet-item" style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 10px;">
                                             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
                                                 <div>
-                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Maliyet Adı</label>
-                                                    <input type="text" name="maliyet_adi[]" value="<?php echo htmlspecialchars($maliyet['maliyet_adi']); ?>" placeholder="Örn: Reklam, Komisyon" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" required>
+                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-primary); font-size: 14px;">Maliyet Adı</label>
+                                                    <input type="text" name="maliyet_adi[]" value="<?php echo htmlspecialchars($maliyet['maliyet_adi']); ?>" placeholder="Örn: Reklam, Komisyon" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;" required>
                                                 </div>
                                                 <div>
-                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Açıklama</label>
-                                                    <input type="text" name="maliyet_aciklama[]" value="<?php echo htmlspecialchars($maliyet['maliyet_aciklama']); ?>" placeholder="Maliyet açıklaması" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-primary); font-size: 14px;">Açıklama</label>
+                                                    <input type="text" name="maliyet_aciklama[]" value="<?php echo htmlspecialchars($maliyet['maliyet_aciklama']); ?>" placeholder="Maliyet açıklaması" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                                                 </div>
                                                 <div>
-                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Tutar (₺)</label>
-                                                    <input type="number" name="maliyet_tutari[]" step="0.01" min="0" value="<?php echo $maliyet['maliyet_tutari']; ?>" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="updateMaliyetToplam()" required>
+                                                    <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-primary); font-size: 14px;">Tutar (₺)</label>
+                                                    <input type="number" name="maliyet_tutari[]" step="0.01" min="0" value="<?php echo $maliyet['maliyet_tutari']; ?>" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;" onchange="updateMaliyetToplam()" required>
                                                 </div>
                                                 <div>
                                                     <button type="button" onclick="removeMaliyet(this)" style="background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px;">
@@ -453,9 +453,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                 <?php endif; ?>
                             </div>
                             
-                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                            <div style="background: var(--bg-secondary); padding: 15px; border-radius: 8px; margin-top: 15px;">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <span style="font-weight: 600; color: #374151;">Toplam Maliyet:</span>
+                                    <span style="font-weight: 600; color: var(--text-primary);">Toplam Maliyet:</span>
                                     <span id="toplamMaliyet" style="font-weight: 700; color: #dc2626; font-size: 18px;">₺0,00</span>
                                 </div>
                             </div>
@@ -463,15 +463,15 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                         
                         <!-- Satış Tarihi -->
                         <div style="margin-bottom: 30px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Satış Tarihi</label>
-                            <input type="date" name="satis_tarihi" value="<?php echo $satis['satis_tarihi'] ?? date('Y-m-d'); ?>" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Satış Tarihi</label>
+                            <input type="date" name="satis_tarihi" value="<?php echo $satis['satis_tarihi'] ?? date('Y-m-d'); ?>" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                         </div>
                         
                         <!-- Ödeme Durumu ve Genel Toplam -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ödeme Durumu</label>
-                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ödeme Durumu</label>
+                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="odendi" <?php echo $satis['durum'] == 'odendi' ? 'selected' : ''; ?>>Ödendi</option>
                                     <option value="odenmedi" <?php echo $satis['durum'] == 'odenmedi' ? 'selected' : ''; ?>>Ödenmedi</option>
                                     <option value="odeme_bekleniyor" <?php echo $satis['durum'] == 'odeme_bekleniyor' ? 'selected' : ''; ?>>Ödeme Bekleniyor</option>
@@ -480,8 +480,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                             </div>
                             
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Genel Toplam (₺)</label>
-                                <input type="number" id="genel-toplam" step="0.01" value="<?php echo $satis['toplam_tutar']; ?>" readonly style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: #f8fafc; font-weight: 600; font-size: 18px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Genel Toplam (₺)</label>
+                                <input type="number" id="genel-toplam" step="0.01" value="<?php echo $satis['toplam_tutar']; ?>" readonly style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--bg-secondary); font-weight: 600; font-size: 18px;">
                             </div>
                         </div>
                         
@@ -660,21 +660,21 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
             
             const maliyetDiv = document.createElement('div');
             maliyetDiv.className = 'maliyet-item';
-            maliyetDiv.style.cssText = 'background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 10px;';
+            maliyetDiv.style.cssText = 'background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; margin-bottom: 10px;';
             
             maliyetDiv.innerHTML = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Maliyet Adı</label>
-                        <input type="text" name="maliyet_adi[]" placeholder="Örn: Reklam, Komisyon" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" required>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-primary); font-size: 14px;">Maliyet Adı</label>
+                        <input type="text" name="maliyet_adi[]" placeholder="Örn: Reklam, Komisyon" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;" required>
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Açıklama</label>
-                        <input type="text" name="maliyet_aciklama[]" placeholder="Maliyet açıklaması" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-primary); font-size: 14px;">Açıklama</label>
+                        <input type="text" name="maliyet_aciklama[]" placeholder="Maliyet açıklaması" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                     </div>
                     <div>
-                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #374151; font-size: 14px;">Tutar (₺)</label>
-                        <input type="number" name="maliyet_tutari[]" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="updateMaliyetToplam()" required>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-primary); font-size: 14px;">Tutar (₺)</label>
+                        <input type="number" name="maliyet_tutari[]" step="0.01" min="0" placeholder="0.00" style="width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;" onchange="updateMaliyetToplam()" required>
                     </div>
                     <div>
                         <button type="button" onclick="removeMaliyet(this)" style="background: #dc2626; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 14px;">

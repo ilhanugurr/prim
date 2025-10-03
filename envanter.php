@@ -9,6 +9,7 @@ header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
 require_once 'config/database.php';
+require_once 'includes/auth.php';
 
 // Admin kontrolü
 if (!isAdmin()) {
@@ -96,10 +97,10 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Envanter Yönetimi</span>
+                        <span style="color: var(--text-primary);">Envanter Yönetimi</span>
                     </nav>
                 </div>
 
@@ -129,11 +130,11 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
                 </div>
 
                 <!-- Filtreler -->
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                <div class="white-card" style="padding: 20px; margin-bottom: 20px;">
                     <form method="GET" style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 15px; align-items: end;">
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #374151; font-size: 14px;">Personel</label>
-                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Personel</label>
+                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                                 <option value="">Tüm Personeller</option>
                                 <?php foreach ($personeller as $personel): ?>
                                     <option value="<?php echo $personel['id']; ?>" <?php echo $filtre_personel == $personel['id'] ? 'selected' : ''; ?>>
@@ -143,8 +144,8 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #374151; font-size: 14px;">Kategori</label>
-                            <select name="kategori" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Kategori</label>
+                            <select name="kategori" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                                 <option value="">Tüm Kategoriler</option>
                                 <?php foreach ($kategoriler_filtre as $kategori): ?>
                                     <option value="<?php echo htmlspecialchars($kategori['kategori']); ?>" <?php echo $filtre_kategori == $kategori['kategori'] ? 'selected' : ''; ?>>
@@ -154,8 +155,8 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #374151; font-size: 14px;">Durum</label>
-                            <select name="durum" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Durum</label>
+                            <select name="durum" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 14px;">
                                 <option value="">Tüm Durumlar</option>
                                 <option value="aktif" <?php echo $filtre_durum == 'aktif' ? 'selected' : ''; ?>>Aktif</option>
                                 <option value="pasif" <?php echo $filtre_durum == 'pasif' ? 'selected' : ''; ?>>Pasif</option>
@@ -170,29 +171,28 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
                 </div>
 
                 <!-- Envanter Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Envanter Listesi</h2>
+                <div class="white-card" style="padding: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Envanter Listesi</h2>
                     
                     <?php if (!empty($envanter_listesi)): ?>
                         <div style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
-                                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Ürün Adı</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Kategori</th>
-                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: #374151;">Miktar</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Personel</th>
-                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: #374151;">Durum</th>
-                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: #374151;">İşlemler</th>
+                                    <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Ürün Adı</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Kategori</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Personel</th>
+                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: var(--text-primary);">Durum</th>
+                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: var(--text-primary);">İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($envanter_listesi as $envanter): ?>
                                         <tr style="border-bottom: 1px solid #f1f5f9; transition: background-color 0.2s;">
                                             <td style="padding: 15px;">
-                                                <div style="font-weight: 600; color: #1e293b;"><?php echo htmlspecialchars($envanter['urun_adi']); ?></div>
+                                                <div style="font-weight: 600; color: var(--text-primary);"><?php echo htmlspecialchars($envanter['urun_adi']); ?></div>
                                                 <?php if (!empty($envanter['aciklama'])): ?>
-                                                    <div style="font-size: 13px; color: #64748b; margin-top: 4px;"><?php echo htmlspecialchars($envanter['aciklama']); ?></div>
+                                                    <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;"><?php echo htmlspecialchars($envanter['aciklama']); ?></div>
                                                 <?php endif; ?>
                                             </td>
                                             <td style="padding: 15px;">
@@ -201,16 +201,13 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
                                                         <?php if (!empty($envanter['kategori_renk'])): ?>
                                                             <div style="width: 8px; height: 8px; background: <?php echo $envanter['kategori_renk']; ?>; border-radius: 50%;"></div>
                                                         <?php endif; ?>
-                                                        <span style="font-size: 13px; font-weight: 500; color: #374151;"><?php echo htmlspecialchars($envanter['kategori']); ?></span>
+                                                        <span style="font-size: 13px; font-weight: 500; color: var(--text-primary);"><?php echo htmlspecialchars($envanter['kategori']); ?></span>
                                                     </div>
                                                 <?php else: ?>
-                                                    <span style="color: #9ca3af;">-</span>
+                                                    <span style="color: var(--text-muted);">-</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td style="padding: 15px; text-align: center; font-weight: 600; color: #3b82f6;">
-                                                <?php echo number_format($envanter['miktar']); ?>
-                                            </td>
-                                            <td style="padding: 15px; color: #64748b;">
+                                            <td style="padding: 15px; color: var(--text-secondary);">
                                                 <?php echo !empty($envanter['personel_adi']) ? htmlspecialchars($envanter['personel_adi']) : '-'; ?>
                                             </td>
                                             <td style="padding: 15px; text-align: center;">
@@ -237,19 +234,16 @@ $kategoriler_filtre = $db->query("SELECT DISTINCT kategori FROM envanter WHERE k
                         </div>
 
                         <!-- Toplam Özet -->
-                        <?php 
-                        $toplam_miktar = array_sum(array_column($envanter_listesi, 'miktar'));
-                        ?>
-                        <div style="margin-top: 20px; padding: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                        <div style="margin-top: 20px; padding: 20px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border-color);">
                             <div style="text-align: center;">
-                                <div style="font-size: 24px; font-weight: 700; color: #3b82f6;"><?php echo number_format($toplam_miktar); ?></div>
-                                <div style="font-size: 14px; color: #64748b; font-weight: 500;">Toplam Miktar</div>
+                                <div style="font-size: 24px; font-weight: 700; color: #3b82f6;"><?php echo count($envanter_listesi); ?></div>
+                                <div style="font-size: 14px; color: var(--text-secondary); font-weight: 500;">Toplam Envanter Kaydı</div>
                             </div>
                         </div>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 60px; color: #64748b;">
+                        <div class="text-secondary" style="text-align: center; padding: 60px;">
                             <i class="fas fa-boxes" style="font-size: 64px; margin-bottom: 20px; color: #d1d5db;"></i>
-                            <h3 style="font-size: 20px; margin-bottom: 8px; color: #374151;">Henüz envanter kaydı bulunmuyor</h3>
+                            <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Henüz envanter kaydı bulunmuyor</h3>
                             <p style="font-size: 16px; margin-bottom: 20px;">İlk envanter kaydınızı ekleyerek başlayın.</p>
                             <a href="envanter-ekle.php" class="btn btn-primary">
                                 <i class="fas fa-plus"></i>

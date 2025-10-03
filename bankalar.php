@@ -63,8 +63,8 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
     <link href="style.css" rel="stylesheet">
     <style>
         .banka-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 16px;
             margin-bottom: 12px;
@@ -98,12 +98,12 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
 
             <div class="content-area">
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Banka Yönetimi</span>
+                        <span style="color: var(--text-primary);">Banka Yönetimi</span>
                     </nav>
                 </div>
 
@@ -131,12 +131,12 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                 <?php endif; ?>
 
                 <!-- Yeni Banka Ekleme -->
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); margin-bottom: 30px;">
+                <div class="white-card-small" style="padding: 20px; margin-bottom: 30px;">
                     <form method="POST" action="bankalar.php" style="display: flex; gap: 12px; align-items: center;">
                         <input type="hidden" name="action" value="add">
                         <div style="flex: 1;">
                             <input type="text" name="banka_adi" placeholder="Yeni banka adı..." required 
-                                   style="width: 100%; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px;">
+                                   style="width: 100%; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 15px;">
                         </div>
                         <button type="submit" style="padding: 12px 24px; background: #10b981; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
                             <i class="fas fa-plus"></i> Banka Ekle
@@ -145,8 +145,8 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                 </div>
 
                 <!-- Banka Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">
+                <div class="white-card" style="padding: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">
                         <i class="fas fa-university"></i> Kayıtlı Bankalar (<?php echo count($bankalar); ?>)
                     </h2>
                     
@@ -158,7 +158,7 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                                 <i class="fas fa-university" style="color: white; font-size: 16px;"></i>
                             </div>
                             
-                            <span class="banka-text" id="text_<?php echo $banka['id']; ?>" style="flex: 1; font-size: 15px; font-weight: 600; color: #1e293b;">
+                            <span class="banka-text text-primary" id="text_<?php echo $banka['id']; ?>" style="flex: 1; font-size: 15px; font-weight: 600;">
                                 <?php echo htmlspecialchars($banka['banka_adi']); ?>
                             </span>
                             
@@ -188,7 +188,7 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                         <?php endforeach; ?>
                     </div>
                     <?php else: ?>
-                    <div style="text-align: center; padding: 40px; color: #64748b;">
+                    <div class="text-secondary" style="text-align: center; padding: 40px;">
                         <i class="fas fa-university" style="font-size: 48px; margin-bottom: 15px; color: #cbd5e1;"></i>
                         <p>Henüz banka kaydı yok.</p>
                     </div>

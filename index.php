@@ -108,28 +108,28 @@ $recent_activities = $db->query("
                                         break;
                                 }
                         ?>
-                        <div class="sales-card" style="background: white; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; height: 140px; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div class="sales-card" style="background: var(--bg-card); border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; height: 140px; display: flex; flex-direction: column; justify-content: space-between;">
                             <div style="display: flex; align-items: center; margin-bottom: 8px;">
                                 <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-right: 8px;">
                                     <i class="fas fa-receipt" style="color: white; font-size: 14px;"></i>
                                 </div>
                                 <div>
-                                    <div style="font-weight: 600; color: #1e293b; font-size: 13px;">#<?php echo $sale['id']; ?></div>
-                                    <div style="font-size: 11px; color: #64748b;"><?php echo date('d.m.Y', strtotime($sale['olusturma_tarihi'])); ?></div>
+                                    <div style="font-weight: 600; color: var(--text-primary); font-size: 13px;">#<?php echo $sale['id']; ?></div>
+                                    <div style="font-size: 11px; color: var(--text-secondary);"><?php echo date('d.m.Y', strtotime($sale['olusturma_tarihi'])); ?></div>
                                 </div>
                             </div>
                             
                             <div style="flex: 1; margin-bottom: 8px;">
-                                <div style="font-weight: 500; color: #374151; font-size: 12px; margin-bottom: 3px; line-height: 1.3;">
+                                <div style="font-weight: 500; color: var(--text-primary); font-size: 12px; margin-bottom: 3px; line-height: 1.3;">
                                     <?php echo htmlspecialchars($sale['musteri_adi'] ?: 'Müşteri bilgisi yok'); ?>
                                 </div>
-                                <div style="font-size: 11px; color: #64748b;">
+                                <div style="font-size: 11px; color: var(--text-secondary);">
                                     <strong><?php echo htmlspecialchars($sale['personel_adi'] ?: 'Personel bilgisi yok'); ?></strong>
                                 </div>
                             </div>
                             
                             <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div style="font-weight: 600; color: #1e293b; font-size: 14px;">
+                                <div style="font-weight: 600; color: var(--text-primary); font-size: 14px;">
                                     ₺<?php echo number_format($sale['toplam_tutar'], 0, ',', '.'); ?>
                                 </div>
                                 <div style="padding: 3px 6px; border-radius: 4px; font-size: 10px; font-weight: 500; background: <?php echo $durum_color; ?>20; color: <?php echo $durum_color; ?>;">
@@ -141,7 +141,7 @@ $recent_activities = $db->query("
                             endforeach;
                         else:
                         ?>
-                        <div class="sales-card" style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; grid-column: 1 / -1; text-align: center;">
+                        <div class="sales-card" style="background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; grid-column: 1 / -1; text-align: center;">
                             <div style="color: #6b7280; font-size: 14px;">
                                 <i class="fas fa-info-circle" style="margin-right: 8px;"></i>
                                 Henüz satış bulunmuyor
@@ -213,11 +213,11 @@ $recent_activities = $db->query("
                         
                         foreach ($aylar_data as $ay_data): 
                         ?>
-                        <div style="background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                            <h3 style="font-size: 18px; font-weight: 700; color: #1e293b; margin-bottom: 8px; text-align: center;">
+                        <div class="white-card" style="padding: 25px;">
+                            <h3 style="font-size: 18px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; text-align: center;">
                                 <?php echo $ay_data['ay_adi']; ?>
                             </h3>
-                            <div style="font-size: 14px; color: #64748b; margin-bottom: 20px; text-align: center;">
+                            <div style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; text-align: center;">
                                 Toplam: <strong style="color: #3b82f6;">₺<?php echo number_format($ay_data['toplam'], 0, ',', '.'); ?></strong>
                             </div>
                             
@@ -236,16 +236,16 @@ $recent_activities = $db->query("
                                     $color = $colors[$color_index % count($colors)];
                                     $color_index++;
                                 ?>
-                                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px; background: #f8fafc; border-radius: 6px; border-left: 3px solid <?php echo $color; ?>;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid <?php echo $color; ?>;">
                                     <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;">
                                         <div style="width: 10px; height: 10px; border-radius: 50%; background: <?php echo $color; ?>; flex-shrink: 0;"></div>
-                                        <span style="font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo htmlspecialchars($firma['firma_adi']); ?></span>
+                                        <span style="font-size: 13px; font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><?php echo htmlspecialchars($firma['firma_adi']); ?></span>
                                     </div>
                                     <div style="text-align: right; flex-shrink: 0; margin-left: 8px;">
                                         <div style="font-size: 13px; font-weight: 700; color: <?php echo $color; ?>;">
                                             ₺<?php echo number_format($firma['toplam_satis'], 0, ',', '.'); ?>
                                         </div>
-                                        <div style="font-size: 11px; color: #64748b;">
+                                        <div style="font-size: 11px; color: var(--text-secondary);">
                                             %<?php echo number_format($yuzde, 1); ?>
                                         </div>
                                     </div>
@@ -386,7 +386,7 @@ $recent_activities = $db->query("
                     card.style.color = '#10b981';
                     setTimeout(() => {
                         card.style.transform = 'scale(1)';
-                        card.style.color = '#1e293b';
+                        card.style.color = 'var(--text-primary)';
                     }, 300);
                 }
             });
@@ -395,7 +395,7 @@ $recent_activities = $db->query("
 
     <style>
         .logout-btn {
-            color: #64748b;
+            color: var(--text-secondary);
             text-decoration: none;
             padding: 8px;
             border-radius: 6px;

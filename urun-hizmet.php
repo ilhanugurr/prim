@@ -80,20 +80,20 @@ $urunler = $db->query($query);
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Ürün / Hizmet</span>
+                        <span style="color: var(--text-primary);">Ürün / Hizmet</span>
                     </nav>
                 </div>
 
                 <!-- Filtre ve Aksiyon Butonları -->
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 20px;">
+                <div class="white-card" style="padding: 20px; margin-bottom: 20px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 250px;">
                             <form method="GET" action="urun-hizmet.php" style="display: flex; gap: 10px; align-items: center;">
-                                <label style="font-weight: 600; color: #374151; white-space: nowrap;">Firma Filtresi:</label>
-                                <select name="firma_id" onchange="this.form.submit()" style="flex: 1; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; background: white; cursor: pointer;">
+                                <label style="font-weight: 600; color: var(--text-primary); white-space: nowrap;">Firma Filtresi:</label>
+                                <select name="firma_id" onchange="this.form.submit()" style="flex: 1; padding: 10px 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: var(--bg-card); cursor: pointer;">
                                     <option value="">Tüm Firmalar</option>
                                     <?php foreach ($firmalar as $firma): ?>
                                         <option value="<?php echo $firma['id']; ?>" <?php echo $firma_filter == $firma['id'] ? 'selected' : ''; ?>>
@@ -132,27 +132,27 @@ $urunler = $db->query($query);
 
 
                 <!-- Ürün/Hizmet Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Ürün/Hizmet Listesi</h2>
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Ürün/Hizmet Listesi</h2>
                     
                     <?php if (!empty($urunler)): ?>
                         <div style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
-                                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: #374151; width: 60px;">#</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151; width: 50px;"></th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Ürün/Hizmet Adı</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Firma</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Fiyat (KDV Dahil)</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Durum</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">İşlemler</th>
+                                    <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                                        <th style="padding: 15px; text-align: center; font-weight: 600; color: var(--text-primary); width: 60px;">#</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary); width: 50px;"></th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Ürün/Hizmet Adı</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Firma</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Fiyat (KDV Dahil)</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Durum</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php $sira = 1; foreach ($urunler as $urun): ?>
-                                        <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='transparent'">
-                                            <td style="padding: 15px; text-align: center; font-weight: 600; color: #64748b; font-size: 14px;">
+                                        <tr style="border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='var(--bg-secondary)'" onmouseout="this.style.backgroundColor='transparent'">
+                                            <td style="padding: 15px; text-align: center; font-weight: 600; color: var(--text-secondary); font-size: 14px;">
                                                 <?php echo $sira; ?>
                                             </td>
                                             <td style="padding: 15px;">
@@ -161,17 +161,17 @@ $urunler = $db->query($query);
                                                 </div>
                                             </td>
                                             <td style="padding: 15px;">
-                                                <div style="font-size: 14px; font-weight: 600; color: #1e293b; margin-bottom: 4px;">
+                                                <div style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
                                                     <?php echo htmlspecialchars($urun['urun_adi']); ?>
                                                 </div>
                                                 <?php if ($urun['aciklama']): ?>
-                                                    <div style="font-size: 12px; color: #64748b; line-height: 1.3;">
+                                                    <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.3;">
                                                         <?php echo htmlspecialchars(substr($urun['aciklama'], 0, 80)) . (strlen($urun['aciklama']) > 80 ? '...' : ''); ?>
                                                     </div>
                                                 <?php endif; ?>
                                             </td>
                                             <td style="padding: 15px;">
-                                                <div style="font-size: 14px; color: #64748b;">
+                                                <div style="font-size: 14px; color: var(--text-secondary);">
                                                     <i class="fas fa-building" style="margin-right: 5px;"></i>
                                                     <?php echo htmlspecialchars($urun['firma_adi'] ?? 'Firma Yok'); ?>
                                                 </div>
@@ -195,21 +195,21 @@ $urunler = $db->query($query);
                                                         <i class="fas fa-check-circle" style="font-size: 12px;"></i>
                                                         <?php echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?>₺
                                                     </div>
-                                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
                                                         KDV Hariç: <?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?>₺
                                                     </div>
                                                     <div style="font-size: 10px; color: #10b981; margin-top: 2px; font-weight: 600;">
                                                         <i class="fas fa-info-circle"></i> KDV Ekle Aktif
                                                     </div>
                                                 <?php else: ?>
-                                                    <div style="font-size: 14px; font-weight: 600; color: #64748b;">
+                                                    <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">
                                                         <i class="fas fa-times-circle" style="font-size: 12px;"></i>
                                                         <?php echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?>₺
                                                     </div>
-                                                    <div style="font-size: 11px; color: #64748b; margin-top: 2px;">
+                                                    <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
                                                         KDV Hariç: <?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?>₺
                                                     </div>
-                                                    <div style="font-size: 10px; color: #64748b; margin-top: 2px; font-weight: 600;">
+                                                    <div style="font-size: 10px; color: var(--text-secondary); margin-top: 2px; font-weight: 600;">
                                                         <i class="fas fa-info-circle"></i> KDV Dahil Fiyat
                                                     </div>
                                                 <?php endif; ?>
@@ -240,9 +240,9 @@ $urunler = $db->query($query);
                             </table>
                         </div>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 60px; color: #64748b;">
+                        <div class="text-secondary" style="text-align: center; padding: 60px;">
                             <i class="fas fa-box" style="font-size: 64px; margin-bottom: 20px; color: #d1d5db;"></i>
-                            <h3 style="font-size: 20px; margin-bottom: 8px; color: #374151;">Henüz ürün/hizmet eklenmemiş</h3>
+                            <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Henüz ürün/hizmet eklenmemiş</h3>
                             <p style="font-size: 16px; margin-bottom: 20px;">Sisteme ürün/hizmet ekleyerek başlayın.</p>
                             <a href="urun-ekle.php" class="btn btn-primary">
                                 <i class="fas fa-plus"></i>

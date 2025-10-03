@@ -141,20 +141,20 @@ $satislar = $db->query("
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Satışlar</span>
+                        <span style="color: var(--text-primary);">Satışlar</span>
                     </nav>
                 </div>
 
                 <!-- Filtreleme -->
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
                     <form method="GET" action="satislar.php" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
                         <?php if (isAdmin()): ?>
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Satışçı</label>
-                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Satışçı</label>
+                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tüm Satışçılar</option>
                                 <?php
                                 $personeller = $db->select('personel', ['rol' => 'satisci', 'durum' => 'aktif'], 'ad_soyad ASC');
@@ -169,20 +169,20 @@ $satislar = $db->query("
                         <?php endif; ?>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Başlangıç Tarihi</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Başlangıç Tarihi</label>
                             <input type="date" name="baslangic_tarihi" value="<?php echo htmlspecialchars($filter_baslangic ?? ''); ?>" 
-                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                   style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                         </div>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Bitiş Tarihi</label>
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Bitiş Tarihi</label>
                             <input type="date" name="bitis_tarihi" value="<?php echo htmlspecialchars($filter_bitis ?? ''); ?>" 
-                                   style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                   style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                         </div>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Ödeme Durumu</label>
-                            <select name="durum" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Ödeme Durumu</label>
+                            <select name="durum" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tümü</option>
                                 <option value="odendi" <?php echo $filter_durum == 'odendi' ? 'selected' : ''; ?>>Ödendi</option>
                                 <option value="odenmedi" <?php echo $filter_durum == 'odenmedi' ? 'selected' : ''; ?>>Ödenmedi</option>
@@ -193,8 +193,8 @@ $satislar = $db->query("
                         
                         <?php if (isAdmin()): ?>
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Onay Durumu</label>
-                            <select name="onay_durumu" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Onay Durumu</label>
+                            <select name="onay_durumu" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tümü</option>
                                 <option value="beklemede" <?php echo $filter_onay == 'beklemede' ? 'selected' : ''; ?>>Beklemede</option>
                                 <option value="onaylandi" <?php echo $filter_onay == 'onaylandi' ? 'selected' : ''; ?>>Onaylandı</option>
@@ -229,7 +229,7 @@ $satislar = $db->query("
 
                 <!-- Action Buttons -->
                 <div class="action-buttons" style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="font-size: 15px; color: #64748b;">
+                    <div style="font-size: 15px; color: var(--text-secondary);">
                         <i class="fas fa-list"></i> Toplam <strong><?php echo count($satislar); ?></strong> satış bulundu
                     </div>
                     <a href="satis-ekle.php" class="btn btn-primary">
@@ -239,47 +239,47 @@ $satislar = $db->query("
                 </div>
 
                 <!-- Satış Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Satış Listesi</h2>
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Satış Listesi</h2>
                     
                     <?php if (!empty($satislar)): ?>
                         <div style="overflow-x: auto;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <thead>
-                                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">#</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Personel</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Müşteri</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Toplam Tutar</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Maliyet</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Net Tutar</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Ödeme</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Onay Durumu</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">Satış Tarihi</th>
-                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: #374151;">İşlemler</th>
+                                    <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">#</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Personel</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Müşteri</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Toplam Tutar</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Maliyet</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Net Tutar</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Ödeme</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Onay Durumu</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">Satış Tarihi</th>
+                                        <th style="padding: 15px; text-align: left; font-weight: 600; color: var(--text-primary);">İşlemler</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($satislar as $satis): ?>
-                                        <tr style="border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='#f8fafc'" onmouseout="this.style.backgroundColor='white'">
-                                            <td style="padding: 15px; color: #1e293b; font-weight: 600;">
+                                        <tr style="border-bottom: 1px solid #e2e8f0; transition: all 0.3s ease;" onmouseover="this.style.backgroundColor='var(--bg-secondary)'" onmouseout="this.style.backgroundColor='var(--bg-card)'">
+                                            <td style="padding: 15px; color: var(--text-primary); font-weight: 600;">
                                                 #<?php echo $satis['id']; ?>
                                             </td>
-                                            <td style="padding: 15px; color: #64748b; max-width: 300px;">
+                                            <td style="padding: 15px; color: var(--text-secondary); max-width: 300px;">
                                                 <?php if ($satis['personel_adi']): ?>
                                                     <?php echo htmlspecialchars($satis['personel_adi']); ?>
                                                 <?php else: ?>
                                                     <span style="color: #d1d5db;">Personel atanmamış</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td style="padding: 15px; color: #64748b; max-width: 300px;">
+                                            <td style="padding: 15px; color: var(--text-secondary); max-width: 300px;">
                                                 <?php if ($satis['musteri_adi']): ?>
                                                     <?php echo htmlspecialchars($satis['musteri_adi']); ?>
                                                 <?php else: ?>
                                                     <span style="color: #d1d5db;">Müşteri bilgisi yok</span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td style="padding: 15px; color: #1e293b; font-weight: 600;">
+                                            <td style="padding: 15px; color: var(--text-primary); font-weight: 600;">
                                                 <?php echo number_format($satis['toplam_tutar'], 2); ?>₺
                                             </td>
                                             <td style="padding: 15px; color: #dc2626; font-weight: 600;">
@@ -328,7 +328,7 @@ $satislar = $db->query("
                                                     <?php echo $onay_text; ?>
                                                 </span>
                                             </td>
-                                            <td style="padding: 15px; color: #64748b; font-size: 14px;">
+                                            <td style="padding: 15px; color: var(--text-secondary); font-size: 14px;">
                                                 <?php echo date('d.m.Y', strtotime($satis['satis_tarihi'])); ?>
                                             </td>
                                             <td style="padding: 15px;">
@@ -364,9 +364,9 @@ $satislar = $db->query("
                             </table>
                         </div>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 60px; color: #64748b;">
+                        <div class="text-secondary" style="text-align: center; padding: 60px;">
                             <i class="fas fa-chart-line" style="font-size: 64px; margin-bottom: 20px; color: #d1d5db;"></i>
-                            <h3 style="font-size: 20px; margin-bottom: 8px; color: #374151;">Henüz satış eklenmemiş</h3>
+                            <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Henüz satış eklenmemiş</h3>
                             <p style="font-size: 16px; margin-bottom: 20px;">Sisteme satış ekleyerek başlayın.</p>
                             <a href="satis-ekle.php" class="btn btn-primary">
                                 <i class="fas fa-plus"></i>

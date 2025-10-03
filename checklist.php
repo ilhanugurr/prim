@@ -76,7 +76,7 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
     <link href="style.css" rel="stylesheet">
     <style>
         .checklist-item {
-            background: white;
+            background: var(--bg-card);
             border-radius: 10px;
             padding: 16px 20px;
             margin-bottom: 12px;
@@ -116,11 +116,11 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
         .item-text {
             flex: 1;
             font-size: 15px;
-            color: #1e293b;
+            color: var(--text-primary);
         }
         .item-text.completed {
             text-decoration: line-through;
-            color: #64748b;
+            color: var(--text-secondary);
         }
         .delete-btn {
             color: #ef4444;
@@ -137,7 +137,7 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
             background: #fee2e2;
         }
         .add-form {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 30px;
@@ -158,10 +158,10 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Checklist</span>
+                        <span style="color: var(--text-primary);">Checklist</span>
                     </nav>
                 </div>
 
@@ -185,7 +185,7 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
                         <input type="hidden" name="action" value="add">
                         <input type="text" name="madde" placeholder="Yeni yapılacak madde ekle..." 
                                required
-                               style="flex: 1; padding: 12px 16px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 15px; transition: border-color 0.2s ease;"
+                               style="flex: 1; padding: 12px 16px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 15px; transition: border-color 0.2s ease;"
                                onfocus="this.style.borderColor='#3b82f6'" 
                                onblur="this.style.borderColor='#e2e8f0'">
                         <button type="submit" style="padding: 12px 24px; background: #3b82f6; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background 0.2s ease;">
@@ -201,12 +201,12 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
                 $percentage = $total > 0 ? ($completed / $total) * 100 : 0;
                 ?>
                 <?php if ($total > 0): ?>
-                <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 14px; color: #64748b;">İlerleme</span>
-                        <span style="font-size: 14px; font-weight: 600; color: #1e293b;"><?php echo $completed; ?> / <?php echo $total; ?> tamamlandı</span>
+                        <span style="font-size: 14px; color: var(--text-secondary);">İlerleme</span>
+                        <span style="font-size: 14px; font-weight: 600; color: var(--text-primary);"><?php echo $completed; ?> / <?php echo $total; ?> tamamlandı</span>
                     </div>
-                    <div style="background: #e2e8f0; height: 8px; border-radius: 4px; overflow: hidden;">
+                    <div style="background: var(--bg-secondary); height: 8px; border-radius: 4px; overflow: hidden;">
                         <div style="background: linear-gradient(90deg, #3b82f6, #10b981); height: 100%; width: <?php echo $percentage; ?>%; transition: width 0.3s ease;"></div>
                     </div>
                 </div>
@@ -215,9 +215,9 @@ $items = $db->query("SELECT * FROM checklist ORDER BY tamamlandi ASC, sira ASC, 
                 <!-- Checklist Maddeleri -->
                 <div>
                     <?php if (empty($items)): ?>
-                    <div style="text-align: center; padding: 60px 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
+                    <div style="text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);">
                         <i class="fas fa-clipboard-list" style="font-size: 64px; color: #cbd5e1; margin-bottom: 20px;"></i>
-                        <h3 style="color: #64748b; font-size: 18px; margin: 0;">Henüz checklist maddesi yok</h3>
+                        <h3 style="color: var(--text-secondary); font-size: 18px; margin: 0;">Henüz checklist maddesi yok</h3>
                         <p style="color: #94a3b8; margin: 8px 0 0;">Yukarıdaki formdan yeni madde ekleyebilirsiniz.</p>
                     </div>
                     <?php else: ?>

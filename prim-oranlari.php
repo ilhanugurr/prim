@@ -98,7 +98,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #64748b;">
+                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
                         <a href="primler.php" style="color: #3b82f6; text-decoration: none;">Primler</a>
@@ -247,17 +247,17 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
     <style>
         .form-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             margin-bottom: 25px;
         }
 
         .form-card h3 {
             margin: 0 0 20px 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 18px;
             font-weight: 600;
         }
@@ -277,12 +277,12 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         .form-group label {
             margin-bottom: 8px;
             font-weight: 500;
-            color: #374151;
+            color: var(--text-primary);
         }
 
         .form-group input {
             padding: 10px 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
         }
@@ -300,16 +300,16 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         }
 
         .prim-oranlari-container {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .prim-oranlari-container h3 {
             margin: 0 0 20px 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 18px;
             font-weight: 600;
         }
@@ -324,8 +324,8 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         }
 
         .prim-oranlari-table th {
-            background: #f8fafc;
-            color: #374151;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             font-weight: 600;
             padding: 15px 12px;
             text-align: left;
@@ -341,7 +341,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 
         .tutar-aralik {
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-primary);
         }
 
         .prim-oran {
@@ -351,7 +351,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         }
 
         .aciklama {
-            color: #64748b;
+            color: var(--text-secondary);
         }
 
         .status-badge {
@@ -384,7 +384,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            color: #64748b;
+            color: var(--text-secondary);
         }
 
         .empty-state i {
@@ -394,7 +394,7 @@ if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
         }
 
         .empty-state h3 {
-            color: #64748b;
+            color: var(--text-secondary);
             margin-bottom: 10px;
             font-size: 20px;
         }

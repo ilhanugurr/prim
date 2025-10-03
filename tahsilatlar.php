@@ -114,10 +114,10 @@ $aylar = [
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Tahsilat</span>
+                        <span style="color: var(--text-primary);">Tahsilat</span>
                     </nav>
                 </div>
 
@@ -140,11 +140,11 @@ $aylar = [
                 <?php endif; ?>
 
                 <!-- Filtreleme -->
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
                     <form method="GET" action="tahsilatlar.php" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end;">
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Yıl</label>
-                            <select name="yil" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Yıl</label>
+                            <select name="yil" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <?php for ($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
                                     <option value="<?php echo $y; ?>" <?php echo $filter_yil == $y ? 'selected' : ''; ?>><?php echo $y; ?></option>
                                 <?php endfor; ?>
@@ -152,8 +152,8 @@ $aylar = [
                         </div>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Ay</label>
-                            <select name="ay" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Ay</label>
+                            <select name="ay" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tüm Aylar</option>
                                 <?php foreach ($aylar as $ay_num => $ay_adi): ?>
                                     <option value="<?php echo $ay_num; ?>" <?php echo $filter_ay == $ay_num ? 'selected' : ''; ?>><?php echo $ay_adi; ?></option>
@@ -162,8 +162,8 @@ $aylar = [
                         </div>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Müşteri</label>
-                            <select name="musteri_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Müşteri</label>
+                            <select name="musteri_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tüm Müşteriler</option>
                                 <?php foreach ($musteriler as $m): ?>
                                     <option value="<?php echo $m['id']; ?>" <?php echo $filter_musteri == $m['id'] ? 'selected' : ''; ?>>
@@ -174,8 +174,8 @@ $aylar = [
                         </div>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Banka</label>
-                            <select name="banka_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Banka</label>
+                            <select name="banka_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tüm Bankalar</option>
                                 <?php foreach ($bankalar as $b): ?>
                                     <option value="<?php echo $b['id']; ?>" <?php echo $filter_banka == $b['id'] ? 'selected' : ''; ?>>
@@ -186,8 +186,8 @@ $aylar = [
                         </div>
                         
                         <div>
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151; font-size: 14px;">Personel</label>
-                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary); font-size: 14px;">Personel</label>
+                            <select name="personel_id" style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                 <option value="">Tüm Personel</option>
                                 <?php foreach ($personeller as $p): ?>
                                     <option value="<?php echo $p['id']; ?>" <?php echo $filter_personel == $p['id'] ? 'selected' : ''; ?>>
@@ -259,7 +259,7 @@ $aylar = [
 
                 <!-- Aksiyon Butonları -->
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <div style="font-size: 15px; color: #64748b;">
+                    <div style="font-size: 15px; color: var(--text-secondary);">
                         <i class="fas fa-list"></i> Toplam <strong><?php echo count($tahsilatlar); ?></strong> tahsilat
                     </div>
                     <div style="display: flex; gap: 10px;">
@@ -273,19 +273,19 @@ $aylar = [
                 </div>
 
                 <!-- Tahsilat Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
                     <?php if (!empty($tahsilatlar)): ?>
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
-                            <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Ödeme Tarihi</th>
-                                <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Müşteri</th>
-                                <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Personel</th>
-                                <th style="padding: 12px; text-align: left; color: #64748b; font-weight: 600;">Banka</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Tahsilat</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Maliyet</th>
-                                <th style="padding: 12px; text-align: right; color: #64748b; font-weight: 600;">Net Tutar</th>
-                                <th style="padding: 12px; text-align: center; color: #64748b; font-weight: 600;">İşlemler</th>
+                            <tr style="background: var(--bg-secondary); border-bottom: 2px solid #e2e8f0;">
+                                <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Ödeme Tarihi</th>
+                                <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Müşteri</th>
+                                <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Personel</th>
+                                <th style="padding: 12px; text-align: left; color: var(--text-secondary); font-weight: 600;">Banka</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Tahsilat</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Maliyet</th>
+                                <th style="padding: 12px; text-align: right; color: var(--text-secondary); font-weight: 600;">Net Tutar</th>
+                                <th style="padding: 12px; text-align: center; color: var(--text-secondary); font-weight: 600;">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -294,7 +294,7 @@ $aylar = [
                                 <td style="padding: 16px; color: #1f2937;">
                                     <div style="font-weight: 600;"><?php echo date('d.m.Y', strtotime($tahsilat['odeme_tarihi'])); ?></div>
                                     <?php if ($tahsilat['fatura_tarihi']): ?>
-                                    <div style="font-size: 12px; color: #64748b; margin-top: 2px;">
+                                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px;">
                                         <i class="fas fa-file-invoice"></i> Fatura: <?php echo date('d.m.Y', strtotime($tahsilat['fatura_tarihi'])); ?>
                                     </div>
                                     <?php endif; ?>
@@ -302,7 +302,7 @@ $aylar = [
                                 <td style="padding: 16px; color: #1f2937; font-weight: 500;">
                                     <?php echo htmlspecialchars($tahsilat['musteri_adi']); ?>
                                 </td>
-                                <td style="padding: 16px; color: #64748b;">
+                                <td style="padding: 16px; color: var(--text-secondary);">
                                     <?php if ($tahsilat['personel_adi']): ?>
                                         <i class="fas fa-user" style="margin-right: 5px;"></i>
                                         <?php echo htmlspecialchars($tahsilat['personel_adi']); ?>
@@ -310,11 +310,11 @@ $aylar = [
                                         <span style="color: #cbd5e1;">—</span>
                                     <?php endif; ?>
                                 </td>
-                                <td style="padding: 16px; color: #64748b;">
+                                <td style="padding: 16px; color: var(--text-secondary);">
                                     <i class="fas fa-university" style="margin-right: 5px;"></i>
                                     <?php echo htmlspecialchars($tahsilat['banka_adi']); ?>
                                 </td>
-                                <td style="padding: 16px; text-align: right; color: #64748b; font-weight: 600;">
+                                <td style="padding: 16px; text-align: right; color: var(--text-secondary); font-weight: 600;">
                                     ₺<?php echo number_format($tahsilat['tutar_kdv_dahil'], 2, ',', '.'); ?>
                                 </td>
                                 <td style="padding: 16px; text-align: right; color: #ef4444; font-weight: 600;">
@@ -344,9 +344,9 @@ $aylar = [
                             <?php endforeach; ?>
                         </tbody>
                         <tfoot>
-                            <tr style="background: #f8fafc; font-weight: 700; border-top: 2px solid #e2e8f0;">
+                            <tr style="background: var(--bg-secondary); font-weight: 700; border-top: 2px solid #e2e8f0;">
                                 <td colspan="4" style="padding: 16px; color: #1f2937;">TOPLAM</td>
-                                <td style="padding: 16px; text-align: right; color: #64748b;">
+                                <td style="padding: 16px; text-align: right; color: var(--text-secondary);">
                                     ₺<?php echo number_format($toplam_kdv_dahil + $toplam_maliyet, 2, ',', '.'); ?>
                                 </td>
                                 <td style="padding: 16px; text-align: right; color: #ef4444;">
@@ -360,9 +360,9 @@ $aylar = [
                         </tfoot>
                     </table>
                     <?php else: ?>
-                    <div style="text-align: center; padding: 60px; color: #64748b;">
+                    <div class="text-secondary" style="text-align: center; padding: 60px;">
                         <i class="fas fa-money-bill-wave" style="font-size: 64px; margin-bottom: 20px; color: #cbd5e1;"></i>
-                        <h3 style="font-size: 20px; margin-bottom: 8px; color: #374151;">Tahsilat kaydı bulunamadı</h3>
+                        <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Tahsilat kaydı bulunamadı</h3>
                         <p style="font-size: 16px; margin-bottom: 20px;">Seçili filtrelere göre tahsilat bulunamadı.</p>
                         <a href="tahsilat-ekle.php" style="padding: 12px 24px; background: #10b981; color: white; border-radius: 8px; text-decoration: none; font-weight: 600; display: inline-block;">
                             <i class="fas fa-plus"></i> Yeni Tahsilat Ekle

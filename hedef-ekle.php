@@ -91,7 +91,7 @@ $stats = getStats();
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #64748b;">
+                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
                         <a href="hedefler.php" style="color: #3b82f6; text-decoration: none;">Hedefler</a>
@@ -258,12 +258,12 @@ $stats = getStats();
 
         .yil-tab {
             padding: 10px 20px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-color);
             background: #f9fafb;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
-            color: #374151;
+            color: var(--text-primary);
         }
 
         .yil-tab.active {
@@ -281,13 +281,13 @@ $stats = getStats();
 
         .ay-tab {
             padding: 8px 16px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-color);
             background: #f9fafb;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 14px;
-            color: #374151;
+            color: var(--text-primary);
         }
 
         .ay-tab.active {
@@ -297,10 +297,10 @@ $stats = getStats();
         }
 
         .firma-hedef-item {
-            background: #f8fafc;
+            background: var(--bg-secondary);
             padding: 15px;
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             margin-bottom: 15px;
         }
 
@@ -312,7 +312,7 @@ $stats = getStats();
 
         .firma-label {
             font-weight: 600;
-            color: #374151;
+            color: var(--text-primary);
             min-width: 120px;
         }
 

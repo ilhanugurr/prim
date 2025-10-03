@@ -119,7 +119,7 @@ if (isAdmin()) {
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #64748b;">
+                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
                         <span>Hedefler</span>
@@ -206,8 +206,8 @@ if (isAdmin()) {
                     <?php else: ?>
                         <div class="dashboard-card" style="text-align: center; padding: 40px;">
                             <i class="fas fa-bullseye" style="font-size: 48px; color: #d1d5db; margin-bottom: 20px;"></i>
-                            <h3 style="color: #64748b; margin-bottom: 10px;">Henüz hedef eklenmemiş</h3>
-                            <p style="color: #9ca3af;">Yeni hedef eklemek için yukarıdaki butonu kullanın.</p>
+                            <h3 style="color: var(--text-secondary); margin-bottom: 10px;">Henüz hedef eklenmemiş</h3>
+                            <p style="color: var(--text-muted);">Yeni hedef eklemek için yukarıdaki butonu kullanın.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -226,11 +226,11 @@ if (isAdmin()) {
 
     <style>
         .personel-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             margin-bottom: 25px;
         }
 
@@ -256,7 +256,7 @@ if (isAdmin()) {
 
         .personel-info h3 {
             margin: 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 20px;
             font-weight: 600;
         }

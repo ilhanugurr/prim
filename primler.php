@@ -63,7 +63,7 @@ $aylar = [
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #64748b;">
+                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
                         <span>Primler</span>
@@ -225,16 +225,16 @@ $aylar = [
         }
 
         .filter-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .filter-card h3 {
             margin: 0 0 20px 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 18px;
             font-weight: 600;
         }
@@ -259,24 +259,24 @@ $aylar = [
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #374151;
+            color: var(--text-primary);
         }
 
         .filter-group select {
             width: 100%;
             padding: 10px 12px;
-            border: 1px solid #d1d5db;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            background: white;
+            background: var(--bg-card);
             font-size: 14px;
         }
 
         .primler-container {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .primler-header {
@@ -290,7 +290,7 @@ $aylar = [
 
         .primler-header h2 {
             margin: 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 20px;
             font-weight: 600;
         }
@@ -314,8 +314,8 @@ $aylar = [
         }
 
         .primler-table th {
-            background: #f8fafc;
-            color: #374151;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
             font-weight: 600;
             padding: 15px 12px;
             text-align: left;
@@ -342,7 +342,7 @@ $aylar = [
 
         .amount, .prim-amount {
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-primary);
         }
 
         .percentage {
@@ -370,9 +370,9 @@ $aylar = [
         .prim-summary-card {
             margin-top: 25px;
             padding: 20px;
-            background: #f8fafc;
+            background: var(--bg-secondary);
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .summary-row {
@@ -388,7 +388,7 @@ $aylar = [
 
         .summary-label {
             font-weight: 500;
-            color: #374151;
+            color: var(--text-primary);
         }
 
         .summary-amount {
@@ -418,19 +418,19 @@ $aylar = [
             flex-direction: column;
             gap: 4px;
             padding: 8px;
-            background: #f8fafc;
+            background: var(--bg-secondary);
             border-radius: 6px;
             border-left: 3px solid #3b82f6;
         }
 
         .firma-name {
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 13px;
         }
 
         .firma-satis {
-            color: #64748b;
+            color: var(--text-secondary);
             font-size: 12px;
         }
 

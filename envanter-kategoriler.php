@@ -9,6 +9,7 @@ header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
 require_once 'config/database.php';
+require_once 'includes/auth.php';
 
 // Admin kontrolü
 if (!isAdmin()) {
@@ -71,12 +72,12 @@ $kategoriler = $db->query("
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="envanter.php" style="color: #3b82f6; text-decoration: none;">Envanter</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Kategoriler</span>
+                        <span style="color: var(--text-primary);">Kategoriler</span>
                     </nav>
                 </div>
 
@@ -106,23 +107,23 @@ $kategoriler = $db->query("
                 </div>
 
                 <!-- Kategoriler Listesi -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0;">
-                    <h2 style="font-size: 20px; font-weight: 600; color: #1e293b; margin-bottom: 20px;">Envanter Kategorileri</h2>
+                <div class="white-card" style="padding: 30px;">
+                    <h2 class="text-primary" style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Envanter Kategorileri</h2>
                     
                     <?php if (!empty($kategoriler)): ?>
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
                             <?php foreach ($kategoriler as $kategori): ?>
-                                <div style="background: #f8fafc; border: 2px solid <?php echo $kategori['renk']; ?>20; border-radius: 12px; padding: 20px; transition: all 0.3s ease; position: relative;">
+                                <div style="background: var(--bg-secondary); border: 2px solid <?php echo $kategori['renk']; ?>20; border-radius: 12px; padding: 20px; transition: all 0.3s ease; position: relative;">
                                     <!-- Kategori Rengi Göstergesi -->
                                     <div style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px; background: <?php echo $kategori['renk']; ?>; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.1);"></div>
                                     
                                     <!-- Kategori Adı -->
                                     <div style="margin-bottom: 15px;">
-                                        <h3 style="font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 5px 0; padding-right: 35px;">
+                                        <h3 style="font-size: 18px; font-weight: 600; color: var(--text-primary); margin: 0 0 5px 0; padding-right: 35px;">
                                             <?php echo htmlspecialchars($kategori['kategori_adi']); ?>
                                         </h3>
                                         <?php if (!empty($kategori['aciklama'])): ?>
-                                            <p style="color: #64748b; font-size: 14px; margin: 0; line-height: 1.4;">
+                                            <p style="color: var(--text-secondary); font-size: 14px; margin: 0; line-height: 1.4;">
                                                 <?php echo htmlspecialchars($kategori['aciklama']); ?>
                                             </p>
                                         <?php endif; ?>
@@ -130,7 +131,7 @@ $kategoriler = $db->query("
                                     
                                     <!-- Kullanım Bilgisi -->
                                     <div style="margin-bottom: 20px;">
-                                        <div style="display: flex; align-items: center; gap: 8px; color: #64748b; font-size: 14px;">
+                                        <div style="display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: 14px;">
                                             <i class="fas fa-boxes" style="color: #3b82f6;"></i>
                                             <span><?php echo $kategori['kullanim_sayisi']; ?> envanter kaydı</span>
                                         </div>
@@ -154,7 +155,7 @@ $kategoriler = $db->query("
                                                     <i class="fas fa-trash"></i> Sil
                                                 </a>
                                             <?php else: ?>
-                                                <span style="padding: 6px 12px; font-size: 11px; color: #64748b; background: #f3f4f6; border-radius: 6px; cursor: not-allowed;">
+                                                <span style="padding: 6px 12px; font-size: 11px; color: var(--text-secondary); background: #f3f4f6; border-radius: 6px; cursor: not-allowed;">
                                                     <i class="fas fa-lock"></i> Kullanımda
                                                 </span>
                                             <?php endif; ?>
@@ -170,9 +171,9 @@ $kategoriler = $db->query("
                             <?php endforeach; ?>
                         </div>
                     <?php else: ?>
-                        <div style="text-align: center; padding: 60px; color: #64748b;">
+                        <div class="text-secondary" style="text-align: center; padding: 60px;">
                             <i class="fas fa-tags" style="font-size: 64px; margin-bottom: 20px; color: #d1d5db;"></i>
-                            <h3 style="font-size: 20px; margin-bottom: 8px; color: #374151;">Henüz kategori bulunmuyor</h3>
+                            <h3 class="text-primary" style="font-size: 20px; margin-bottom: 8px;">Henüz kategori bulunmuyor</h3>
                             <p style="font-size: 16px; margin-bottom: 20px;">İlk kategoriyi ekleyerek başlayın.</p>
                             <a href="envanter-kategori-ekle.php" class="btn btn-primary">
                                 <i class="fas fa-plus"></i>

@@ -46,11 +46,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
         }
         
         .dashboard-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 16px;
             padding: 15px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             transition: all 0.3s ease;
         }
         
@@ -75,10 +75,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Müşteriler</span>
+                        <span style="color: var(--text-primary);">Müşteriler</span>
                     </nav>
                 </div>
 
@@ -113,10 +113,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div style="display: flex; align-items: center; gap: 20px;">
                                         <div style="display: flex; align-items: center;">
-                                            <i class="fas fa-user-tie" style="width: 20px; color: #64748b; margin-right: 10px;"></i>
+                                            <i class="fas fa-user-tie" style="width: 20px; color: var(--text-secondary); margin-right: 10px;"></i>
                                             <span style="font-weight: 600; font-size: 16px;"><?php echo htmlspecialchars($musteri['firma_adi']); ?></span>
                                         </div>
-                                        <div style="display: flex; align-items: center; font-size: 14px; color: #64748b;">
+                                        <div style="display: flex; align-items: center; font-size: 14px; color: var(--text-secondary);">
                                             <i class="fas fa-user" style="width: 16px; margin-right: 8px;"></i>
                                             <span><?php echo htmlspecialchars($musteri['yetkili_ad_soyad']); ?></span>
                                         </div>
@@ -141,8 +141,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                         <div class="dashboard-card">
                             <div style="text-align: center; padding: 40px;">
                                 <i class="fas fa-user-tie" style="font-size: 48px; color: #d1d5db; margin-bottom: 16px;"></i>
-                                <h3 style="color: #64748b; margin-bottom: 8px;">Henüz müşteri bulunmuyor</h3>
-                                <p style="color: #9ca3af;">İlk müşterinizi ekleyerek başlayın</p>
+                                <h3 style="color: var(--text-secondary); margin-bottom: 8px;">Henüz müşteri bulunmuyor</h3>
+                                <p style="color: var(--text-muted);">İlk müşterinizi ekleyerek başlayın</p>
                                 <a href="musteri-ekle.php" class="btn btn-primary" style="margin-top: 16px;">
                                     <i class="fas fa-plus"></i>
                                     Yeni Müşteri Ekle

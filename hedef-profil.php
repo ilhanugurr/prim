@@ -83,7 +83,7 @@ $stats = getStats();
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #64748b;">
+                    <nav style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <i class="fas fa-chevron-right" style="font-size: 12px;"></i>
                         <a href="hedefler.php" style="color: #3b82f6; text-decoration: none;">Hedefler</a>
@@ -311,11 +311,11 @@ $stats = getStats();
 
     <style>
         .personel-info-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             margin-bottom: 25px;
         }
 
@@ -338,7 +338,7 @@ $stats = getStats();
 
         .personel-info h2 {
             margin: 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 24px;
             font-weight: 600;
         }
@@ -359,11 +359,11 @@ $stats = getStats();
         }
 
         .hedef-card {
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             padding: 25px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             transition: all 0.2s;
         }
 
@@ -383,7 +383,7 @@ $stats = getStats();
 
         .hedef-info h3 {
             margin: 0;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 20px;
             font-weight: 600;
         }
@@ -418,8 +418,8 @@ $stats = getStats();
 
         .btn-edit {
             background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
         }
 
         .btn-edit:hover {
@@ -446,15 +446,15 @@ $stats = getStats();
 
         .firma-item {
             padding: 20px;
-            background: #f8fafc;
+            background: var(--bg-secondary);
             border-radius: 8px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             transition: all 0.2s;
             margin-bottom: 15px;
         }
 
         .firma-item:hover {
-            background: #f1f5f9;
+            background: var(--bg-secondary);
             border-color: #3b82f6;
         }
 
@@ -467,7 +467,7 @@ $stats = getStats();
 
         .firma-name {
             font-weight: 600;
-            color: #1e293b;
+            color: var(--text-primary);
             font-size: 16px;
         }
 
@@ -486,10 +486,10 @@ $stats = getStats();
         .empty-state {
             text-align: center;
             padding: 60px 20px;
-            background: white;
+            background: var(--bg-card);
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .empty-state i {
@@ -499,7 +499,7 @@ $stats = getStats();
         }
 
         .empty-state h3 {
-            color: #64748b;
+            color: var(--text-secondary);
             margin-bottom: 10px;
             font-size: 20px;
         }
@@ -524,7 +524,7 @@ $stats = getStats();
 
         .progress-title {
             font-weight: 600;
-            color: #374151;
+            color: var(--text-primary);
             font-size: 14px;
         }
 
@@ -535,7 +535,7 @@ $stats = getStats();
         }
 
         .progress-bar-container {
-            background: #f1f5f9;
+            background: var(--bg-secondary);
             border-radius: 10px;
             height: 8px;
             overflow: hidden;
@@ -553,7 +553,7 @@ $stats = getStats();
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            color: #64748b;
+            color: var(--text-secondary);
         }
 
         .progress-amount {

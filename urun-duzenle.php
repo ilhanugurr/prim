@@ -94,12 +94,12 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
             <div class="content-area">
                 <!-- Breadcrumb -->
                 <div style="margin-bottom: 20px;">
-                    <nav style="font-size: 14px; color: #64748b;">
+                    <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
                         <a href="urun-hizmet.php" style="color: #3b82f6; text-decoration: none;">Ürün / Hizmet</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: #1e293b;">Ürün/Hizmet Düzenle</span>
+                        <span style="color: var(--text-primary);">Ürün/Hizmet Düzenle</span>
                     </nav>
                 </div>
 
@@ -117,9 +117,9 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                 <?php endif; ?>
 
                 <!-- Form -->
-                <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid #e2e8f0; margin-bottom: 30px;">
+                <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); margin-bottom: 30px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                        <h2 style="font-size: 24px; font-weight: 600; color: #1e293b;">Ürün/Hizmet Bilgilerini Düzenle</h2>
+                        <h2 class="text-primary" style="font-size: 24px; font-weight: 600;">Ürün/Hizmet Bilgilerini Düzenle</h2>
                         <a href="urun-hizmet.php" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i>
                             Ürün/Hizmet Listesi
@@ -132,15 +132,15 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ürün/Hizmet Adı *</label>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ürün/Hizmet Adı *</label>
                                 <input type="text" name="urun_adi" value="<?php echo htmlspecialchars($urun['urun_adi']); ?>" required 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                        placeholder="Örn: Otomotiv Yedek Parça">
                             </div>
                             
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Firma Seçimi *</label>
-                                <select name="firma_id" required style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Firma Seçimi *</label>
+                                <select name="firma_id" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Firma Seçiniz</option>
                                     <?php foreach ($firmalar as $firma): ?>
                                         <option value="<?php echo $firma['id']; ?>" <?php echo $urun['firma_id'] == $firma['id'] ? 'selected' : ''; ?>>
@@ -152,8 +152,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                         </div>
                         
                         <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Açıklama</label>
-                            <textarea name="aciklama" rows="3" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; resize: vertical;" 
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Açıklama</label>
+                            <textarea name="aciklama" rows="3" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; resize: vertical;" 
                                       placeholder="Ürün/hizmet hakkında detaylı açıklama"><?php echo htmlspecialchars($urun['aciklama']); ?></textarea>
                         </div>
                         
@@ -174,28 +174,28 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                                     $fiyat_label = "Fiyat (KDV Dahil - ₺)";
                                 }
                                 ?>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">
                                     <?php echo $fiyat_label; ?>
                                 </label>
                                 <input type="number" name="fiyat" step="0.01" min="0" value="<?php echo $urun['fiyat']; ?>" 
-                                       style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;"
+                                       style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                        placeholder="0.00">
                                 <div style="font-size: 14px; color: #0ea5e9; margin-top: 8px; font-weight: 600;">
                                     <i class="fas fa-info-circle"></i> 
                                     <?php if ($kdv_aktif): ?>
                                         <span style="color: #10b981;">✓ KDV Dahil: ₺<?php echo number_format($kdv_dahil_fiyat, 2, ',', '.'); ?></span>
                                     <?php else: ?>
-                                        <span style="color: #64748b;">KDV Hariç: ₺<?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?></span>
+                                        <span style="color: var(--text-secondary);">KDV Hariç: ₺<?php echo number_format($kdv_hariç_fiyat, 2, ',', '.'); ?></span>
                                     <?php endif; ?>
                                 </div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">KDV Durumu</label>
-                                <button type="button" onclick="toggleKDV()" style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; <?php echo $kdv_aktif ? 'background: #10b981; color: white;' : 'background: #e2e8f0; color: #64748b;'; ?>">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">KDV Durumu</label>
+                                <button type="button" onclick="toggleKDV()" style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; <?php echo $kdv_aktif ? 'background: #10b981; color: white;' : 'background: var(--bg-secondary); color: var(--text-secondary);'; ?>">
                                     <i class="fas <?php echo $kdv_aktif ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
                                     <?php echo $kdv_aktif ? 'KDV Ekle (Aktif)' : 'KDV Ekle (Pasif)'; ?>
                                 </button>
-                                <div style="font-size: 12px; color: #64748b; margin-top: 8px; text-align: center;">
+                                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px; text-align: center;">
                                     <i class="fas fa-info-circle"></i> 
                                     <?php if ($kdv_aktif): ?>
                                         Aktif: Fiyat üzerine %20 KDV eklenir
@@ -208,8 +208,8 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Durum</label>
-                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Durum</label>
+                                <select name="durum" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="aktif" <?php echo $urun['durum'] == 'aktif' ? 'selected' : ''; ?>>Aktif</option>
                                     <option value="pasif" <?php echo $urun['durum'] == 'pasif' ? 'selected' : ''; ?>>Pasif</option>
                                 </select>
@@ -217,16 +217,16 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                         </div>
                         
                         <!-- Mevcut Bilgiler -->
-                        <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-                            <h3 style="font-size: 16px; font-weight: 600; color: #374151; margin-bottom: 15px;">Mevcut Bilgiler</h3>
+                        <div style="background: var(--bg-secondary); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+                            <h3 style="font-size: 16px; font-weight: 600; color: var(--text-primary); margin-bottom: 15px;">Mevcut Bilgiler</h3>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px;">
                                 <div>
-                                    <span style="color: #64748b;">Oluşturma Tarihi:</span>
-                                    <span style="color: #1e293b; font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($urun['olusturma_tarihi'])); ?></span>
+                                    <span style="color: var(--text-secondary);">Oluşturma Tarihi:</span>
+                                    <span style="color: var(--text-primary); font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($urun['olusturma_tarihi'])); ?></span>
                                 </div>
                                 <div>
-                                    <span style="color: #64748b;">Son Güncelleme:</span>
-                                    <span style="color: #1e293b; font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($urun['son_guncelleme'])); ?></span>
+                                    <span style="color: var(--text-secondary);">Son Güncelleme:</span>
+                                    <span style="color: var(--text-primary); font-weight: 500;"><?php echo date('d.m.Y H:i', strtotime($urun['son_guncelleme'])); ?></span>
                                 </div>
                             </div>
                         </div>
