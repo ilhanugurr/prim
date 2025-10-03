@@ -72,56 +72,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_musteri') {
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="seomew-logo.png" alt="SyncMEW Logo" style="height: 52px; margin-bottom: 0;">
-            </div>
-            
-            <nav class="sidebar-nav">
-                <a href="index.php" class="nav-item">
-                    <i class="fas fa-home nav-icon"></i>
-                    <span class="nav-text">Ana Sayfa</span>
-                </a>
-                <a href="firmalar.php" class="nav-item">
-                    <i class="fas fa-industry nav-icon"></i>
-                    <span class="nav-text">Firmalar</span>
-                    <span class="nav-badge"><?php echo $stats['firmalar']; ?></span>
-                </a>
-                <a href="personel.php" class="nav-item">
-                    <i class="fas fa-users nav-icon"></i>
-                    <span class="nav-text">Personel</span>
-                    <span class="nav-badge"><?php echo $stats['personel']; ?></span>
-                </a>
-                <a href="urun-hizmet.php" class="nav-item">
-                    <i class="fas fa-link nav-icon"></i>
-                    <span class="nav-text">Ürün / Hizmet</span>
-                    <span class="nav-badge"><?php echo $stats['urun_hizmet']; ?></span>
-                </a>
-                <a href="satislar.php" class="nav-item">
-                    <i class="fas fa-chart-line nav-icon"></i>
-                    <span class="nav-text">Satışlar</span>
-                </a>
-                <a href="musteriler.php" class="nav-item active">
-                    <i class="fas fa-user-tie nav-icon"></i>
-                    <span class="nav-text">Müşteriler</span>
-                    <span class="nav-badge"><?php echo $stats['musteriler']; ?></span>
-                </a>
-                
-                <a href="hedefler.php" class="nav-item">
-                    <i class="fas fa-bullseye nav-icon"></i>
-                    <span class="nav-text">Hedefler</span>
-                    <span class="nav-badge"><?php echo $stats['hedefler']; ?></span>
-                </a>
-                <a href="mail.php" class="nav-item">
-                    <i class="fas fa-envelope nav-icon"></i>
-                    <span class="nav-text">Mail</span>
-                </a>
-                <a href="checklist.php" class="nav-item">
-                    <i class="fas fa-check-square nav-icon"></i>
-                    <span class="nav-text">Checklist</span>
-                </a>
-            </nav>
-        </div>
+        <?php include 'includes/sidebar.php'; ?>
 
         <!-- Main Content -->
         <div class="main-content">

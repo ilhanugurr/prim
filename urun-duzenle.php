@@ -32,18 +32,6 @@ $urun = $urun[0];
 // Firmaları al
 $firmalar = $db->select('firmalar', [], 'firma_adi ASC');
 
-// KDV Ekle/Çıkar işlemi
-if ($_POST && isset($_POST['action']) && $_POST['action'] == 'toggle_kdv') {
-    $current_kdv = $db->select('urun_hizmet', ['id' => $urun_id])[0]['kdv_dahil'];
-    $new_kdv = $current_kdv ? 0 : 1;
-    
-    if ($db->update('urun_hizmet', ['kdv_dahil' => $new_kdv], ['id' => $urun_id])) {
-        $success_message = $new_kdv ? "KDV dahil fiyata geçildi!" : "KDV hariç fiyata geçildi!";
-        // Güncellenmiş veriyi al
-        $urun = $db->select('urun_hizmet', ['id' => $urun_id])[0];
-    }
-}
-
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
     $data = [
@@ -93,55 +81,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
 <body>
     <div class="container">
         <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <img src="seomew-logo.png" alt="SyncMEW Logo" style="height: 52px; margin-bottom: 0;">
-            </div>
-            
-            <nav class="sidebar-nav">
-                <a href="index.php" class="nav-item">
-                    <i class="fas fa-home nav-icon"></i>
-                    <span class="nav-text">Ana Sayfa</span>
-                </a>
-                <a href="firmalar.php" class="nav-item">
-                    <i class="fas fa-industry nav-icon"></i>
-                    <span class="nav-text">Firmalar</span>
-                    <span class="nav-badge"><?php echo $stats['firmalar']; ?></span>
-                </a>
-                <a href="personel.php" class="nav-item">
-                    <i class="fas fa-users nav-icon"></i>
-                    <span class="nav-text">Personel</span>
-                    <span class="nav-badge"><?php echo $stats['personel']; ?></span>
-                </a>
-                <a href="urun-hizmet.php" class="nav-item active">
-                    <i class="fas fa-link nav-icon"></i>
-                    <span class="nav-text">Ürün / Hizmet</span>
-                    <span class="nav-badge"><?php echo $stats['urun_hizmet']; ?></span>
-                </a>
-                <a href="satislar.php" class="nav-item">
-                    <i class="fas fa-chart-line nav-icon"></i>
-                    <span class="nav-text">Satışlar</span>
-                </a>
-                <a href="musteriler.php" class="nav-item">
-                    <i class="fas fa-user-tie nav-icon"></i>
-                    <span class="nav-text">Müşteriler</span>
-                    <span class="nav-badge"><?php echo $stats['musteriler']; ?></span>
-                </a>
-                <a href="hedefler.php" class="nav-item">
-                    <i class="fas fa-bullseye nav-icon"></i>
-                    <span class="nav-text">Hedefler</span>
-                    <span class="nav-badge"><?php echo $stats['hedefler']; ?></span>
-                </a>
-                <a href="mail.php" class="nav-item">
-                    <i class="fas fa-envelope nav-icon"></i>
-                    <span class="nav-text">Mail</span>
-                </a>
-                <a href="checklist.php" class="nav-item">
-                    <i class="fas fa-check-square nav-icon"></i>
-                    <span class="nav-text">Checklist</span>
-                </a>
-            </nav>
-        </div>
+        <?php include 'includes/sidebar.php'; ?>
 
         <!-- Main Content -->
         <div class="main-content">
@@ -188,6 +128,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                     
                     <form method="POST" action="urun-duzenle.php?id=<?php echo $urun_id; ?>">
                         <input type="hidden" name="action" value="update_urun">
+                        <input type="hidden" name="kdv_dahil" id="kdv_dahil" value="<?php echo $urun['kdv_dahil']; ?>">
                         
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                             <div>
@@ -249,14 +190,11 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
                                 </div>
                             </div>
                             <div>
-                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">KDV Ekle</label>
-                                <form method="POST" action="urun-duzenle.php?id=<?php echo $urun_id; ?>" style="margin: 0;">
-                                    <input type="hidden" name="action" value="toggle_kdv">
-                                    <button type="submit" style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; <?php echo $kdv_aktif ? 'background: #10b981; color: white;' : 'background: #e2e8f0; color: #64748b;'; ?>">
-                                        <i class="fas <?php echo $kdv_aktif ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
-                                        <?php echo $kdv_aktif ? 'KDV Ekle (Aktif)' : 'KDV Ekle (Pasif)'; ?>
-                                    </button>
-                                </form>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">KDV Durumu</label>
+                                <button type="button" onclick="toggleKDV()" style="width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s; <?php echo $kdv_aktif ? 'background: #10b981; color: white;' : 'background: #e2e8f0; color: #64748b;'; ?>">
+                                    <i class="fas <?php echo $kdv_aktif ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
+                                    <?php echo $kdv_aktif ? 'KDV Ekle (Aktif)' : 'KDV Ekle (Pasif)'; ?>
+                                </button>
                                 <div style="font-size: 12px; color: #64748b; margin-top: 8px; text-align: center;">
                                     <i class="fas fa-info-circle"></i> 
                                     <?php if ($kdv_aktif): ?>
@@ -307,6 +245,35 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_urun') {
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
+        }
+
+        function toggleKDV() {
+            const kdvInput = document.getElementById('kdv_dahil');
+            const kdvButton = document.querySelector('button[onclick="toggleKDV()"]');
+            
+            const currentKDV = parseInt(kdvInput.value);
+            const newKDV = currentKDV ? 0 : 1;
+            
+            kdvInput.value = newKDV;
+            
+            // Buton görünümünü güncelle
+            if (newKDV) {
+                kdvButton.style.background = '#10b981';
+                kdvButton.style.color = 'white';
+                kdvButton.innerHTML = '<i class="fas fa-check-circle"></i> KDV Ekle (Aktif)';
+            } else {
+                kdvButton.style.background = '#e2e8f0';
+                kdvButton.style.color = '#64748b';
+                kdvButton.innerHTML = '<i class="fas fa-times-circle"></i> KDV Ekle (Pasif)';
+            }
+            
+            // Bilgi metnini güncelle
+            const infoDiv = kdvButton.nextElementSibling;
+            if (newKDV) {
+                infoDiv.innerHTML = '<i class="fas fa-info-circle"></i> Aktif: Fiyat üzerine %20 KDV eklenir';
+            } else {
+                infoDiv.innerHTML = '<i class="fas fa-info-circle"></i> Pasif: Fiyat zaten KDV dahildir';
+            }
         }
 
         document.addEventListener('click', function(event) {
