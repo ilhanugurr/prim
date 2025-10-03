@@ -83,6 +83,9 @@ $firmalar = $db->query("
     ORDER BY f.firma_adi ASC
 ");
 
+// Bankaları al
+$bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
+
 // Form gönderildi mi?
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
     $personel_id = !empty($_POST['personel_id']) ? (int)$_POST['personel_id'] : null;
@@ -116,6 +119,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
         'satis_tarihi' => $_POST['satis_tarihi'] ?? date('Y-m-d'),
         'toplam_tutar' => $toplam_tutar,
         'durum' => $_POST['durum'],
+        'banka_id' => !empty($_POST['banka_id']) ? (int)$_POST['banka_id'] : null,
         'onay_durumu' => 'beklemede', // Düzenleme sonrası tekrar onaya düşsün
         'onay_tarihi' => null,
         'onaylayan_id' => null
@@ -274,6 +278,19 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_satis') {
                                 ?>
                                 <option value="<?php echo $musteri['id']; ?>" <?php echo ($satis['musteri_adi'] == $musteri['firma_adi']) ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($musteri['firma_adi'] . ' - ' . $musteri['yetkili_ad_soyad']); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <!-- Ödeme Yeri Seçimi -->
+                        <div style="margin-bottom: 30px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Ödeme Nereye Yapıldı</label>
+                            <select name="banka_id" style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px;">
+                                <option value="">Banka seçiniz</option>
+                                <?php foreach ($bankalar as $banka): ?>
+                                <option value="<?php echo $banka['id']; ?>" <?php echo $satis['banka_id'] == $banka['id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($banka['banka_adi']); ?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>
