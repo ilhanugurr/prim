@@ -333,9 +333,6 @@ $satislar = $db->query("
                                             </td>
                                             <td style="padding: 15px;">
                                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                                    <a href="satis-duzenle.php?id=<?php echo $satis['id']; ?>" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
-                                                        <i class="fas fa-eye"></i> Görüntüle
-                                                    </a>
                                                     <?php if (isAdmin() && $onay_durumu == 'beklemede'): ?>
                                                     <a href="satislar.php?action=approve&id=<?php echo $satis['id']; ?>" 
                                                        class="btn btn-success" 

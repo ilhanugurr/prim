@@ -152,9 +152,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                                 </div>
                                             </div>
                                             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-                                                <a href="firma-duzenle.php?id=<?php echo $alt_firma['id']; ?>" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
-                                                    <i class="fas fa-eye"></i> Görüntüle
-                                                </a>
                                                 <?php if (isAdmin()): ?>
                                                 <a href="firma-duzenle.php?id=<?php echo $alt_firma['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
                                                     <i class="fas fa-edit"></i> Düzenle
@@ -181,9 +178,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                 </span>
                             </div>
                             <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <a href="firma-duzenle.php?id=<?php echo $ana_firma['id']; ?>" class="btn btn-primary" style="padding: 8px 16px; font-size: 12px;">
-                                    <i class="fas fa-eye"></i> Görüntüle
-                                </a>
                                 <?php if (isAdmin()): ?>
                                 <a href="firma-duzenle.php?id=<?php echo $ana_firma['id']; ?>" class="btn btn-secondary" style="padding: 8px 16px; font-size: 12px;">
                                     <i class="fas fa-edit"></i> Düzenle

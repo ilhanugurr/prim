@@ -126,21 +126,18 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                                     <div style="display: flex; gap: 8px; flex-shrink: 0;">
                                         <?php if (isAdmin()): ?>
                                         <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" 
-                                           style="padding: 8px 14px; background: #3b82f6; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.2s ease;"
-                                           title="Düzenle">
-                                            <i class="fas fa-edit"></i>
+                                           class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
+                                            <i class="fas fa-edit"></i> Düzenle
                                         </a>
                                         <a href="personel.php?action=delete&id=<?php echo $personel['id']; ?>" 
-                                           style="padding: 8px 14px; background: #ef4444; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.2s ease;"
-                                           title="Sil"
+                                           class="btn btn-danger" style="padding: 6px 12px; font-size: 11px;"
                                            onclick="return confirm('Bu personeli silmek istediğinizden emin misiniz?')">
-                                            <i class="fas fa-trash"></i>
+                                            <i class="fas fa-trash"></i> Sil
                                         </a>
                                         <?php endif; ?>
                                         <a href="hedef-profil.php?personel_id=<?php echo $personel['id']; ?>" 
-                                           style="padding: 8px 14px; background: #10b981; color: white; border-radius: 6px; text-decoration: none; font-size: 13px; transition: all 0.2s ease;"
-                                           title="Hedefler">
-                                            <i class="fas fa-bullseye"></i>
+                                           class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
+                                            <i class="fas fa-bullseye"></i> Hedefler
                                         </a>
                                     </div>
                                 </div>

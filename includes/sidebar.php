@@ -40,6 +40,12 @@ $stats = getStats();
             <span class="nav-badge"><?php echo $stats['urun_hizmet']; ?></span>
             <?php endif; ?>
         </a>
+        <?php if (isAdmin()): ?>
+        <a href="envanter.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'envanter.php' || basename($_SERVER['PHP_SELF']) == 'envanter-ekle.php' || basename($_SERVER['PHP_SELF']) == 'envanter-duzenle.php' || basename($_SERVER['PHP_SELF']) == 'envanter-kategoriler.php' || basename($_SERVER['PHP_SELF']) == 'envanter-kategori-ekle.php' || basename($_SERVER['PHP_SELF']) == 'envanter-kategori-duzenle.php') ? 'active' : ''; ?>">
+            <i class="fas fa-boxes nav-icon"></i>
+            <span class="nav-text">Envanter</span>
+        </a>
+        <?php endif; ?>
         <a href="satislar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'satislar.php') ? 'active' : ''; ?>">
             <i class="fas fa-chart-line nav-icon"></i>
             <span class="nav-text">Satışlar</span>

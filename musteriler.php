@@ -126,14 +126,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
                                             <?php echo ucfirst($musteri['durum']); ?>
                                         </span>
                                         <div style="display: flex; gap: 6px;">
-                                            <a href="musteri-duzenle.php?id=<?php echo $musteri['id']; ?>" class="btn btn-primary" style="padding: 4px 8px; font-size: 10px;">
-                                                <i class="fas fa-eye"></i>
+                                            <a href="musteri-duzenle.php?id=<?php echo $musteri['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
+                                                <i class="fas fa-edit"></i> Düzenle
                                             </a>
-                                            <a href="musteri-duzenle.php?id=<?php echo $musteri['id']; ?>" class="btn btn-secondary" style="padding: 4px 8px; font-size: 10px;">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <a href="musteriler.php?action=delete&id=<?php echo $musteri['id']; ?>" class="btn btn-danger" style="padding: 4px 8px; font-size: 10px;" onclick="return confirm('Bu müşteriyi silmek istediğinizden emin misiniz?')">
-                                                <i class="fas fa-trash"></i>
+                                            <a href="musteriler.php?action=delete&id=<?php echo $musteri['id']; ?>" class="btn btn-danger" style="padding: 6px 12px; font-size: 11px;" onclick="return confirm('Bu müşteriyi silmek istediğinizden emin misiniz?')">
+                                                <i class="fas fa-trash"></i> Sil
                                             </a>
                                         </div>
                                     </div>

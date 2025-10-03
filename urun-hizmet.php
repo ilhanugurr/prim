@@ -221,9 +221,6 @@ $urunler = $db->query($query);
                                             </td>
                                             <td style="padding: 15px;">
                                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                                    <a href="urun-duzenle.php?id=<?php echo $urun['id']; ?>" class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
-                                                        <i class="fas fa-eye"></i> Görüntüle
-                                                    </a>
                                                     <?php if (isAdmin()): ?>
                                                     <a href="urun-duzenle.php?id=<?php echo $urun['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
                                                         <i class="fas fa-edit"></i> Düzenle
