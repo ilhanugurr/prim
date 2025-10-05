@@ -160,13 +160,38 @@ $aylar = [
                                     <td class="amount">₺<?php echo number_format($prim_data['toplam_satis'], 0, ',', '.'); ?></td>
                                     <td class="prim-amount">₺<?php echo number_format($prim_data['toplam_prim'], 0, ',', '.'); ?></td>
                                     <td class="firma-detaylari">
-                                        <?php if (!empty($prim_data['prim_detaylari'])): ?>
+                                        <?php 
+                                        $hedef_durumu = $prim_data['hedef_durumu'] ?? 'hedef_var';
+                                        
+                                        if ($hedef_durumu == 'hedef_yok'): ?>
+                                            <span class="no-data">Hedef belirlenmemiş</span>
+                                        <?php elseif (!empty($prim_data['prim_detaylari'])): ?>
                                             <div class="firma-list">
                                                 <?php foreach ($prim_data['prim_detaylari'] as $detay): ?>
                                                     <div class="firma-item">
-                                                        <span class="firma-name"><?php echo htmlspecialchars($detay['firma_adi']); ?></span>
-                                                        <span class="firma-satis">₺<?php echo number_format($detay['satis_tutari'], 0, ',', '.'); ?></span>
-                                                        <span class="firma-prim">%<?php echo $detay['prim_orani']; ?> = ₺<?php echo number_format($detay['prim_tutari'], 0, ',', '.'); ?></span>
+                                                        <span class="firma-name">
+                                                            <?php echo htmlspecialchars($detay['firma_adi']); ?>
+                                                            <?php if (isset($detay['hedef_tamamlandi'])): ?>
+                                                                <?php if ($detay['hedef_tamamlandi']): ?>
+                                                                    <span style="color: #10b981; font-size: 12px;">✓</span>
+                                                                <?php else: ?>
+                                                                    <span style="color: #dc2626; font-size: 12px;">✗</span>
+                                                                <?php endif; ?>
+                                                            <?php endif; ?>
+                                                        </span>
+                                                        <span class="firma-satis">
+                                                            Satış: ₺<?php echo number_format($detay['satis_tutari'], 0, ',', '.'); ?>
+                                                            <?php if (isset($detay['hedef_tutari']) && $detay['hedef_tutari'] > 0): ?>
+                                                                / Hedef: ₺<?php echo number_format($detay['hedef_tutari'], 0, ',', '.'); ?>
+                                                                (<?php echo number_format($detay['hedef_orani'], 1); ?>%)
+                                                            <?php endif; ?>
+                                                        </span>
+                                                        <span class="firma-prim">
+                                                            %<?php echo $detay['prim_orani']; ?> = ₺<?php echo number_format($detay['prim_tutari'], 0, ',', '.'); ?>
+                                                            <?php if (!isset($detay['hedef_tamamlandi']) || !$detay['hedef_tamamlandi']): ?>
+                                                                <span style="color: #6b7280; font-size: 11px;">(Hedef tamamlanmadı)</span>
+                                                            <?php endif; ?>
+                                                        </span>
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
@@ -175,11 +200,29 @@ $aylar = [
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <?php if ($prim_data['toplam_prim'] > 0): ?>
-                                            <span class="status-badge success">Prim Kazandı</span>
+                                        <?php 
+                                        $hedef_durumu = $prim_data['hedef_durumu'] ?? 'hedef_var';
+                                        $hedef_aciklama = $prim_data['hedef_aciklama'] ?? '';
+                                        
+                                        if ($hedef_durumu == 'hedef_yok'): ?>
+                                            <span class="status-badge warning">Hedef Yok</span>
+                                        <?php elseif ($hedef_durumu == 'hedef_tamamlandi'): ?>
+                                            <span class="status-badge success">✓ Hedef Tamam</span>
+                                        <?php elseif ($hedef_durumu == 'kismen_tamamlandi'): ?>
+                                            <span class="status-badge partial">⚠ Kısmi Hedef</span>
+                                        <?php elseif ($hedef_durumu == 'hedef_tamamlanmadi'): ?>
+                                            <span class="status-badge danger">✗ Hedef Tutmadı</span>
                                         <?php else: ?>
                                             <span class="status-badge inactive">Prim Yok</span>
                                         <?php endif; ?>
+                                        
+                                        <?php if ($prim_data['toplam_prim'] > 0): ?>
+                                            <br><span class="status-badge success" style="margin-top: 4px;">Prim: ₺<?php echo number_format($prim_data['toplam_prim'], 0, ',', '.'); ?></span>
+                                        <?php endif; ?>
+                                        
+                                        <div class="hedef-aciklama">
+                                            <?php echo $hedef_aciklama; ?>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -365,6 +408,63 @@ $aylar = [
         .status-badge.inactive {
             background: #f3f4f6;
             color: #6b7280;
+        }
+
+        .status-badge.warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-badge.partial {
+            background: #fef9e7;
+            color: #f59e0b;
+        }
+
+        .status-badge.danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Dark mode styles */
+        html.dark-mode .status-badge.warning,
+        body.dark-mode .status-badge.warning {
+            background: #92400e;
+            color: #fbbf24;
+        }
+
+        html.dark-mode .status-badge.partial,
+        body.dark-mode .status-badge.partial {
+            background: #b45309;
+            color: #f59e0b;
+        }
+
+        html.dark-mode .status-badge.danger,
+        body.dark-mode .status-badge.danger {
+            background: #7f1d1d;
+            color: #fca5a5;
+        }
+
+        html.dark-mode .status-badge.success,
+        body.dark-mode .status-badge.success {
+            background: #14532d;
+            color: #86efac;
+        }
+
+        html.dark-mode .status-badge.inactive,
+        body.dark-mode .status-badge.inactive {
+            background: #374151;
+            color: #9ca3af;
+        }
+
+        .hedef-aciklama {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        html.dark-mode .hedef-aciklama,
+        body.dark-mode .hedef-aciklama {
+            color: #9ca3af;
         }
 
         .prim-summary-card {

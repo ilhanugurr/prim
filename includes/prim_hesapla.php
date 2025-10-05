@@ -6,6 +6,28 @@
 
 if (!function_exists('hesaplaAylikPrim')) {
     function hesaplaAylikPrim($personel_id, $yil, $ay, $db) {
+        // Önce bu personelin bu ay için hedeflerini kontrol et
+        $hedefler = $db->query("
+            SELECT h.*, f.firma_adi 
+            FROM hedefler h
+            LEFT JOIN firmalar f ON h.firma_id = f.id
+            WHERE h.personel_id = ? 
+            AND h.yil = ? 
+            AND h.ay = ? 
+            AND h.durum = 'aktif'
+        ", [$personel_id, $yil, $ay]);
+        
+        // Eğer bu personelin bu ay için hedefi yoksa prim kazanamaz
+        if (empty($hedefler)) {
+            return [
+                'toplam_satis' => 0,
+                'toplam_prim' => 0,
+                'prim_detaylari' => [],
+                'hedef_durumu' => 'hedef_yok',
+                'hedef_aciklama' => 'Bu ay için hedef belirlenmemiş'
+            ];
+        }
+        
         // Firma listesini al (bu ay satış yapılan firmalar)
         $firmalar_query = $db->query("
             SELECT DISTINCT f.id as firma_id, f.firma_adi
@@ -23,10 +45,22 @@ if (!function_exists('hesaplaAylikPrim')) {
         $toplam_prim = 0;
         $toplam_satis = 0;
         $prim_detaylari = [];
+        $hedef_tamamlanan_firma_sayisi = 0;
+        $toplam_hedef = 0;
+        $hedef_detaylari = [];
+        
+        // Hedef değerlerini topla
+        foreach ($hedefler as $hedef) {
+            $toplam_hedef += $hedef['aylik_hedef'];
+            $hedef_detaylari[$hedef['firma_id']] = $hedef['aylik_hedef'];
+        }
         
         foreach ($firmalar_query as $firma) {
             $firma_id = $firma['firma_id'];
             $firma_adi = $firma['firma_adi'];
+            
+            // Bu firma için hedef var mı kontrol et
+            $firma_hedef = isset($hedef_detaylari[$firma_id]) ? $hedef_detaylari[$firma_id] : 0;
             
             // Bu firma için satışları al
             $satis_ids = $db->query("
@@ -85,6 +119,13 @@ if (!function_exists('hesaplaAylikPrim')) {
             if ($net_satis > 0) {
                 $toplam_satis += $net_satis;
                 
+                // HEDEF KONTROLÜ: Bu firma için hedef tamamlanmış mı?
+                $hedef_tamamlandi = ($firma_hedef > 0 && $net_satis >= $firma_hedef);
+                
+                if ($hedef_tamamlandi) {
+                    $hedef_tamamlanan_firma_sayisi++;
+                }
+                
                 // Önce firma komisyon oranlarını kontrol et
                 $firma_komisyon_oranlari = $db->query("
                     SELECT * FROM firma_komisyon 
@@ -134,8 +175,12 @@ if (!function_exists('hesaplaAylikPrim')) {
                     }
                 }
                 
-                $prim_tutari = ($net_satis * $prim_orani) / 100;
-                $toplam_prim += $prim_tutari;
+                // SADECE HEDEF TAMAMLANAN FİRMALAR İÇİN PRİM VER
+                $prim_tutari = 0;
+                if ($hedef_tamamlandi) {
+                    $prim_tutari = ($net_satis * $prim_orani) / 100;
+                    $toplam_prim += $prim_tutari;
+                }
                 
                 $prim_detaylari[] = [
                     'firma_adi' => $firma_adi,
@@ -143,15 +188,41 @@ if (!function_exists('hesaplaAylikPrim')) {
                     'prim_orani' => $prim_orani,
                     'prim_tutari' => $prim_tutari,
                     'prim_aciklama' => $prim_aciklama,
-                    'maliyet_tutari' => $firma_toplam_maliyet
+                    'maliyet_tutari' => $firma_toplam_maliyet,
+                    'hedef_tutari' => $firma_hedef,
+                    'hedef_tamamlandi' => $hedef_tamamlandi,
+                    'hedef_orani' => $firma_hedef > 0 ? ($net_satis / $firma_hedef) * 100 : 0
                 ];
             }
+        }
+        
+        // Genel hedef durumu belirle
+        $hedef_durumu = 'hedef_var';
+        $hedef_aciklama = '';
+        
+        if ($toplam_hedef == 0) {
+            $hedef_durumu = 'hedef_yok';
+            $hedef_aciklama = 'Bu ay için hedef belirlenmemiş';
+        } elseif ($toplam_satis >= $toplam_hedef) {
+            $hedef_durumu = 'hedef_tamamlandi';
+            $hedef_aciklama = 'Tüm hedefler tamamlandı';
+        } elseif ($hedef_tamamlanan_firma_sayisi > 0) {
+            $hedef_durumu = 'kismen_tamamlandi';
+            $hedef_aciklama = $hedef_tamamlanan_firma_sayisi . ' firma hedefi tamamlandı';
+        } else {
+            $hedef_durumu = 'hedef_tamamlanmadi';
+            $hedef_aciklama = 'Hiçbir firma hedefi tamamlanmadı';
         }
         
         return [
             'toplam_satis' => $toplam_satis,
             'toplam_prim' => $toplam_prim,
-            'prim_detaylari' => $prim_detaylari
+            'prim_detaylari' => $prim_detaylari,
+            'hedef_durumu' => $hedef_durumu,
+            'hedef_aciklama' => $hedef_aciklama,
+            'toplam_hedef' => $toplam_hedef,
+            'hedef_tamamlanan_firma_sayisi' => $hedef_tamamlanan_firma_sayisi,
+            'hedef_orani' => $toplam_hedef > 0 ? ($toplam_satis / $toplam_hedef) * 100 : 0
         ];
     }
 }
