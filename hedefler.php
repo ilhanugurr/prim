@@ -66,11 +66,11 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['person
 }
 
 // Personelleri al (rol bazlı filtreleme)
-if (hasPagePermission('hedefler', 'goruntuleme')) {
-    // Yetkili kullanıcı tüm personelleri görür
+if (isAdmin()) {
+    // Admin tüm personelleri görür
     $personeller = getPersonel();
 } else {
-    // Satışçı sadece kendini görür
+    // Satışçı/Teknik Destek sadece kendini görür
     $personeller = $db->select('personel', ['id' => $_SESSION['personel_id']], 'ad_soyad ASC');
 }
 
@@ -78,11 +78,11 @@ $firmalar = getFirmalar();
 $stats = getStats();
 
 // Hedefleri al (rol bazlı filtreleme)
-if (hasPagePermission('hedefler', 'goruntuleme')) {
-    // Yetkili kullanıcı tüm hedefleri görür
+if (isAdmin()) {
+    // Admin tüm hedefleri görür
     $hedefler = getHedefler();
 } else {
-    // Satışçı sadece kendi hedeflerini görür
+    // Satışçı/Teknik Destek sadece kendi hedeflerini görür
     $hedefler = $db->query("
         SELECT h.*, p.ad_soyad as personel_adi, f.firma_adi
         FROM hedefler h
@@ -142,7 +142,7 @@ if (hasPagePermission('hedefler', 'goruntuleme')) {
                 <?php endif; ?>
 
                 <!-- Action Buttons -->
-                <?php if (hasPagePermission('hedefler', 'ekleme')): ?>
+                <?php if (isAdmin()): ?>
                 <div class="action-buttons">
                     <a href="hedef-ekle.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
@@ -195,8 +195,8 @@ if (hasPagePermission('hedefler', 'goruntuleme')) {
                                 <div class="personel-actions">
                                     <span class="hedef-count"><?php echo count($personel_data['hedefler']); ?> Hedef</span>
                                     <a href="hedef-profil.php?personel_id=<?php echo $personel_id; ?>" class="btn-edit-profile">
-                                        <i class="fas fa-<?php echo hasPagePermission('hedefler', 'duzenleme') ? 'edit' : 'eye'; ?>"></i>
-                                        <?php echo hasPagePermission('hedefler', 'duzenleme') ? 'Hedef Düzenle' : 'Hedefleri Görüntüle'; ?>
+                                        <i class="fas fa-<?php echo isAdmin() ? 'edit' : 'eye'; ?>"></i>
+                                        <?php echo isAdmin() ? 'Hedef Düzenle' : 'Hedefleri Görüntüle'; ?>
                                     </a>
                                 </div>
                             </div>

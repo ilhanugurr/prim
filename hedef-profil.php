@@ -13,9 +13,9 @@ if (!isset($_GET['personel_id']) || !is_numeric($_GET['personel_id'])) {
 
 $personel_id = (int)$_GET['personel_id'];
 
-// Rol bazlı erişim kontrolü
-if (isSatisci() && $_SESSION['personel_id'] != $personel_id) {
-    // Satışçı sadece kendi hedeflerine erişebilir
+// Rol bazlı erişim kontrolü - Admin dışında herkes sadece kendini görebilir
+if (!isAdmin() && $_SESSION['personel_id'] != $personel_id) {
+    // Admin dışındaki herkes (Satışçı, Teknik Destek vb.) sadece kendi hedeflerine erişebilir
     header("Location: hedefler.php");
     exit;
 }

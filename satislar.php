@@ -332,29 +332,31 @@ $satislar = $db->query("
                                                 <?php echo date('d.m.Y', strtotime($satis['satis_tarihi'])); ?>
                                             </td>
                                             <td style="padding: 15px;">
-                                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                                <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                                                     <?php if (hasPagePermission('satislar', 'duzenleme') && $onay_durumu == 'beklemede'): ?>
                                                     <a href="satislar.php?action=approve&id=<?php echo $satis['id']; ?>" 
-                                                       class="btn btn-success" 
-                                                       style="padding: 6px 12px; font-size: 11px;"
-                                                       onclick="return confirm('Bu satışı onaylamak istediğinizden emin misiniz?')">
-                                                       <i class="fas fa-check"></i> Onayla
+                                                       class="action-btn action-btn-approve"
+                                                       onclick="return confirm('Bu satışı onaylamak istediğinizden emin misiniz?')"
+                                                       title="Onayla">
+                                                       <i class="fas fa-check"></i>
                                                     </a>
                                                     <a href="satislar.php?action=reject&id=<?php echo $satis['id']; ?>" 
-                                                       class="btn btn-warning" 
-                                                       style="padding: 6px 12px; font-size: 11px;"
-                                                       onclick="return confirm('Bu satışı reddetmek istediğinizden emin misiniz?')">
-                                                       <i class="fas fa-times"></i> Reddet
+                                                       class="action-btn action-btn-reject"
+                                                       onclick="return confirm('Bu satışı reddetmek istediğinizden emin misiniz?')"
+                                                       title="Reddet">
+                                                       <i class="fas fa-times"></i>
                                                     </a>
                                                     <?php endif; ?>
-                                                    <a href="satis-duzenle.php?id=<?php echo $satis['id']; ?>" class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
-                                                        <i class="fas fa-edit"></i> Düzenle
+                                                    <a href="satis-duzenle.php?id=<?php echo $satis['id']; ?>" 
+                                                       class="action-btn action-btn-edit"
+                                                       title="Düzenle">
+                                                        <i class="fas fa-edit"></i>
                                                     </a>
                                                     <a href="satislar.php?action=delete&id=<?php echo $satis['id']; ?>" 
-                                                       class="btn btn-danger" 
-                                                       style="padding: 6px 12px; font-size: 11px;"
-                                                       onclick="return confirm('Bu satışı silmek istediğinizden emin misiniz?')">
-                                                       <i class="fas fa-trash"></i> Sil
+                                                       class="action-btn action-btn-delete"
+                                                       onclick="return confirm('Bu satışı silmek istediğinizden emin misiniz?')"
+                                                       title="Sil">
+                                                       <i class="fas fa-trash"></i>
                                                     </a>
                                                 </div>
                                             </td>
@@ -403,5 +405,122 @@ $satislar = $db->query("
             }
         });
     </script>
+
+    <style>
+        /* Action Button Styles */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn-approve {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .action-btn-approve:hover {
+            background: #bbf7d0;
+            color: #14532d;
+        }
+
+        .action-btn-reject {
+            background: #fef3c7;
+            color: #d97706;
+            border: 1px solid #fde68a;
+        }
+
+        .action-btn-reject:hover {
+            background: #fde68a;
+            color: #b45309;
+        }
+
+        .action-btn-edit {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .action-btn-edit:hover {
+            background: #bfdbfe;
+            color: #1e3a8a;
+        }
+
+        .action-btn-delete {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .action-btn-delete:hover {
+            background: #fecaca;
+            color: #b91c1c;
+        }
+
+        /* Dark Mode */
+        html.dark-mode .action-btn-approve,
+        body.dark-mode .action-btn-approve {
+            background: #14532d;
+            color: #86efac;
+            border-color: #166534;
+        }
+
+        html.dark-mode .action-btn-approve:hover,
+        body.dark-mode .action-btn-approve:hover {
+            background: #166534;
+            color: #bbf7d0;
+        }
+
+        html.dark-mode .action-btn-reject,
+        body.dark-mode .action-btn-reject {
+            background: #92400e;
+            color: #fbbf24;
+            border-color: #b45309;
+        }
+
+        html.dark-mode .action-btn-reject:hover,
+        body.dark-mode .action-btn-reject:hover {
+            background: #b45309;
+            color: #fde68a;
+        }
+
+        html.dark-mode .action-btn-edit,
+        body.dark-mode .action-btn-edit {
+            background: #1e3a8a;
+            color: #93c5fd;
+            border-color: #1e40af;
+        }
+
+        html.dark-mode .action-btn-edit:hover,
+        body.dark-mode .action-btn-edit:hover {
+            background: #1e40af;
+            color: #bfdbfe;
+        }
+
+        html.dark-mode .action-btn-delete,
+        body.dark-mode .action-btn-delete {
+            background: #7f1d1d;
+            color: #fca5a5;
+            border-color: #991b1b;
+        }
+
+        html.dark-mode .action-btn-delete:hover,
+        body.dark-mode .action-btn-delete:hover {
+            background: #991b1b;
+            color: #fecaca;
+        }
+    </style>
 </body>
 </html>

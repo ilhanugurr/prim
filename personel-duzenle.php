@@ -14,6 +14,20 @@ require_once 'includes/auth.php';
 // Giriş kontrolü
 requireLogin();
 
+// Admin değilse, sadece kendi bilgilerini düzenleyebilir
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header("Location: index.php");
+    exit;
+}
+
+$personel_id = (int)$_GET['id'];
+
+// Admin değilse sadece kendi bilgilerini düzenleyebilir
+if (!isAdmin() && $_SESSION['personel_id'] != $personel_id) {
+    header("Location: index.php");
+    exit;
+}
+
 // İstatistikleri al
 $stats = getStats();
 

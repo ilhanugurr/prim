@@ -1,5 +1,15 @@
 <?php
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+
+// Giriş kontrolü
+requireLogin();
+
+// Sadece admin hedef düzenleyebilir
+if (!isAdmin()) {
+    header("Location: hedefler.php");
+    exit;
+}
 
 // Hedef düzenleme işlemi
 if ($_POST && isset($_POST['action']) && $_POST['action'] == 'update_hedef') {

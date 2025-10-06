@@ -9,6 +9,16 @@ header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+
+// Giriş kontrolü
+requireLogin();
+
+// Sadece admin personel ekleyebilir
+if (!isAdmin()) {
+    header("Location: index.php");
+    exit;
+}
 
 // İstatistikleri al
 $stats = getStats();

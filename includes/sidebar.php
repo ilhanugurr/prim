@@ -23,27 +23,18 @@ $stats = getStats();
         <a href="firmalar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'firmalar.php') ? 'active' : ''; ?>">
             <i class="fas fa-industry nav-icon"></i>
             <span class="nav-text">Firmalar</span>
-            <?php if (hasPagePermission('firmalar', 'ekleme')): ?>
-            <span class="nav-badge"><?php echo $stats['firmalar']; ?></span>
-            <?php endif; ?>
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('personel', 'goruntuleme')): ?>
         <a href="personel.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'personel.php') ? 'active' : ''; ?>">
             <i class="fas fa-users nav-icon"></i>
             <span class="nav-text">Personel</span>
-            <?php if (hasPagePermission('personel', 'ekleme')): ?>
-            <span class="nav-badge"><?php echo $stats['personel']; ?></span>
-            <?php endif; ?>
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('urun-hizmet', 'goruntuleme')): ?>
         <a href="urun-hizmet.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'urun-hizmet.php') ? 'active' : ''; ?>">
             <i class="fas fa-link nav-icon"></i>
             <span class="nav-text">Ürün / Hizmet</span>
-            <?php if (hasPagePermission('urun-hizmet', 'ekleme')): ?>
-            <span class="nav-badge"><?php echo $stats['urun_hizmet']; ?></span>
-            <?php endif; ?>
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('envanter', 'goruntuleme')): ?>
@@ -56,15 +47,24 @@ $stats = getStats();
         <a href="satislar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'satislar.php') ? 'active' : ''; ?>">
             <i class="fas fa-chart-line nav-icon"></i>
             <span class="nav-text">Satışlar</span>
+            <?php 
+            // Beklemedeki satış sayısını sadece admin'e göster
+            if (isAdmin()):
+                $bekleyen_satislar = $db->query("SELECT COUNT(*) as sayi FROM satislar WHERE onay_durumu = 'beklemede'");
+                $bekleyen_sayi = !empty($bekleyen_satislar) ? (int)$bekleyen_satislar[0]['sayi'] : 0;
+                if ($bekleyen_sayi > 0): 
+            ?>
+            <span class="nav-badge nav-badge-warning"><?php echo $bekleyen_sayi; ?></span>
+            <?php 
+                endif;
+            endif; 
+            ?>
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('musteriler', 'goruntuleme')): ?>
         <a href="musteriler.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'musteriler.php') ? 'active' : ''; ?>">
             <i class="fas fa-user-tie nav-icon"></i>
             <span class="nav-text">Müşteriler</span>
-            <?php if (hasPagePermission('musteriler', 'ekleme')): ?>
-            <span class="nav-badge"><?php echo $stats['musteriler']; ?></span>
-            <?php endif; ?>
         </a>
         <?php endif; ?>
         
@@ -72,9 +72,6 @@ $stats = getStats();
         <a href="hedefler.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'hedefler.php') ? 'active' : ''; ?>">
             <i class="fas fa-bullseye nav-icon"></i>
             <span class="nav-text">Hedefler</span>
-            <?php if (hasPagePermission('hedefler', 'ekleme')): ?>
-            <span class="nav-badge"><?php echo $stats['hedefler']; ?></span>
-            <?php endif; ?>
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('primler', 'goruntuleme')): ?>

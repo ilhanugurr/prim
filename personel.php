@@ -9,12 +9,21 @@ header('Content-Type: text/html; charset=utf-8');
 mb_internal_encoding('UTF-8');
 
 require_once 'config/database.php';
+require_once 'includes/auth.php';
+
+// Giriş kontrolü
+requireLogin();
 
 // İstatistikleri al
 $stats = getStats();
 
-// Personel silme işlemi
+// Personel silme işlemi - Sadece admin silebilir
 if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
+    if (!isAdmin()) {
+        header("Location: personel.php");
+        exit;
+    }
+    
     $personel_id = (int)$_GET['id'];
     
     if ($db->delete('personel', ['id' => $personel_id])) {
@@ -24,7 +33,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
     }
 }
 
-// Personelleri al
+// Personelleri al - herkes görebilir
 $personeller = $db->select('personel', [], 'ad_soyad ASC');
 ?>
 <!DOCTYPE html>
@@ -73,7 +82,7 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                 <?php endif; ?>
 
                 <!-- Action Buttons -->
-                <?php if (hasPagePermission('personel', 'ekleme')): ?>
+                <?php if (isAdmin()): ?>
                 <div class="action-buttons">
                     <a href="personel-ekle.php" class="btn btn-primary">
                         <i class="fas fa-plus"></i>
@@ -124,23 +133,28 @@ $personeller = $db->select('personel', [], 'ad_soyad ASC');
                                     
                                     <!-- Aksiyonlar -->
                                     <div style="display: flex; gap: 8px; flex-shrink: 0;">
-                                        <?php if (hasPagePermission('personel', 'duzenleme')): ?>
+                                        <?php if (isAdmin()): ?>
                                         <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" 
                                            class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
                                             <i class="fas fa-edit"></i> Düzenle
                                         </a>
-                                        <?php if (hasPagePermission('personel', 'silme')): ?>
                                         <a href="personel.php?action=delete&id=<?php echo $personel['id']; ?>" 
                                            class="btn btn-danger" style="padding: 6px 12px; font-size: 11px;"
                                            onclick="return confirm('Bu personeli silmek istediğinizden emin misiniz?')">
                                             <i class="fas fa-trash"></i> Sil
                                         </a>
+                                        <?php elseif ($_SESSION['personel_id'] == $personel['id']): ?>
+                                        <a href="personel-duzenle.php?id=<?php echo $personel['id']; ?>" 
+                                           class="btn btn-secondary" style="padding: 6px 12px; font-size: 11px;">
+                                            <i class="fas fa-edit"></i> Profilimi Düzenle
+                                        </a>
                                         <?php endif; ?>
-                                        <?php endif; ?>
+                                        <?php if (isAdmin() || $_SESSION['personel_id'] == $personel['id']): ?>
                                         <a href="hedef-profil.php?personel_id=<?php echo $personel['id']; ?>" 
                                            class="btn btn-primary" style="padding: 6px 12px; font-size: 11px;">
                                             <i class="fas fa-bullseye"></i> Hedefler
                                         </a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

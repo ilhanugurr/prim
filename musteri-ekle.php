@@ -23,6 +23,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_musteri') {
         'yetkili_ad_soyad' => trim($_POST['yetkili_ad_soyad']),
         'telefon' => trim($_POST['telefon']),
         'email' => trim($_POST['email']),
+        'website' => trim($_POST['website']),
         'adres' => trim($_POST['adres']),
         'durum' => $_POST['durum']
     ];
@@ -41,6 +42,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_musteri') {
                 'yetkili_ad_soyad' => '',
                 'telefon' => '',
                 'email' => '',
+                'website' => '',
                 'adres' => '',
                 'durum' => 'aktif'
             ];
@@ -54,6 +56,7 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_musteri') {
         'yetkili_ad_soyad' => '',
         'telefon' => '',
         'email' => '',
+        'website' => '',
         'adres' => '',
         'durum' => 'aktif'
     ];
@@ -132,6 +135,11 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_musteri') {
                         <div class="form-group">
                             <label class="form-label">E-posta</label>
                             <input type="email" name="email" class="form-input" value="<?php echo htmlspecialchars($data['email']); ?>" placeholder="E-posta adresini giriniz">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Web Sitesi</label>
+                            <input type="url" name="website" class="form-input" value="<?php echo htmlspecialchars($data['website']); ?>" placeholder="https://www.ornek.com">
                         </div>
                         
                         <div class="form-group">

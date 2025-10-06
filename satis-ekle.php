@@ -99,9 +99,14 @@ if ($_POST && isset($_POST['action']) && $_POST['action'] == 'add_satis') {
         'satis_tarihi' => $_POST['satis_tarihi'] ?? date('Y-m-d'),
         'toplam_tutar' => $toplam_tutar,
         'durum' => $_POST['durum'],
-        'banka_id' => !empty($_POST['banka_id']) ? (int)$_POST['banka_id'] : null,
         'onay_durumu' => 'beklemede'  // Yeni satışlar otomatik beklemede
     ];
+    
+    // Banka_id kolonunu kontrol et ve varsa ekle
+    $columns = $db->query("SHOW COLUMNS FROM satislar LIKE 'banka_id'");
+    if (!empty($columns) && !empty($_POST['banka_id'])) {
+        $satis_data['banka_id'] = (int)$_POST['banka_id'];
+    }
     
     $satis_id = $db->insert('satislar', $satis_data);
     

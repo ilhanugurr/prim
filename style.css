@@ -142,6 +142,11 @@ body.dark-mode .logo-img {
     margin-left: auto;
 }
 
+.nav-badge-warning {
+    background: #f59e0b;
+    color: white;
+}
+
 /* Main Content */
 .main-content {
     flex: 1;
@@ -575,6 +580,11 @@ body.dark-mode .logo-img {
     color: #374151;
     margin-bottom: 8px;
     font-size: 14px;
+}
+
+html.dark-mode .form-label,
+body.dark-mode .form-label {
+    color: #e2e8f0;
 }
 
 .form-input,
