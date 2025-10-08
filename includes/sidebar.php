@@ -81,9 +81,9 @@ $stats = getStats();
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('tahsilat', 'goruntuleme')): ?>
-        <a href="tahsilatlar.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'tahsilatlar.php' || basename($_SERVER['PHP_SELF']) == 'tahsilat-ekle.php' || basename($_SERVER['PHP_SELF']) == 'tahsilat-duzenle.php') ? 'active' : ''; ?>">
+        <a href="kasa.php" class="nav-item <?php echo (basename($_SERVER['PHP_SELF']) == 'kasa.php' || basename($_SERVER['PHP_SELF']) == 'odeme-ekle.php' || basename($_SERVER['PHP_SELF']) == 'odeme-duzenle.php' || basename($_SERVER['PHP_SELF']) == 'gider-ekle.php' || basename($_SERVER['PHP_SELF']) == 'gider-duzenle.php') ? 'active' : ''; ?>">
             <i class="fas fa-money-bill-wave nav-icon"></i>
-            <span class="nav-text">Tahsilat</span>
+            <span class="nav-text">Kasa</span>
         </a>
         <?php endif; ?>
         <?php if (hasPagePermission('raporlar', 'goruntuleme')): ?>

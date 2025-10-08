@@ -109,7 +109,7 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                     </form>
                 </div>
 
-                <h2 style="color: #1f2937; margin-bottom: 20px;">
+                <h2 style="color: var(--text-primary); margin-bottom: 20px;">
                     <?php echo $aylar[$selected_ay]; ?> <?php echo $selected_yil; ?> Raporu
                 </h2>
 
@@ -161,7 +161,7 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                 <!-- Personel Detayları -->
                 <?php if (!empty($personel_detaylari)): ?>
                 <div style="background: var(--bg-card); border-radius: 12px; padding: 24px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                    <h3 style="color: #1f2937; margin-bottom: 20px;">Personel Bazında Detaylar</h3>
+                    <h3 style="color: var(--text-primary); margin-bottom: 20px;">Personel Bazında Detaylar</h3>
                     
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead>
@@ -178,7 +178,7 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                                 $prim_orani_ort = $detay['net_satis'] > 0 ? ($detay['prim'] / $detay['net_satis']) * 100 : 0;
                             ?>
                             <tr style="border-bottom: 1px solid #e2e8f0;">
-                                <td style="padding: 16px; color: #1f2937; font-weight: 600;">
+                                <td style="padding: 16px; color: var(--text-primary); font-weight: 600;">
                                     <?php echo htmlspecialchars($detay['ad_soyad']); ?>
                                 </td>
                                 <td style="padding: 16px; text-align: right; color: #3b82f6; font-weight: 600;">
@@ -200,8 +200,8 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                                     <div style="background: var(--bg-secondary); padding: 12px; border-radius: 8px;">
                                         <?php foreach ($detay['prim_detaylari'] as $firma_detay): ?>
                                         <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e2e8f0;">
-                                            <span style="color: #475569; font-size: 14px;">
-                                                <i class="fas fa-building" style="color: #94a3b8; margin-right: 8px;"></i>
+                                            <span style="color: var(--text-secondary); font-size: 14px;">
+                                                <i class="fas fa-building" style="color: var(--text-muted); margin-right: 8px;"></i>
                                                 <?php echo htmlspecialchars($firma_detay['firma_adi']); ?>
                                             </span>
                                             <div style="display: flex; gap: 20px; font-size: 14px;">
@@ -220,7 +220,7 @@ $sirkete_kalan = $toplam_net_satis - $toplam_prim;
                         </tbody>
                         <tfoot>
                             <tr style="background: var(--bg-secondary); font-weight: 700; border-top: 2px solid #e2e8f0;">
-                                <td style="padding: 16px; color: #1f2937;">TOPLAM</td>
+                                <td style="padding: 16px; color: var(--text-primary);">TOPLAM</td>
                                 <td style="padding: 16px; text-align: right; color: #3b82f6;">₺<?php echo number_format($toplam_net_satis, 0, ',', '.'); ?></td>
                                 <td style="padding: 16px; text-align: right; color: #f59e0b;">₺<?php echo number_format($toplam_prim, 0, ',', '.'); ?></td>
                                 <td style="padding: 16px; text-align: right; color: var(--text-secondary);">

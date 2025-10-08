@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
+                        <a href="kasa.php" style="color: #3b82f6; text-decoration: none;">Kasa</a>
                         <span style="margin: 0 8px;">›</span>
                         <span style="color: var(--text-primary);">Yeni Banka</span>
                     </nav>

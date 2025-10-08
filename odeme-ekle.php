@@ -1,6 +1,6 @@
 <?php
 /**
- * Primew Panel - Yeni Tahsilat Ekle
+ * Primew Panel - Yeni Ödeme Ekle
  */
 
 header('Content-Type: text/html; charset=utf-8');
@@ -57,13 +57,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'aciklama' => $aciklama
         ];
         
-        if ($tahsilat_id = $db->insert('tahsilatlar', $data)) {
+        if ($odeme_id = $db->insert('tahsilatlar', $data)) {
             // Maliyetleri kaydet
             if (isset($_POST['maliyet_adi']) && is_array($_POST['maliyet_adi'])) {
                 foreach ($_POST['maliyet_adi'] as $index => $maliyet_adi) {
                     if (!empty($maliyet_adi) && !empty($_POST['maliyet_tutari'][$index])) {
                         $db->insert('tahsilat_maliyetler', [
-                            'tahsilat_id' => $tahsilat_id,
+                            'tahsilat_id' => $odeme_id,
                             'maliyet_adi' => trim($maliyet_adi),
                             'maliyet_aciklama' => !empty($_POST['maliyet_aciklama'][$index]) ? trim($_POST['maliyet_aciklama'][$index]) : null,
                             'maliyet_tutari' => (float)$_POST['maliyet_tutari'][$index]
@@ -72,10 +72,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
-            header('Location: tahsilatlar.php?success=1');
+            header('Location: kasa.php?success=1');
             exit;
         } else {
-            $errors[] = "Tahsilat eklenirken hata oluştu!";
+            $errors[] = "Ödeme eklenirken hata oluştu!";
         }
     }
 }
@@ -89,7 +89,7 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SeoMEW Prim Sistemi - Yeni Tahsilat</title>
+    <title>SeoMEW Prim Sistemi - Yeni Ödeme Ekle</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
@@ -100,7 +100,7 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
 
         <div class="main-content">
             <?php 
-            $page_title = 'Yeni Tahsilat Ekle';
+            $page_title = 'Yeni Ödeme Ekle';
             include 'includes/header.php'; 
             ?>
 
@@ -110,9 +110,9 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                     <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
+                        <a href="kasa.php" style="color: #3b82f6; text-decoration: none;">Kasa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: var(--text-primary);">Yeni Tahsilat</span>
+                        <span style="color: var(--text-primary);">Yeni Ödeme</span>
                     </nav>
                 </div>
 
@@ -129,7 +129,7 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
 
                 <!-- Form -->
                 <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                    <form method="POST" action="tahsilat-ekle.php" id="tahsilat-form">
+                    <form method="POST" action="odeme-ekle.php" id="odeme-form">
                         <input type="hidden" name="kdv_yok" id="kdv_yok_hidden" value="0">
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
                             <!-- Müşteri Seçimi -->
@@ -266,7 +266,7 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
                         
                         <!-- Butonlar -->
                         <div style="display: flex; gap: 12px; margin-top: 30px; justify-content: flex-end;">
-                            <a href="tahsilatlar.php" style="padding: 12px 24px; background: #64748b; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                            <a href="kasa.php" style="padding: 12px 24px; background: #64748b; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
                                 <i class="fas fa-times"></i> İptal
                             </a>
                             <button type="submit" style="padding: 12px 24px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
@@ -353,4 +353,3 @@ $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); //
     </script>
 </body>
 </html>
-

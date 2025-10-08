@@ -1308,7 +1308,7 @@ body.dark-mode .permission-item:hover {
     color: var(--text-muted);
 }
 
-/* Tahsilat sayfası dark mode düzeltmeleri */
+/* Kasa sayfası dark mode düzeltmeleri */
 html.dark-mode .alert-success,
 body.dark-mode .alert-success {
     background: #064e3b !important;

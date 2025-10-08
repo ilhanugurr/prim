@@ -113,7 +113,7 @@ $satislar = $db->query("
     LEFT JOIN satis_maliyetler sm ON s.id = sm.satis_id
     $where_clause
     GROUP BY s.id
-    ORDER BY s.satis_tarihi DESC, s.olusturma_tarihi DESC
+    ORDER BY s.id DESC
 ", $where_params);
 ?>
 <!DOCTYPE html>

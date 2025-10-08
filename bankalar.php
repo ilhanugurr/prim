@@ -33,10 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     if ($_POST['action'] === 'delete' && isset($_POST['id'])) {
         $banka_id = (int)$_POST['id'];
         
-        // Bu bankayı kullanan tahsilat var mı kontrol et
-        $tahsilat_check = $db->select('tahsilatlar', ['banka_id' => $banka_id]);
+        // Bu bankayı kullanan kasa kaydı var mı kontrol et
+        $kasa_check = $db->select('tahsilatlar', ['banka_id' => $banka_id]);
         
-        if (!empty($tahsilat_check)) {
+        if (!empty($kasa_check)) {
             // Kullanımda - sadece pasif yap
             $db->update('bankalar', ['durum' => 'pasif'], ['id' => $banka_id]);
             header('Location: bankalar.php?deleted=1&warning=1');
@@ -101,7 +101,7 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                     <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
+                        <a href="kasa.php" style="color: #3b82f6; text-decoration: none;">Kasa</a>
                         <span style="margin: 0 8px;">›</span>
                         <span style="color: var(--text-primary);">Banka Yönetimi</span>
                     </nav>
@@ -123,7 +123,7 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
                 <div style="background: <?php echo isset($_GET['warning']) ? '#fef3c7' : '#fee2e2'; ?>; color: <?php echo isset($_GET['warning']) ? '#92400e' : '#dc2626'; ?>; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
                     <i class="fas fa-<?php echo isset($_GET['warning']) ? 'exclamation-triangle' : 'trash'; ?>"></i>
                     <?php if (isset($_GET['warning'])): ?>
-                        Banka kullanımda olduğu için pasif yapıldı! (Tahsilatlarda kullanılmış)
+                        Banka kullanımda olduğu için pasif yapıldı! (Kasa kayıtlarında kullanılmış)
                     <?php else: ?>
                         Banka başarıyla silindi!
                     <?php endif; ?>
@@ -252,4 +252,3 @@ $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
     </script>
 </body>
 </html>
-

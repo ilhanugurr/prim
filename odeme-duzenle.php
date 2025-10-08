@@ -1,6 +1,6 @@
 <?php
 /**
- * Primew Panel - Tahsilat Düzenle
+ * Primew Panel - Ödeme Düzenle
  */
 
 header('Content-Type: text/html; charset=utf-8');
@@ -12,20 +12,20 @@ require_once 'includes/auth.php';
 requireLogin();
 requireAdmin();
 
-$tahsilat_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$tahsilat = null;
+$odeme_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+$odeme = null;
 $errors = [];
 
-if ($tahsilat_id > 0) {
-    $tahsilat = $db->select('tahsilatlar', ['id' => $tahsilat_id]);
-    if (!empty($tahsilat)) {
-        $tahsilat = $tahsilat[0];
+if ($odeme_id > 0) {
+    $odeme = $db->select('tahsilatlar', ['id' => $odeme_id]);
+    if (!empty($odeme)) {
+        $odeme = $odeme[0];
     } else {
-        header('Location: tahsilatlar.php');
+        header('Location: kasa.php');
         exit;
     }
 } else {
-    header('Location: tahsilatlar.php');
+    header('Location: kasa.php');
     exit;
 }
 
@@ -71,16 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'aciklama' => $aciklama
         ];
         
-        if ($db->update('tahsilatlar', $data, ['id' => $tahsilat_id])) {
+        if ($db->update('tahsilatlar', $data, ['id' => $odeme_id])) {
             // Önce mevcut maliyetleri sil
-            $db->delete('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]);
+            $db->delete('tahsilat_maliyetler', ['tahsilat_id' => $odeme_id]);
             
             // Yeni maliyetleri kaydet
             if (isset($_POST['maliyet_adi']) && is_array($_POST['maliyet_adi'])) {
                 foreach ($_POST['maliyet_adi'] as $index => $maliyet_adi) {
                     if (!empty($maliyet_adi) && !empty($_POST['maliyet_tutari'][$index])) {
                         $db->insert('tahsilat_maliyetler', [
-                            'tahsilat_id' => $tahsilat_id,
+                            'tahsilat_id' => $odeme_id,
                             'maliyet_adi' => trim($maliyet_adi),
                             'maliyet_aciklama' => !empty($_POST['maliyet_aciklama'][$index]) ? trim($_POST['maliyet_aciklama'][$index]) : null,
                             'maliyet_tutari' => (float)$_POST['maliyet_tutari'][$index]
@@ -89,10 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
             
-            header('Location: tahsilatlar.php?updated=1');
+            header('Location: kasa.php?updated=1');
             exit;
         } else {
-            $errors[] = "Tahsilat güncellenirken hata oluştu!";
+            $errors[] = "Ödeme güncellenirken hata oluştu!";
         }
     }
 }
@@ -100,14 +100,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $musteriler = $db->select('musteriler', ['durum' => 'aktif'], 'firma_adi ASC');
 $bankalar = $db->select('bankalar', ['durum' => 'aktif'], 'banka_adi ASC');
 $personeller = $db->select('personel', ['durum' => 'aktif'], 'ad_soyad ASC'); // Tüm personeller (admin + satışçı)
-$maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id], 'id ASC');
+$maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $odeme_id], 'id ASC');
 ?>
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SeoMEW Prim Sistemi - Tahsilat Düzenle</title>
+    <title>SeoMEW Prim Sistemi - Ödeme Düzenle</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="style.css" rel="stylesheet">
@@ -118,7 +118,7 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
 
         <div class="main-content">
             <?php 
-            $page_title = 'Tahsilat Düzenle';
+            $page_title = 'Ödeme Düzenle';
             include 'includes/header.php'; 
             ?>
 
@@ -127,9 +127,9 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                     <nav style="font-size: 14px; color: var(--text-secondary);">
                         <a href="index.php" style="color: #3b82f6; text-decoration: none;">Ana Sayfa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <a href="tahsilatlar.php" style="color: #3b82f6; text-decoration: none;">Tahsilat</a>
+                        <a href="kasa.php" style="color: #3b82f6; text-decoration: none;">Kasa</a>
                         <span style="margin: 0 8px;">›</span>
-                        <span style="color: var(--text-primary);">Düzenle</span>
+                        <span style="color: var(--text-primary);">Ödeme Düzenle</span>
                     </nav>
                 </div>
 
@@ -145,15 +145,15 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                 <?php endif; ?>
 
                 <div style="background: var(--bg-card); border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
-                    <form method="POST" action="tahsilat-duzenle.php?id=<?php echo $tahsilat_id; ?>" id="tahsilat-form">
-                        <input type="hidden" name="kdv_yok" id="kdv_yok_hidden" value="<?php echo $tahsilat['kdv_tutari'] == 0 ? '1' : '0'; ?>">
+                    <form method="POST" action="odeme-duzenle.php?id=<?php echo $odeme_id; ?>" id="odeme-form">
+                        <input type="hidden" name="kdv_yok" id="kdv_yok_hidden" value="<?php echo $odeme['kdv_tutari'] == 0 ? '1' : '0'; ?>">
                         <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Müşteri *</label>
                                 <select name="musteri_id" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Müşteri Seçiniz</option>
                                     <?php foreach ($musteriler as $m): ?>
-                                        <option value="<?php echo $m['id']; ?>" <?php echo $tahsilat['musteri_id'] == $m['id'] ? 'selected' : ''; ?>>
+                                        <option value="<?php echo $m['id']; ?>" <?php echo $odeme['musteri_id'] == $m['id'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($m['firma_adi']); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -165,7 +165,7 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                                 <select name="personel_id" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Personel Seçiniz (Opsiyonel)</option>
                                     <?php foreach ($personeller as $p): ?>
-                                        <option value="<?php echo $p['id']; ?>" <?php echo $tahsilat['personel_id'] == $p['id'] ? 'selected' : ''; ?>>
+                                        <option value="<?php echo $p['id']; ?>" <?php echo $odeme['personel_id'] == $p['id'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($p['ad_soyad']); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -177,7 +177,7 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                                 <select name="banka_id" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                                     <option value="">Banka Seçiniz</option>
                                     <?php foreach ($bankalar as $b): ?>
-                                        <option value="<?php echo $b['id']; ?>" <?php echo $tahsilat['banka_id'] == $b['id'] ? 'selected' : ''; ?>>
+                                        <option value="<?php echo $b['id']; ?>" <?php echo $odeme['banka_id'] == $b['id'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars($b['banka_adi']); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -186,26 +186,26 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                             
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Ödeme Tarihi *</label>
-                                <input type="date" name="odeme_tarihi" value="<?php echo $tahsilat['odeme_tarihi']; ?>" required 
+                                <input type="date" name="odeme_tarihi" value="<?php echo $odeme['odeme_tarihi']; ?>" required 
                                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                             </div>
                             
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Fatura Tarihi</label>
-                                <input type="date" name="fatura_tarihi" value="<?php echo $tahsilat['fatura_tarihi']; ?>" 
+                                <input type="date" name="fatura_tarihi" value="<?php echo $odeme['fatura_tarihi']; ?>" 
                                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;">
                             </div>
                             
                             <div>
                                 <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Tutar (KDV Hariç) *</label>
                                 <input type="number" name="tutar_kdv_haric" id="tutar_kdv_haric" step="0.01" required 
-                                       value="<?php echo $tahsilat['tutar_kdv_haric']; ?>"
+                                       value="<?php echo $odeme['tutar_kdv_haric']; ?>"
                                        style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px;"
                                        oninput="hesaplaKDV()">
                                 <div style="margin-top: 8px;">
                                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px; color: var(--text-secondary);">
                                         <input type="checkbox" id="kdv_yok" onchange="toggleKDV()" 
-                                               <?php echo $tahsilat['kdv_tutari'] == 0 ? 'checked' : ''; ?>
+                                               <?php echo $odeme['kdv_tutari'] == 0 ? 'checked' : ''; ?>
                                                style="width: 18px; height: 18px; cursor: pointer;">
                                         <span>KDV Yok</span>
                                     </label>
@@ -226,7 +226,7 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                         <div style="margin-top: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">Açıklama</label>
                             <textarea name="aciklama" rows="3" 
-                                      style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; resize: vertical;"><?php echo htmlspecialchars($tahsilat['aciklama']); ?></textarea>
+                                      style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; resize: vertical;"><?php echo htmlspecialchars($odeme['aciklama']); ?></textarea>
                         </div>
                         
                         <!-- Maliyetler -->
@@ -299,7 +299,7 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
                         </div>
                         
                         <div style="display: flex; gap: 12px; margin-top: 30px; justify-content: flex-end;">
-                            <a href="tahsilatlar.php" style="padding: 12px 24px; background: #64748b; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
+                            <a href="kasa.php" style="padding: 12px 24px; background: #64748b; color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">
                                 <i class="fas fa-times"></i> İptal
                             </a>
                             <button type="submit" style="padding: 12px 24px; background: #10b981; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
@@ -392,4 +392,3 @@ $maliyetler = $db->select('tahsilat_maliyetler', ['tahsilat_id' => $tahsilat_id]
     </script>
 </body>
 </html>
-
