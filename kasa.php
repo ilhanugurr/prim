@@ -14,9 +14,9 @@ requireAdmin();
 
 $stats = getStats();
 
-// Filtreleme
+// Filtreleme - Varsayılan olarak bu ay ve yıl
 $filter_yil = isset($_GET['yil']) ? (int)$_GET['yil'] : date('Y');
-$filter_ay = isset($_GET['ay']) && !empty($_GET['ay']) ? (int)$_GET['ay'] : null;
+$filter_ay = isset($_GET['ay']) && $_GET['ay'] !== '' ? (int)$_GET['ay'] : (isset($_GET['yil']) || isset($_GET['musteri_id']) || isset($_GET['banka_id']) || isset($_GET['personel_id']) ? null : date('n'));
 $filter_musteri = isset($_GET['musteri_id']) && !empty($_GET['musteri_id']) ? (int)$_GET['musteri_id'] : null;
 $filter_banka = isset($_GET['banka_id']) && !empty($_GET['banka_id']) ? (int)$_GET['banka_id'] : null;
 $filter_personel = isset($_GET['personel_id']) && !empty($_GET['personel_id']) ? (int)$_GET['personel_id'] : null;
@@ -244,7 +244,7 @@ $aylar = [
                     <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);">
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <div style="background: rgba(255,255,255,0.2); width: 56px; height: 56px; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-lira-sign" style="font-size: 24px;"></i>
+                                <span style="font-size: 32px; font-weight: 700;">₺</span>
                             </div>
                             <div>
                                 <div style="font-size: 14px; opacity: 0.9; margin-bottom: 4px;">
